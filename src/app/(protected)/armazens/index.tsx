@@ -1,43 +1,29 @@
-import { StorageType } from "@/_app/services/storage";
-import { listarArmazens } from "@/src/features/armazem/services/armazemService";
-import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { useStorage } from "@/src/features/armazens/hooks/storage/queries/useStorage";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function Armazens() {
-  const [armazens, setArmazem] = useState<StorageType[]>([]);
-
-  async function getArmazens() {
-    const payload = await listarArmazens();
-    setArmazem(payload);
-  }
-
-  function selectedArmazem(armazemId: number) {
-    router.push({
-      pathname: "/armazens/[armazemId]",
-      params: {
-        armazemId: armazemId.toString(),
-      },
-    });
-  }
-
-  useEffect(() => {
-    getArmazens();
-  }, []);
+  const { data: result, isPending, isError, selectedStorage } = useStorage();
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Selecionar Armazém</Text>
 
-      {armazens.map((item) => (
-        <TouchableOpacity
-          key={item.id}
-          style={styles.botao}
-          onPress={() => selectedArmazem(item.id)}
-        >
-          <Text style={styles.texto}>{item.name}</Text>
-        </TouchableOpacity>
-      ))}
+      {/* todo: alterar para toast */}
+      {isPending && <Text>Loading...</Text>}
+      {/*menos esse */}
+      {result?.length === 0 && <Text>Nenhum armazem cadastrado.</Text>}
+      {isError && <Text>Erro ao obter armazens.</Text>}
+
+      {result &&
+        result.map((item) => (
+          <TouchableOpacity
+            key={item.id}
+            style={styles.botao}
+            onPress={() => selectedStorage(item.id)}
+          >
+            <Text style={styles.texto}>{item.name}</Text>
+          </TouchableOpacity>
+        ))}
     </View>
   );
 }

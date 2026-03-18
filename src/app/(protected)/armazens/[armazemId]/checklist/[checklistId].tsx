@@ -1,42 +1,40 @@
-import { getQuestionsByChecklist } from "@/src/features/armazem/services/armazemService";
-import {
-  generateChecklistPDF,
-  registerChecklistResponse,
-} from "@/src/features/armazem/services/checklistService";
-import { ChecklistType } from "@/src/features/checklist/types/ChecklistType";
-import { QuestionChecklistType } from "@/src/features/questions/types/QuestionChecklistType";
-import { registerChecklistResponseLocalStorage } from "@/src/localStorage/services/localStorageService";
-import * as Location from "expo-location";
+import { useGetStorageNameQueryData } from "@/src/features/armazens/hooks/storage/queries/queryData/useGetStorageNameQueryData";
+import { useChecklistResponse } from "@/src/features/checklist/hooks/mutations/useChecklistResponse";
+import { useGetChecklistNameQueryData } from "@/src/features/checklist/hooks/queries/queryData/useGetChecklistNameQueryData";
+import { useQuestionsChecklist } from "@/src/features/checklist/hooks/queries/useQuestionsChecklist";
+import { useGps } from "@/src/shared/hooks/useGps";
 import { router, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function Checklist() {
-  const [checklist, setChecklist] = useState<ChecklistType>();
-  const [gps, setGps] = useState("");
   const [respostas, setRespostas] = useState<{ [key: string]: string }>({});
   const { checklistId, armazemId } = useLocalSearchParams<{
     checklistId: string;
     armazemId: string;
   }>();
 
-  const [questions, setQuestions] = useState<QuestionChecklistType[]>([]);
+  const {
+    data: result,
+    isPending,
+    isError,
+  } = useQuestionsChecklist({
+    checklistId: Number(checklistId),
+  });
 
-  async function handleSelectChecklist(checklistId: number) {
-    const data = await getQuestionsByChecklist(checklistId);
-    setQuestions(data);
-  }
+  const { data: gpsResult } = useGps();
 
-  async function capturarGPS() {
-    const { status } = await Location.requestForegroundPermissionsAsync();
+  const { mutateAsync, isPending: isPendingChecklistResponse } =
+    useChecklistResponse();
 
-    if (status !== "granted") {
-      return;
-    }
+  const { checklistNameByStorage } = useGetChecklistNameQueryData({
+    checklistId: Number(checklistId),
+    storageId: Number(armazemId),
+  });
 
-    const location = await Location.getCurrentPositionAsync({});
-    setGps(location.coords.latitude + "," + location.coords.longitude);
-  }
+  const { storageName } = useGetStorageNameQueryData({
+    armazemId: Number(armazemId),
+  });
 
   function responder(pergunta: string, resposta: string) {
     setRespostas({
@@ -46,19 +44,18 @@ export default function Checklist() {
   }
 
   const salvar = async () => {
-    if (!respostas) return;
+    if (!respostas || !checklistNameByStorage || !storageName) return;
 
     const dados = {
-      checklistName: "Teste", //todo: inserir nome do checklist
-      armazemId: Number(armazemId), //todo: inserir nome do armazem -> possivelmente store
+      checklistName: checklistNameByStorage,
+      armazemName: storageName,
       fotos: [],
       data: new Date().toISOString(),
-      gps,
+      gps: gpsResult?.toString() || "",
       respostas,
     };
 
-    await registerChecklistResponseLocalStorage(dados);
-    await registerChecklistResponse(dados);
+    await mutateAsync(dados);
 
     //todo: Refatorar e incluir endpoint
     // await sendWebhookYMS({
@@ -66,45 +63,49 @@ export default function Checklist() {
     //   dados,
     // });
 
-    generateChecklistPDF(dados);
     // alert("Checklist registrado"); todo: Inserir toast para mensagens.
 
     router.back(); //todo: back somente se for gerado com sucesso.
   };
 
-  useEffect(() => {
-    capturarGPS();
-    handleSelectChecklist(Number(checklistId));
-  }, [checklistId]);
-
   return (
     <View style={styles.container}>
-      <Text style={styles.titulo}>{checklist?.name}</Text>
+      {checklistNameByStorage !== "" && (
+        <Text style={styles.titulo}>{checklistNameByStorage}</Text>
+      )}
 
-      {questions?.map((p, index) => (
-        <View key={index} style={styles.pergunta}>
-          <Text style={styles.textoPergunta}>{p.question}</Text>
+      {isPending && <Text>Loading...</Text>}
+      {isError && <Text>Erro ao obter perguntas.</Text>}
 
-          <View style={styles.botoes}>
-            <TouchableOpacity
-              style={styles.botao}
-              onPress={() => responder(p.question, "sim")}
-            >
-              <Text>Sim</Text>
-            </TouchableOpacity>
+      {result &&
+        result.map((item, index) => (
+          <View key={index} style={styles.pergunta}>
+            <Text style={styles.textoPergunta}>{item.question}</Text>
 
-            <TouchableOpacity
-              style={styles.botao}
-              onPress={() => responder(p.question, "não")}
-            >
-              <Text>Não</Text>
-            </TouchableOpacity>
+            <View style={styles.botoes}>
+              <TouchableOpacity
+                style={styles.botao}
+                onPress={() => responder(item.question, "sim")}
+              >
+                <Text>Sim</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.botao}
+                onPress={() => responder(item.question, "não")}
+              >
+                <Text>Não</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      ))}
+        ))}
 
       <TouchableOpacity style={styles.salvar} onPress={salvar}>
-        <Text style={styles.textoSalvar}>Finalizar Checklist</Text>
+        <Text style={styles.textoSalvar}>
+          {isPendingChecklistResponse
+            ? "Finalizando..."
+            : "Finalizar Checklist"}
+        </Text>
       </TouchableOpacity>
     </View>
   );

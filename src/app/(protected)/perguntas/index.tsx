@@ -1,16 +1,14 @@
-import {
-  checkLinkStorageChecklist,
-  checkQuestionChecklist,
-  listarArmazens,
-  listarChecklists,
-  listarPerguntasChecklist,
-  postChecklist,
-  postQuestionChecklist,
-} from "@/src/features/armazem/services/armazemService";
-import { StorageType } from "@/src/features/armazem/types/StorageType";
-import { ChecklistQuestionType } from "@/src/features/checklist/types/ChecklistQuestionType";
-import { ChecklistType } from "@/src/features/checklist/types/ChecklistType";
-import { useEffect, useState } from "react";
+import { useGetStorageNameQueryData } from "@/src/features/armazens/hooks/storage/queries/queryData/useGetStorageNameQueryData";
+import { useCheckLinkStorageChecklistQuery } from "@/src/features/armazens/hooks/storage/queries/useCheckLinkStorageChecklistQuery";
+import { useStorage } from "@/src/features/armazens/hooks/storage/queries/useStorage";
+import { usePostChecklistQuery } from "@/src/features/checklist/hooks/mutations/usePostChecklistQuery";
+import { useGetChecklistNameQueryData } from "@/src/features/checklist/hooks/queries/queryData/useGetChecklistNameQueryData";
+import { useChecklist } from "@/src/features/checklist/hooks/queries/useChecklist";
+import { useQuestionsChecklist } from "@/src/features/checklist/hooks/queries/useQuestionsChecklist";
+import { useQuestion } from "@/src/features/perguntas/hooks/useQuestion";
+import { QuestionChecklistType } from "@/src/features/perguntas/types/QuestionChecklistType";
+import { normalizeTextUtil } from "@/src/shared/utils";
+import { useState } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -25,130 +23,140 @@ import { RadioButton, Text } from "react-native-paper";
 export default function CadastroPerguntas() {
   const [addMode, setAddMode] = useState(false);
 
-  const [storageId, setStorageId] = useState<number | null>(null);
-  const [storageName, setStorageName] = useState<number | null>(null);
-  const [storage, setStorage] = useState<StorageType[]>([]);
+  const [storageId, setStorageId] = useState<number | undefined>(undefined);
+  const [checklistId, setChecklistId] = useState<number | undefined>(undefined);
 
-  const [checklistId, setChecklistId] = useState<number | null>(null);
-  const [checklistName, setChecklistName] = useState<string>("");
-  const [checklists, setChecklists] = useState<ChecklistType[]>([]);
-
-  const [questions, setQuestions] = useState<ChecklistQuestionType[]>([]);
+  const [questions, setQuestions] = useState<QuestionChecklistType[]>([]);
   const [newTextQuestion, setNewTextQuestion] = useState("");
-  const [responseType, setResponseType] = useState("text");
-  const [requiresPhoto, setRequiresPhoto] = useState<boolean>(false);
 
-  async function registerQuestion(
-    storageId: number,
-    checklistId: number,
-    question: string,
-    requiresPhoto: boolean,
-    responseType: string,
-  ) {
-    // 1️⃣ verificar vínculo
-    const relation = await checkLinkStorageChecklist(storageId, checklistId);
+  const [responseType, setResponseType] = useState("text"); //todo: implementar hookform
+  const [requiresPhoto, setRequiresPhoto] = useState<boolean>(false); //todo: implementar hookform
 
-    if (relation.length === 0) {
-      await postChecklist(storageId, checklistId);
+  const { data: storagesResult, isPending: isPendingStorages } = useStorage();
+  const { data: checklistsResult, isPending: isPendingChecklists } =
+    useChecklist();
+
+  const {
+    data: questionsByChecklist,
+    isPending: isPendingQuestionByChecklist,
+  } = useQuestionsChecklist({ checklistId: Number(checklistId) });
+
+  const { postQuestion, questionName } = useQuestion(
+    Number(checklistId),
+    newTextQuestion,
+  );
+
+  const { mutateAsync: postChecklistQuery } = usePostChecklistQuery();
+
+  const { data: relationChecklistStorage } = useCheckLinkStorageChecklistQuery({
+    storageId,
+    checklistId,
+  });
+
+  const { checklistName } = useGetChecklistNameQueryData({
+    checklistId: Number(checklistId),
+  });
+
+  const { storageName } = useGetStorageNameQueryData({
+    armazemId: Number(storageId),
+  });
+
+  async function registerQuestion(questionRequest: QuestionChecklistType[]) {
+    if (!storageId || !checklistId || !relationChecklistStorage) return;
+
+    try {
+      const hasQuestions = questionRequest.length > 0;
+      const isLinked = relationChecklistStorage.length > 0;
+
+      if (isLinked && !hasQuestions) {
+        alert(
+          `Checklist ${checklistName} já vinculado ao Armazém ${storageName}. Cadastre uma nova pergunta ou um novo checklist.`,
+        );
+        return;
+      }
+
+      if (!isLinked) {
+        await postChecklistQuery({ armazemId: storageId, checklistId });
+      }
+
+      if (hasQuestions) {
+        await postQuestion.mutateAsync({
+          questions: questionRequest,
+          checklistId,
+        });
+
+        alert("Perguntas cadastradas com sucesso");
+        resetFormNewQuestion();
+
+        //implementar hookform
+        setQuestions([]);
+        setStorageId(undefined);
+        setChecklistId(undefined);
+        setQuestions([]);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao cadastrar perguntas");
     }
-
-    // 2️⃣ verificar se pergunta já existe
-    const questions = await checkQuestionChecklist(checklistId);
-
-    const exists = questions.some(
-      (q: any) => q.question.toLowerCase() === question.toLocaleLowerCase(),
-    );
-
-    if (relation && question === "") {
-      alert(
-        `Checklist ${checklistName} já vinculado ao Armazém ${storageName}. Cadastre uma nova pergunta ou um novo checklist.`,
-      );
-      return;
-    }
-
-    if (exists) {
-      alert("Pergunta já existe nesse checklist");
-      return;
-    }
-    await postQuestionChecklist({
-      id: Math.random(),
-      checklistId,
-      question,
-      requiresPhoto,
-      responseType,
-    });
-    alert("Pergunta cadastrada");
   }
 
   async function handleRegisterChecklistQuestion() {
-    if (!storageId || !checklistId) return;
-    await registerQuestion(
-      storageId,
-      checklistId,
-      newTextQuestion,
-      requiresPhoto,
-      responseType,
-    );
+    if (!checklistId) return;
+    await registerQuestion(questions);
   }
 
-  function handleAddQuestion() {
-    if (!newTextQuestion.trim()) return;
+  function checksQuestionHasAlreadyBeenRegistered(): boolean {
+    const newQuestionNormalized = normalizeTextUtil(newTextQuestion);
 
-    const newQuestion: ChecklistQuestionType = {
-      id: Math.random(),
+    if (!newQuestionNormalized) return false;
+
+    const allQuestions = new Set([
+      ...(questionName ? [normalizeTextUtil(questionName)] : []),
+      ...questions.map((q) => normalizeTextUtil(q.question)),
+    ]);
+
+    if (allQuestions.has(newQuestionNormalized)) {
+      alert(`Pergunta já existe no ${checklistName}`);
+      return false;
+    }
+
+    return true;
+  }
+
+  async function handleAddQuestion() {
+    if (!newTextQuestion.trim() || !checklistId) return;
+
+    const newQuestion: QuestionChecklistType = {
+      id: Date.now(),
+      checklistId: Number(checklistId),
       question: newTextQuestion,
+      requiresPhoto,
+      responseType,
     };
 
-    setQuestions((prev) => [...prev, newQuestion]);
+    if (!checksQuestionHasAlreadyBeenRegistered()) return;
 
-    // resetFormNewQuestion();
-    setAddMode(false);
+    resetFormNewQuestion();
+    setQuestions((prev) => [...prev, newQuestion]);
   }
 
   function resetFormNewQuestion() {
     setRequiresPhoto(false);
     setResponseType("text");
     setNewTextQuestion("");
+    setAddMode(false);
   }
 
   function handleCancelar() {
     resetFormNewQuestion();
-    setAddMode(false);
   }
 
-  async function getStorageList() {
-    const payload = await listarArmazens();
-
-    if (!payload) return;
-
-    setStorage(payload);
+  function onChangeStorage(storageId: number) {
+    setStorageId(storageId);
+    setChecklistId(undefined);
+    resetFormNewQuestion();
+    setQuestions([]);
   }
-
-  async function getChecklists() {
-    const payload = await listarChecklists();
-
-    if (!payload) return;
-
-    setChecklists(payload);
-  }
-
-  async function getQuestionsForChecklistSelected(checklistId: number) {
-    const data = await listarPerguntasChecklist(checklistId);
-    setQuestions(data);
-  }
-
-  function getPerguntasChecklistSelected(checklistId: number | null) {
-    if (!checklistId) return;
-    getQuestionsForChecklistSelected(checklistId);
-  }
-
-  useEffect(() => {
-    getStorageList();
-  }, []);
-
-  useEffect(() => {
-    getPerguntasChecklistSelected(checklistId);
-  }, [checklistId]);
 
   return (
     <View style={styles.container}>
@@ -158,17 +166,13 @@ export default function CadastroPerguntas() {
 
       <Dropdown
         style={styles.dropdown}
-        data={storage}
+        data={storagesResult ?? []}
         labelField="name"
         valueField="id"
-        placeholder="Selecione o Armazém"
+        placeholder={isPendingStorages ? "Loading..." : "Selecione o Armazém"}
         value={storageId}
-        onChange={(item) => {
-          setStorageId(item.id);
-          setStorageName(item.name);
-          getChecklists();
-          setChecklistId(null);
-        }}
+        onChange={(storage) => onChangeStorage(storage.id)}
+        disable={isPendingStorages}
       />
 
       {/* CHECKLIST */}
@@ -177,32 +181,48 @@ export default function CadastroPerguntas() {
 
       <Dropdown
         style={styles.dropdown}
-        data={checklists}
+        data={checklistsResult ?? []}
         labelField="name"
         valueField="id"
-        placeholder="Selecione o Checklist"
+        placeholder={
+          isPendingChecklists ? "Loading..." : "Selecione o Checklist"
+        }
         value={checklistId}
         onChange={(item) => {
           setChecklistId(item.id);
-          setChecklistName(item.name);
+          setQuestions([]);
         }}
-        disable={!storageId}
+        disable={!storageId || isPendingChecklists}
       />
 
       {/* PERGUNTAS EXISTENTES */}
 
-      {checklistId ? (
-        <Text>Perguntas do checklist selecionado:</Text>
-      ) : (
-        <TextNative />
-      )}
+      {isPendingQuestionByChecklist && checklistId && <Text>Loading...</Text>}
+
+      {checklistId &&
+        questionsByChecklist &&
+        questionsByChecklist.length > 0 && (
+          <Text>Perguntas do checklist selecionado:</Text>
+        )}
+
+      {questionsByChecklist &&
+        questionsByChecklist.length === 0 &&
+        questions.length === 0 && <Text>Nenhuma pergunta cadastrada.</Text>}
 
       <View style={styles.perguntasContainer}>
-        {questions.map((item, index) => (
-          <View key={index} style={styles.tag}>
-            <Text>{item.question}</Text>
-          </View>
-        ))}
+        {questionsByChecklist &&
+          questionsByChecklist?.map((item, index) => (
+            <View key={index} style={styles.tag}>
+              <Text>{item.question}</Text>
+            </View>
+          ))}
+
+        {questions &&
+          questions?.map((item, index) => (
+            <View key={index} style={styles.newTag}>
+              <Text>{item.question}</Text>
+            </View>
+          ))}
       </View>
 
       {/* BOTÃO ADICIONAR */}
@@ -296,7 +316,9 @@ export default function CadastroPerguntas() {
           style={styles.cadastrar}
           onPress={handleRegisterChecklistQuestion}
         >
-          <Text style={styles.textoBotao}>Cadastrar Pergunta</Text>
+          <Text style={styles.textoBotao}>
+            {postQuestion.isPending ? "Cadastrando..." : "Cadastrar Pergunta"}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -331,6 +353,14 @@ const styles = StyleSheet.create({
 
   tag: {
     backgroundColor: "#c4c4c46f",
+    padding: 8,
+    marginRight: 8,
+    marginBottom: 8,
+    borderRadius: 8,
+  },
+
+  newTag: {
+    backgroundColor: "#28ec7a",
     padding: 8,
     marginRight: 8,
     marginBottom: 8,
