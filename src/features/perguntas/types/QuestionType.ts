@@ -1,4 +1,4 @@
-import { StorageType } from "../../armazem/types/StorageType";
+import { StorageType } from "../../armazens/types/StorageType";
 
 export type QuestionType = {
   id: number;

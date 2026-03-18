@@ -1,6 +1,6 @@
 export type ChecklistExecuteType = {
   checklistName: string;
-  armazemId: number;
+  armazemName: string;
   gps: string;
   data: string;
   respostas: any;
