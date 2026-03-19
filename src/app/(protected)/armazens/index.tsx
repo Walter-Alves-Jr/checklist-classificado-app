@@ -1,12 +1,13 @@
 import { useStorage } from "@/src/features/armazens/hooks/storage/queries/useStorage";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Touchable } from "@/src/shared/components/Touchable";
+import { Text, View } from "react-native";
 
 export default function Armazens() {
   const { data: result, isPending, isError, selectedStorage } = useStorage();
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Selecionar Armazém</Text>
+    <View className="flex flex-1 justify-center p-7">
+      <Text className="text-3xl text-center mb-7">Selecionar Armazém</Text>
 
       {/* todo: alterar para toast */}
       {isPending && <Text>Loading...</Text>}
@@ -16,41 +17,13 @@ export default function Armazens() {
 
       {result &&
         result.map((item) => (
-          <TouchableOpacity
+          <Touchable.Container
             key={item.id}
-            style={styles.botao}
             onPress={() => selectedStorage(item.id)}
           >
-            <Text style={styles.texto}>{item.name}</Text>
-          </TouchableOpacity>
+            <Touchable.Content>{item.name}</Touchable.Content>
+          </Touchable.Container>
         ))}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 30,
-  },
-
-  title: {
-    fontSize: 26,
-    marginBottom: 40,
-    textAlign: "center",
-  },
-
-  botao: {
-    backgroundColor: "#ff6a00",
-    padding: 18,
-    borderRadius: 8,
-    marginBottom: 15,
-    alignItems: "center",
-  },
-
-  texto: {
-    color: "white",
-    fontWeight: "bold",
-  },
-});

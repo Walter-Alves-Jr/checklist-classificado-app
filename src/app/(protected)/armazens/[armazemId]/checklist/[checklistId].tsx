@@ -2,10 +2,11 @@ import { useGetStorageNameQueryData } from "@/src/features/armazens/hooks/storag
 import { useChecklistResponse } from "@/src/features/checklist/hooks/mutations/useChecklistResponse";
 import { useGetChecklistNameQueryData } from "@/src/features/checklist/hooks/queries/queryData/useGetChecklistNameQueryData";
 import { useQuestionsChecklist } from "@/src/features/checklist/hooks/queries/useQuestionsChecklist";
+import { Touchable } from "@/src/shared/components/Touchable";
 import { useGps } from "@/src/shared/hooks/useGps";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function Checklist() {
   const [respostas, setRespostas] = useState<{ [key: string]: string }>({});
@@ -71,42 +72,45 @@ export default function Checklist() {
   return (
     <View style={styles.container}>
       {checklistNameByStorage !== "" && (
-        <Text style={styles.titulo}>{checklistNameByStorage}</Text>
+        <Text className="text-2xl mb-6">{checklistNameByStorage}</Text>
       )}
+
+      <Text className="text-lg mb-2">Lista de perguntas:</Text>
 
       {isPending && <Text>Loading...</Text>}
       {isError && <Text>Erro ao obter perguntas.</Text>}
 
       {result &&
         result.map((item, index) => (
-          <View key={index} style={styles.pergunta}>
-            <Text style={styles.textoPergunta}>{item.question}</Text>
+          <View key={index}>
+            <Text className="mb-1 text-sm">{item.question}</Text>
 
             <View style={styles.botoes}>
-              <TouchableOpacity
-                style={styles.botao}
+              {/* Alterar para check e/ou radio */}
+              <Touchable.Container
                 onPress={() => responder(item.question, "sim")}
+                className="bg-green-500"
               >
-                <Text>Sim</Text>
-              </TouchableOpacity>
+                <Touchable.Content>Sim</Touchable.Content>
+              </Touchable.Container>
 
-              <TouchableOpacity
-                style={styles.botao}
+              <Touchable.Container
                 onPress={() => responder(item.question, "não")}
+                className="bg-red-500"
               >
-                <Text>Não</Text>
-              </TouchableOpacity>
+                <Touchable.Content>Não</Touchable.Content>
+              </Touchable.Container>
             </View>
           </View>
         ))}
 
-      <TouchableOpacity style={styles.salvar} onPress={salvar}>
-        <Text style={styles.textoSalvar}>
+      <Touchable.Container onPress={salvar} className="mt-7">
+        <Touchable.Content>
           {isPendingChecklistResponse
             ? "Finalizando..."
             : "Finalizar Checklist"}
-        </Text>
-      </TouchableOpacity>
+        </Touchable.Content>
+      </Touchable.Container>
     </View>
   );
 }
