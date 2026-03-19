@@ -7,21 +7,18 @@ import { useChecklist } from "@/src/features/checklist/hooks/queries/useChecklis
 import { useQuestionsChecklist } from "@/src/features/checklist/hooks/queries/useQuestionsChecklist";
 import { useQuestion } from "@/src/features/perguntas/hooks/useQuestion";
 import { QuestionChecklistType } from "@/src/features/perguntas/types/QuestionChecklistType";
+import { Touchable } from "@/src/shared/components/Touchable";
 import { normalizeTextUtil } from "@/src/shared/utils";
+import { useTwTheme } from "@/src/theme/useTwTheme";
 import { useState } from "react";
-import {
-  StyleSheet,
-  TextInput,
-  Text as TextNative,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, TextInput, Text as TextNative, View } from "react-native";
 
 import { Dropdown } from "react-native-element-dropdown";
 import { RadioButton, Text } from "react-native-paper";
 
 export default function CadastroPerguntas() {
   const [addMode, setAddMode] = useState(false);
+  const tw = useTwTheme();
 
   const [storageId, setStorageId] = useState<number | undefined>(undefined);
   const [checklistId, setChecklistId] = useState<number | undefined>(undefined);
@@ -159,8 +156,8 @@ export default function CadastroPerguntas() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Cadastro de Perguntas</Text>
+    <View className="p-5">
+      <Text className="text-2xl mb-7">Cadastro de Perguntas</Text>
 
       <Text>Armazém</Text>
 
@@ -209,17 +206,17 @@ export default function CadastroPerguntas() {
         questionsByChecklist.length === 0 &&
         questions.length === 0 && <Text>Nenhuma pergunta cadastrada.</Text>}
 
-      <View style={styles.perguntasContainer}>
+      <View className="flex flex-row gap-2 mt-2 mb-4">
         {questionsByChecklist &&
           questionsByChecklist?.map((item, index) => (
-            <View key={index} style={styles.tag}>
+            <View key={index} className="bg-gray-300 p-2 rounded-md">
               <Text>{item.question}</Text>
             </View>
           ))}
 
         {questions &&
           questions?.map((item, index) => (
-            <View key={index} style={styles.newTag}>
+            <View key={index} className="bg-emerald-500 p-2 rounded-md">
               <Text>{item.question}</Text>
             </View>
           ))}
@@ -228,13 +225,14 @@ export default function CadastroPerguntas() {
       {/* BOTÃO ADICIONAR */}
 
       {checklistId ? (
-        <TouchableOpacity
-          style={[styles.botaoAdicionar, addMode && styles.botaoDesativado]}
+        <Touchable.Container
           disabled={addMode}
+          style={addMode && { opacity: 0.5 }}
           onPress={() => setAddMode(true)}
+          className="w-32"
         >
-          <Text style={styles.textoBotao}>Adicionar +</Text>
-        </TouchableOpacity>
+          <Touchable.Content>Adicionar +</Touchable.Content>
+        </Touchable.Container>
       ) : (
         <TextNative />
       )}
@@ -242,8 +240,8 @@ export default function CadastroPerguntas() {
       {/* FORMULÁRIO */}
 
       {addMode && (
-        <View>
-          <Text style={styles.title}>Adicionar perguntas ao Checklist</Text>
+        <View className="border rounded-md border-slate-300 p-3">
+          <Text className="text-xl mb-2">Adicionar perguntas ao Checklist</Text>
           <Text>Pergunta</Text>
 
           <TextInput
@@ -253,139 +251,102 @@ export default function CadastroPerguntas() {
             onChangeText={setNewTextQuestion}
           />
 
-          <Text>Exige foto?</Text>
+          <View className="flex flex-col mb-4 gap-y-3">
+            <View>
+              <Text>Exige foto?</Text>
 
-          <View style={styles.row}>
-            <RadioButton.Group
-              onValueChange={(newValue) =>
-                setRequiresPhoto(JSON.parse(newValue))
-              }
-              value={requiresPhoto.toString()}
-            >
-              <View style={{ flexDirection: "row", gap: 8 }}>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <RadioButton value="true" color="#ff6a00" />
-                  <Text>Sim</Text>
+              <RadioButton.Group
+                onValueChange={(newValue) =>
+                  setRequiresPhoto(JSON.parse(newValue))
+                }
+                value={requiresPhoto.toString()}
+              >
+                <View style={{ flexDirection: "row", gap: 8 }}>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <RadioButton
+                      value="true"
+                      color={tw.bgPrimary.backgroundColor}
+                    />
+                    <Text>Sim</Text>
+                  </View>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <RadioButton
+                      value="false"
+                      color={tw.bgPrimary.backgroundColor}
+                    />
+                    <Text>Não</Text>
+                  </View>
                 </View>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <RadioButton value="false" color="#ff6a00" />
-                  <Text>Não</Text>
+              </RadioButton.Group>
+            </View>
+
+            <View>
+              <Text>Tipo de resposta</Text>
+
+              <RadioButton.Group
+                onValueChange={(newValue) => setResponseType(newValue)}
+                value={responseType}
+              >
+                <View style={{ flexDirection: "row", gap: 8 }}>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <RadioButton
+                      value="text"
+                      color={tw.bgPrimary.backgroundColor}
+                    />
+                    <Text>Texto</Text>
+                  </View>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <RadioButton
+                      value="number"
+                      color={tw.bgPrimary.backgroundColor}
+                    />
+                    <Text>Número</Text>
+                  </View>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <RadioButton
+                      value="multiple"
+                      color={tw.bgPrimary.backgroundColor}
+                    />
+                    <Text>Múltiplo</Text>
+                  </View>
                 </View>
-              </View>
-            </RadioButton.Group>
+              </RadioButton.Group>
+            </View>
           </View>
 
-          <Text>Tipo de resposta</Text>
+          <View className="flex items-center justify-center flex-row gap-2 mb-1">
+            <Touchable.Container
+              onPress={handleAddQuestion}
+              className="w-1/2 mb-0"
+            >
+              <Touchable.Content>Salvar</Touchable.Content>
+            </Touchable.Container>
 
-          <RadioButton.Group
-            onValueChange={(newValue) => setResponseType(newValue)}
-            value={responseType}
-          >
-            <View style={{ flexDirection: "row", gap: 8 }}>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <RadioButton value="text" color="#ff6a00" />
-                <Text>Texto</Text>
-              </View>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <RadioButton value="number" color="#ff6a00" />
-                <Text>Número</Text>
-              </View>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <RadioButton value="multiple" color="#ff6a00" />
-                <Text>Múltiplo</Text>
-              </View>
-            </View>
-          </RadioButton.Group>
-
-          <View style={styles.actionContainer}>
-            <TouchableOpacity style={styles.salvar} onPress={handleAddQuestion}>
-              <Text style={styles.textoBotao}>Salvar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.cancelar}
+            <Touchable.Container
+              className="text-black bg-transparent border border-black w-1/2 mb-0"
+              style={{ backgroundColor: "transparent" }}
               onPress={() => handleCancelar()}
             >
-              <Text>Cancelar</Text>
-            </TouchableOpacity>
+              <Touchable.Content style={{ color: "black" }}>
+                Cancelar
+              </Touchable.Content>
+            </Touchable.Container>
           </View>
         </View>
       )}
 
-      <View style={styles.actionContainer}>
-        <TouchableOpacity
-          style={styles.cadastrar}
-          onPress={handleRegisterChecklistQuestion}
-        >
-          <Text style={styles.textoBotao}>
+      <View className="mt-8">
+        <Touchable.Container onPress={handleRegisterChecklistQuestion}>
+          <Touchable.Content>
             {postQuestion.isPending ? "Cadastrando..." : "Cadastrar Pergunta"}
-          </Text>
-        </TouchableOpacity>
+          </Touchable.Content>
+        </Touchable.Container>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-  },
-
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
-
-  perguntasContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginVertical: 10,
-  },
-
-  radioContainer: {
-    display: "flex",
-    gap: 8,
-  },
-
-  radioRow: {
-    display: "flex",
-    flexDirection: "row",
-  },
-
-  tag: {
-    backgroundColor: "#c4c4c46f",
-    padding: 8,
-    marginRight: 8,
-    marginBottom: 8,
-    borderRadius: 8,
-  },
-
-  newTag: {
-    backgroundColor: "#28ec7a",
-    padding: 8,
-    marginRight: 8,
-    marginBottom: 8,
-    borderRadius: 8,
-  },
-
-  botaoAdicionar: {
-    backgroundColor: "#ff6a00",
-    padding: 10,
-    borderRadius: 8,
-    width: 120,
-    alignItems: "center",
-    marginVertical: 4,
-    marginBottom: 30,
-  },
-
-  botaoDesativado: {
-    opacity: 0.5,
-  },
-
-  textoBotao: {
-    color: "white",
-    fontWeight: "bold",
-  },
-
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
@@ -393,39 +354,6 @@ const styles = StyleSheet.create({
     marginVertical: 6,
     marginBottom: 20,
     borderRadius: 6,
-  },
-
-  row: {
-    flexDirection: "row",
-    gap: 20,
-    marginVertical: 10,
-  },
-
-  tipo: {
-    borderWidth: 1,
-    padding: 8,
-    borderRadius: 6,
-  },
-
-  salvar: {
-    backgroundColor: "#ff6a00",
-    padding: 12,
-    borderRadius: 8,
-    marginTop: 10,
-    alignItems: "center",
-    width: "48%",
-  },
-
-  cancelar: {
-    backgroundColor: "transparent",
-    padding: 12,
-    borderRadius: 8,
-    marginTop: 10,
-    alignItems: "center",
-    color: "#000",
-    borderWidth: 1,
-    borderColor: "#000",
-    width: "48%",
   },
 
   dropdown: {
@@ -436,22 +364,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 20,
     marginVertical: 6,
-  },
-
-  actionContainer: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: "4%",
-    marginVertical: 12,
-  },
-
-  cadastrar: {
-    backgroundColor: "#ff6a00",
-    padding: 12,
-    borderRadius: 8,
-    marginTop: 10,
-    alignItems: "center",
-    width: "100%",
   },
 });

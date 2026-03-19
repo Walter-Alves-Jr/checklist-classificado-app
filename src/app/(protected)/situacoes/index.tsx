@@ -1,13 +1,8 @@
 import { getClassificationsLocalStorage } from "@/src/localStorage/services/localStorageService";
+import { Touchable } from "@/src/shared/components/Touchable";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function Situacoes() {
   const [dados, setDados] = useState<any[]>([]);
@@ -28,25 +23,36 @@ export default function Situacoes() {
 
   return (
     <ScrollView style={styles.container}>
-      <TouchableOpacity style={styles.voltar} onPress={() => router.back()}>
-        <Text style={{ color: "white" }}>← Voltar</Text>
-      </TouchableOpacity>
+      <Touchable.Container
+        className="bg-gray-800 w-24"
+        onPress={() => router.push("/")}
+      >
+        <Touchable.Content className="text-white">← Voltar</Touchable.Content>
+      </Touchable.Container>
 
       <Text style={styles.title}>Situação das Classificações</Text>
 
-      <View style={styles.card}>
-        <Text style={styles.label}>Realizadas</Text>
-        <Text style={styles.valor}>{realizadas.length}</Text>
-      </View>
+      <View className="flex flex-1 flex-col gap-2">
+        <View className="border border-gray-400 rounded-md p-4 font-bold">
+          <Text className="font-bold">Realizadas</Text>
+          <Text className="text-2xl font-bold text-emerald-700">
+            {realizadas.length}
+          </Text>
+        </View>
 
-      <View style={styles.card}>
-        <Text style={styles.label}>Pendentes</Text>
-        <Text style={styles.valor}>{pendentes.length}</Text>
-      </View>
+        <View className="border border-gray-400 rounded-md p-4">
+          <Text className="font-bold">Pendentes</Text>
+          <Text className="text-2xl font-bold text-yellow-500">
+            {pendentes.length}
+          </Text>
+        </View>
 
-      <View style={styles.card}>
-        <Text style={styles.label}>Recusadas</Text>
-        <Text style={styles.valor}>{recusadas.length}</Text>
+        <View className="border border-gray-400 rounded-md p-4">
+          <Text className="font-bold">Recusadas</Text>
+          <Text className="text-2xl font-bold text-red-700">
+            {recusadas.length}
+          </Text>
+        </View>
       </View>
     </ScrollView>
   );

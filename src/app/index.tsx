@@ -1,7 +1,13 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
+import { clients } from "../config/clientConfig";
+import { Logo } from "../shared/components/Logo";
+import { Touchable } from "../shared/components/Touchable";
+import { useTheme } from "../theme/ThemeProvider";
 
 export default function Index() {
+  const { setClient } = useTheme();
   const loadArmazens = () => {
     router.push("/armazens");
   };
@@ -22,56 +28,45 @@ export default function Index() {
     router.push("/situacoes");
   };
 
+  async function handleLogin() {
+    const client = clients.system;
+    setClient(client);
+
+    await AsyncStorage.setItem("client", JSON.stringify(client));
+  }
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Yard Checklist</Text>
+    <View className="flex flex-1 justify-center p-7">
+      <Text className="text-3xl text-center mb-7">Yard Checklist</Text>
 
-      <TouchableOpacity style={styles.botao} onPress={loadArmazens}>
-        <Text style={styles.textoBotao}>Iniciar Checklist</Text>
-      </TouchableOpacity>
+      <Touchable.Container onPress={loadArmazens}>
+        <Touchable.Content>Iniciar Checklist</Touchable.Content>
+      </Touchable.Container>
 
-      <TouchableOpacity style={styles.botao} onPress={abrirPerguntas}>
-        <Text style={styles.textoBotao}>Cadastrar Perguntas</Text>
-      </TouchableOpacity>
+      <Touchable.Container onPress={abrirPerguntas}>
+        <Touchable.Content>Cadastrar Perguntas</Touchable.Content>
+      </Touchable.Container>
 
-      <TouchableOpacity style={styles.botao} onPress={abrirSincronizar}>
-        <Text style={styles.textoBotao}>Sincronizar Dados</Text>
-      </TouchableOpacity>
+      <Touchable.Container onPress={abrirSincronizar}>
+        <Touchable.Content>Sincronizar Dados</Touchable.Content>
+      </Touchable.Container>
 
-      <TouchableOpacity style={styles.botao} onPress={abrirClassificador}>
-        <Text style={styles.textoBotao}>Classificador de Grãos</Text>
-      </TouchableOpacity>
+      <Touchable.Container onPress={abrirClassificador}>
+        <Touchable.Content>Classificador de Grãos</Touchable.Content>
+      </Touchable.Container>
 
-      <TouchableOpacity style={styles.botao} onPress={abrirSituacao}>
-        <Text style={styles.textoBotao}>Situação Classificações</Text>
-      </TouchableOpacity>
+      <Touchable.Container onPress={abrirSituacao}>
+        <Touchable.Content>Situação Classificações</Touchable.Content>
+      </Touchable.Container>
+
+      <Touchable.Container>
+        <Touchable.Content onPress={handleLogin}>
+          Teste de tema
+        </Touchable.Content>
+      </Touchable.Container>
+
+      <Text>Imagem do cliente logado: </Text>
+      <Logo />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 30,
-  },
-
-  title: {
-    fontSize: 28,
-    textAlign: "center",
-    marginBottom: 40,
-  },
-
-  botao: {
-    backgroundColor: "#ff6a00",
-    padding: 18,
-    borderRadius: 8,
-    marginBottom: 15,
-    alignItems: "center",
-  },
-
-  textoBotao: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-});

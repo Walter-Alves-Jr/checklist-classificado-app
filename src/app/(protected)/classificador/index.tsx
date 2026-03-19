@@ -1,16 +1,11 @@
 import { generateClassificationPDF } from "@/src/features/classificador/services/classificadorService";
 import { registerClassificationLocalStorage } from "@/src/localStorage/services/localStorageService";
+import { Touchable } from "@/src/shared/components/Touchable";
 import { sendWebhookYMS } from "@/src/shared/services/webHookYMSService";
 import { Picker } from "@react-native-picker/picker";
 import { router } from "expo-router";
 import { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 
 export default function Classificador() {
   const [agendamento, setAgendamento] = useState("");
@@ -180,9 +175,9 @@ export default function Classificador() {
         onChangeText={setGerminados}
       />
 
-      <TouchableOpacity style={styles.botao} onPress={classificar}>
-        <Text style={styles.textoBotao}>Classificar</Text>
-      </TouchableOpacity>
+      <Touchable.Container onPress={classificar}>
+        <Touchable.Content>Classificar</Touchable.Content>
+      </Touchable.Container>
     </View>
   );
 }

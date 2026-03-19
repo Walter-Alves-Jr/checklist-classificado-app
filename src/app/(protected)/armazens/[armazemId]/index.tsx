@@ -1,6 +1,7 @@
 import { useChecklistByStorage } from "@/src/features/checklist/hooks/queries/useChecklistByStorage";
+import { Touchable } from "@/src/shared/components/Touchable";
 import { useLocalSearchParams } from "expo-router";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
 
 export default function Checklists() {
   const { armazemId } = useLocalSearchParams<{
@@ -17,8 +18,8 @@ export default function Checklists() {
   // Alterar seleção de armazens no inicio de checklist para compor um select com multiplos armazens para ser selecionado pelo usuário, permitindo uma busca por filtro também.
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Selecionar Checklist</Text>
+    <View className="flex flex-1 justify-center p-7">
+      <Text className="text-3xl text-center mb-7">Selecionar Checklist</Text>
 
       {/* todo: alterar para toast */}
       {isPending && <Text>Loading...</Text>}
@@ -28,41 +29,13 @@ export default function Checklists() {
 
       {result &&
         result.map((item: any) => (
-          <TouchableOpacity
+          <Touchable.Container
             key={item.id}
-            style={styles.botao}
             onPress={() => selectedCheckList(item.id)}
           >
-            <Text style={styles.texto}>{item.name}</Text>
-          </TouchableOpacity>
+            <Touchable.Content>{item.name}</Touchable.Content>
+          </Touchable.Container>
         ))}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 30,
-  },
-
-  title: {
-    fontSize: 26,
-    marginBottom: 40,
-    textAlign: "center",
-  },
-
-  botao: {
-    backgroundColor: "#ff6a00",
-    padding: 18,
-    borderRadius: 8,
-    marginBottom: 15,
-    alignItems: "center",
-  },
-
-  texto: {
-    color: "white",
-    fontWeight: "bold",
-  },
-});
