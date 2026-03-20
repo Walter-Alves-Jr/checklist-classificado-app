@@ -1,14 +1,14 @@
 import { useTheme } from "./ThemeProvider";
 
 export function useBrand() {
-  const { client } = useTheme();
+  const { theme, client } = useTheme();
 
   return {
     colors: {
-      primary: client?.theme.primary,
-      secondary: client?.theme.secondary,
-      background: client?.theme.background,
-      text: client?.theme.text,
+      primary: theme?.primary,
+      secondary: theme?.secondary,
+      background: theme?.background,
+      text: theme?.text,
     },
     logo: client?.logo,
     name: client?.name,

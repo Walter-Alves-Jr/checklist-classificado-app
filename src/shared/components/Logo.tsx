@@ -6,5 +6,10 @@ export function Logo() {
 
   if (!logo) return null;
 
-  return <Image source={{ uri: logo }} style={{ width: 200, height: 200 }} />;
+  return (
+    <Image
+      source={{ uri: logo }}
+      style={{ width: 200, height: 200, borderRadius: 8 }}
+    />
+  );
 }
