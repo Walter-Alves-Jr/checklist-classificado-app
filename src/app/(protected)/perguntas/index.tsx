@@ -229,7 +229,7 @@ export default function CadastroPerguntas() {
           disabled={addMode}
           style={addMode && { opacity: 0.5 }}
           onPress={() => setAddMode(true)}
-          className="w-32"
+          className="w-32 mb-5"
         >
           <Touchable.Content>Adicionar +</Touchable.Content>
         </Touchable.Container>
@@ -240,7 +240,7 @@ export default function CadastroPerguntas() {
       {/* FORMULÁRIO */}
 
       {addMode && (
-        <View className="border rounded-md border-slate-300 p-3">
+        <View className="border rounded-md border-slate-300 p-3 mb-5">
           <Text className="text-xl mb-2">Adicionar perguntas ao Checklist</Text>
           <Text>Pergunta</Text>
 
@@ -335,7 +335,7 @@ export default function CadastroPerguntas() {
         </View>
       )}
 
-      <View className="mt-8">
+      <View>
         <Touchable.Container onPress={handleRegisterChecklistQuestion}>
           <Touchable.Content>
             {postQuestion.isPending ? "Cadastrando..." : "Cadastrar Pergunta"}

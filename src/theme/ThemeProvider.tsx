@@ -1,28 +1,20 @@
-import { ClientConfig } from "@/src/config/clientConfig";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext } from "react";
+import { IClientResponse, IClientThemeResponse } from "../app/(auth)/IClient";
+import { useAuth } from "../auth/AuthProvider";
 
 type ThemeContextProps = {
-  client: ClientConfig | null;
-  setClient: (client: ClientConfig) => void;
+  theme: IClientThemeResponse | null;
+  client: IClientResponse | undefined;
 };
 
 const ThemeContext = createContext({} as ThemeContextProps);
 
 export function ThemeProvider({ children }: any) {
-  const [client, setClient] = useState<ClientConfig | null>(null);
-
-  async function loadClient() {
-    const saved = await AsyncStorage.getItem("client");
-    if (saved && saved !== undefined) setClient(JSON.parse(saved));
-  }
-
-  useEffect(() => {
-    loadClient();
-  }, []);
+  const { client } = useAuth();
+  const theme = client?.theme ?? null;
 
   return (
-    <ThemeContext.Provider value={{ client, setClient }}>
+    <ThemeContext.Provider value={{ theme, client }}>
       {children}
     </ThemeContext.Provider>
   );

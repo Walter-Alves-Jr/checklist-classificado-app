@@ -2,10 +2,10 @@ import { useAuth } from "@/src/auth/AuthProvider";
 import { Redirect, Slot } from "expo-router";
 import { ActivityIndicator, View } from "react-native";
 
-// se exisitir usuário/token -> permita que ele veja a tela inicial do app
-// se não existir usuário/token -> redireciona ele para a tela de login
+// se usuário logado -> redireciona ele para a página inicial
+// se usuário deslogado/sem token -> permita que ele veja a tela para efetuar login
 
-export default function ProtectedLayout() {
+export default function AuthLayout() {
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
@@ -16,8 +16,8 @@ export default function ProtectedLayout() {
     );
   }
 
-  if (!isAuthenticated) {
-    return <Redirect href="/login" />;
+  if (isAuthenticated) {
+    return <Redirect href="/" />;
   }
 
   return <Slot />;

@@ -25,12 +25,16 @@ export default function Sincronizar() {
   };
 
   return (
-    <View className="flex flex-1 items-center justify-center">
-      <Text className="text-xl mb-2">Sincronização</Text>
+    <View className="flex flex-1 justify-center">
+      <View className="flex justify-center p-7 text-center">
+        <Text className="text-2xl mb-7 text-center">
+          Sincronização de dados locais
+        </Text>
 
-      <Touchable.Container onPress={sincronizar}>
-        <Touchable.Content>Sincronizar</Touchable.Content>
-      </Touchable.Container>
+        <Touchable.Container onPress={sincronizar}>
+          <Touchable.Content>Sincronizar</Touchable.Content>
+        </Touchable.Container>
+      </View>
     </View>
   );
 }
