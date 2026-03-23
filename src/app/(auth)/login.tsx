@@ -1,9 +1,10 @@
 import { useAuth } from "@/src/auth/AuthProvider";
+import AppText from "@/src/shared/components/Text/text";
 import { Touchable } from "@/src/shared/components/Touchable";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
-import { Image, Text, TextInput, View } from "react-native";
+import { Image, TextInput, View } from "react-native";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -29,16 +30,16 @@ export default function LoginScreen() {
   }
 
   return (
-    <View className="flex-1 items-center justify-center px-6 bg-white">
-      <View className="flex items-center justify-center mb-6">
-        <Text className="absolute bottom-2 text-[#ff3e04] font-bold text-4xl text-center">
+    <View className="flex-1 items-center justify-center bg-white px-6">
+      <View className="mb-6 flex items-center justify-center">
+        <AppText className="absolute bottom-4 text-center text-4xl font-bold text-[#ff3e04]">
           checklist
-        </Text>
+        </AppText>
         <Image
           source={{
             uri: "https://institucional.nstech.com.br/core/webp-express/webp-images/themes/theme-wp/src/assets/images/logos/nstech.png.webp",
           }}
-          className="w-32 h-32"
+          className="h-32 w-32"
           resizeMode="contain"
         />
       </View>
@@ -48,16 +49,18 @@ export default function LoginScreen() {
         rules={{ required: "Login é obrigatório" }}
         name="username"
         render={({ field: { value, onChange }, fieldState: { error } }) => (
-          <View className="w-full mb-4">
+          <View className="mb-4 w-full">
             <TextInput
               placeholder="Login"
               value={value}
               onChangeText={onChange}
-              className="border border-gray-300 rounded-lg p-4 outline-1 outline-orange-500"
+              className="rounded-lg border border-gray-300 p-4 outline-1 outline-orange-500"
               {...register("username")}
             />
             {error && (
-              <Text className="text-red-500 mt-1 text-sm">{error.message}</Text>
+              <AppText className="mt-1 text-sm text-red-500">
+                {error.message}
+              </AppText>
             )}
           </View>
         )}
@@ -68,17 +71,19 @@ export default function LoginScreen() {
         name="password"
         rules={{ required: "Senha é obrigatória" }}
         render={({ field: { value, onChange }, fieldState: { error } }) => (
-          <View className="w-full mb-6">
+          <View className="mb-6 w-full">
             <TextInput
               placeholder="Senha"
               secureTextEntry
               value={value}
               onChangeText={onChange}
-              className="border border-gray-300 rounded-lg p-4 outline-1 outline-orange-500"
+              className="rounded-lg border border-gray-300 p-4 outline-1 outline-orange-500"
               {...register("password")}
             />
             {error && (
-              <Text className="text-red-500 mt-1 text-sm">{error.message}</Text>
+              <AppText className="mt-1 text-sm text-red-500">
+                {error.message}
+              </AppText>
             )}
           </View>
         )}
@@ -86,9 +91,9 @@ export default function LoginScreen() {
 
       <Touchable.Container
         onPress={handleSubmit(handleLogin)}
-        className="w-full bg-orange-500 rounded-lg items-center"
+        className="w-full items-center rounded-lg bg-orange-500"
       >
-        <Touchable.Content className="text-white font-bold text-lg">
+        <Touchable.Content className="text-lg font-bold text-white">
           Entrar
         </Touchable.Content>
       </Touchable.Container>

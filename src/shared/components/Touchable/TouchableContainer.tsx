@@ -13,18 +13,7 @@ export default function TouchableContainer(props: TouchableContainerProps) {
     <TouchableOpacity
       {...rest}
       style={[tw.bgPrimary, style]}
-      className={`
-        flex 
-        items-center 
-        bg-orange-500
-        disabled:bg-orange-200 
-        p-3 
-        mb-4 
-        rounded-lg 
-        transition-colors 
-        duration-200 
-        hover:brightness-105
-         ${className}`}
+      className={`mb-4 flex items-center rounded-lg bg-orange-500 p-3 transition-colors duration-200 hover:brightness-105 disabled:bg-orange-200 ${className}`}
     >
       {children}
     </TouchableOpacity>

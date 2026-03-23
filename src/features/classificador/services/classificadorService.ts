@@ -8,6 +8,7 @@ type RegraProduto = {
   tipo2: RegraTipo;
 };
 
+// cadastrar no json-server
 const MAPA_RULES: Record<string, RegraProduto> = {
   soja: {
     tipo1: {
@@ -36,14 +37,11 @@ export type Cultura = "Soja" | "Milho" | "Trigo";
 
 export interface DadosClassificacao {
   cultura: Cultura;
-
   umidade: number;
   impureza: number;
-
   ardidos?: number;
   mofados?: number;
   germinados?: number;
-
   quebrados?: number;
   pesoHectolitro?: number;
 }
@@ -53,6 +51,7 @@ export interface ResultadoClassificacao {
   observacao: string;
 }
 
+//todo: flag = mapa default; se não, utilizar calculo definido pelo usuario
 export function classificarMAPA(d: DadosClassificacao): ResultadoClassificacao {
   if (d.cultura === "Soja") {
     const totalAvariados =
@@ -96,6 +95,7 @@ export function classificarMAPA(d: DadosClassificacao): ResultadoClassificacao {
   return { tipo: "FORA DE TIPO", observacao: "Cultura inválida" };
 }
 
+// todo: melhorar ratingcalculation
 export function ratingcalculation(
   produto: string,
   valores: any,
@@ -126,6 +126,7 @@ export function ratingcalculation(
   return "FORA_PADRAO";
 }
 
+//todo: melhorar design pdf
 export function generateClassificationPDF(data: any) {
   if (!data) return;
 

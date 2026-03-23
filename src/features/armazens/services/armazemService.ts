@@ -1,4 +1,4 @@
-import { api } from "@/src/lib/axios";
+import { api } from "@/src/lib/axios/axios";
 import { CheckListStorageRelationRequest } from "../../checklist/types/ChecklistStorageRelationType";
 import { ChecklistType } from "../../checklist/types/ChecklistType";
 import { QuestionChecklistType } from "../../perguntas/types/QuestionChecklistType";

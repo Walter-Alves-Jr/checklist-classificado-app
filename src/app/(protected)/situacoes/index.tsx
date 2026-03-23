@@ -1,8 +1,9 @@
 import { getClassificationsLocalStorage } from "@/src/localStorage/services/localStorageService";
+import AppText from "@/src/shared/components/Text/text";
 import { Touchable } from "@/src/shared/components/Touchable";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
 export default function Situacoes() {
   const [dados, setDados] = useState<any[]>([]);
@@ -24,34 +25,34 @@ export default function Situacoes() {
   return (
     <ScrollView style={styles.container}>
       <Touchable.Container
-        className="bg-gray-800 w-24"
+        className="w-24 bg-gray-800"
         onPress={() => router.push("/")}
       >
         <Touchable.Content className="text-white">← Voltar</Touchable.Content>
       </Touchable.Container>
 
-      <Text style={styles.title}>Situação das Classificações</Text>
+      <AppText style={styles.title}>Situação das Classificações</AppText>
 
       <View className="flex flex-1 flex-col gap-2">
-        <View className="border border-gray-400 rounded-md p-4 font-bold">
-          <Text className="font-bold">Realizadas</Text>
-          <Text className="text-2xl font-bold text-emerald-700">
+        <View className="rounded-md border border-gray-400 p-4 font-bold">
+          <AppText className="font-bold">Realizadas</AppText>
+          <AppText className="text-2xl font-bold text-emerald-700">
             {realizadas.length}
-          </Text>
+          </AppText>
         </View>
 
-        <View className="border border-gray-400 rounded-md p-4">
-          <Text className="font-bold">Pendentes</Text>
-          <Text className="text-2xl font-bold text-yellow-500">
+        <View className="rounded-md border border-gray-400 p-4">
+          <AppText className="font-bold">Pendentes</AppText>
+          <AppText className="text-2xl font-bold text-yellow-500">
             {pendentes.length}
-          </Text>
+          </AppText>
         </View>
 
-        <View className="border border-gray-400 rounded-md p-4">
-          <Text className="font-bold">Recusadas</Text>
-          <Text className="text-2xl font-bold text-red-700">
+        <View className="rounded-md border border-gray-400 p-4">
+          <AppText className="font-bold">Recusadas</AppText>
+          <AppText className="text-2xl font-bold text-red-700">
             {recusadas.length}
-          </Text>
+          </AppText>
         </View>
       </View>
     </ScrollView>

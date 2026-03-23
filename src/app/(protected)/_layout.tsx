@@ -1,6 +1,6 @@
 import { useAuth } from "@/src/auth/AuthProvider";
 import { Redirect, Slot } from "expo-router";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, ScrollView } from "react-native";
 
 // se exisitir usuário/token -> permita que ele veja a tela inicial do app
 // se não existir usuário/token -> redireciona ele para a tela de login
@@ -10,9 +10,9 @@ export default function ProtectedLayout() {
 
   if (isLoading) {
     return (
-      <View className="flex-1 items-center justify-center">
+      <ScrollView className="flex-1 items-center justify-center">
         <ActivityIndicator />
-      </View>
+      </ScrollView>
     );
   }
 

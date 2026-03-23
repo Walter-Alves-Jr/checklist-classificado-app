@@ -1,4 +1,4 @@
-import { api } from "@/src/lib/axios";
+import { api } from "@/src/lib/axios/axios";
 import { IClientRequest, IClientResponse } from "./IClient";
 
 export async function postLogin({

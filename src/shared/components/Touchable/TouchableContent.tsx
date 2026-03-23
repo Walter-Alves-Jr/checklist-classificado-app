@@ -13,7 +13,7 @@ export default function TouchableContent(props: TouchableContentProps) {
     <Text
       {...rest}
       style={[tw.textPrimary, style]}
-      className={`text-white font-bold ${className}`}
+      className={`font-bold text-white ${className}`}
     >
       {children}
     </Text>

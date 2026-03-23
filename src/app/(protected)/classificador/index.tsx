@@ -1,11 +1,13 @@
 import { generateClassificationPDF } from "@/src/features/classificador/services/classificadorService";
 import { registerClassificationLocalStorage } from "@/src/localStorage/services/localStorageService";
+import HeaderPage from "@/src/shared/components/Header/header-page";
+import AppText from "@/src/shared/components/Text/text";
 import { Touchable } from "@/src/shared/components/Touchable";
 import { sendWebhookYMS } from "@/src/shared/services/webHookYMSService";
 import { Picker } from "@react-native-picker/picker";
 import { router } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TextInput } from "react-native";
 
 export default function Classificador() {
   const [agendamento, setAgendamento] = useState("");
@@ -95,90 +97,97 @@ export default function Classificador() {
     router.back();
   };
 
+  function goBack() {
+    router.back();
+  }
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.titulo}>Classificação de Grãos</Text>
+    <>
+      <HeaderPage title="Classificador de Grãos" goBack={goBack} />
+      <ScrollView style={styles.container}>
+        <AppText>Classificação de Grãos</AppText>
 
-      <TextInput
-        placeholder="Agendamento"
-        style={styles.input}
-        value={agendamento}
-        onChangeText={setAgendamento}
-      />
-      <TextInput
-        placeholder="Placa"
-        style={styles.input}
-        value={placa}
-        onChangeText={setPlaca}
-      />
-      <TextInput
-        placeholder="Motorista"
-        style={styles.input}
-        value={motorista}
-        onChangeText={setMotorista}
-      />
-      <TextInput
-        placeholder="Transportadora"
-        style={styles.input}
-        value={transportadora}
-        onChangeText={setTransportadora}
-      />
-      <TextInput
-        placeholder="Produto"
-        style={styles.input}
-        value={produto}
-        onChangeText={setProduto}
-      />
-      <TextInput
-        placeholder="Terminal"
-        style={styles.input}
-        value={terminal}
-        onChangeText={setTerminal}
-      />
+        <TextInput
+          placeholder="Agendamento"
+          style={styles.input}
+          value={agendamento}
+          onChangeText={setAgendamento}
+        />
+        <TextInput
+          placeholder="Placa"
+          style={styles.input}
+          value={placa}
+          onChangeText={setPlaca}
+        />
+        <TextInput
+          placeholder="Motorista"
+          style={styles.input}
+          value={motorista}
+          onChangeText={setMotorista}
+        />
+        <TextInput
+          placeholder="Transportadora"
+          style={styles.input}
+          value={transportadora}
+          onChangeText={setTransportadora}
+        />
+        <TextInput
+          placeholder="Produto"
+          style={styles.input}
+          value={produto}
+          onChangeText={setProduto}
+        />
+        <TextInput
+          placeholder="Terminal"
+          style={styles.input}
+          value={terminal}
+          onChangeText={setTerminal}
+        />
 
-      <Text>Cultura</Text>
+        <Text>Cultura</Text>
 
-      <Picker selectedValue={cultura} onValueChange={(v) => setCultura(v)}>
-        <Picker.Item label="Soja" value="Soja" />
-        <Picker.Item label="Milho" value="Milho" />
-        <Picker.Item label="Trigo" value="Trigo" />
-      </Picker>
+        <Picker selectedValue={cultura} onValueChange={(v) => setCultura(v)}>
+          <Picker.Item label="Soja" value="Soja" />
+          <Picker.Item label="Milho" value="Milho" />
+          <Picker.Item label="Trigo" value="Trigo" />
+        </Picker>
 
-      <TextInput
-        placeholder="Umidade (%)"
-        style={styles.input}
-        value={umidade}
-        onChangeText={setUmidade}
-      />
-      <TextInput
-        placeholder="Impureza (%)"
-        style={styles.input}
-        value={impureza}
-        onChangeText={setImpureza}
-      />
-      <TextInput
-        placeholder="Ardidos (%)"
-        style={styles.input}
-        value={ardidos}
-        onChangeText={setArdidos}
-      />
-      <TextInput
-        placeholder="Mofados (%)"
-        style={styles.input}
-        value={mofados}
-        onChangeText={setMofados}
-      />
-      <TextInput
-        placeholder="Germinados (%)"
-        style={styles.input}
-        value={germinados}
-        onChangeText={setGerminados}
-      />
+        <TextInput
+          placeholder="Umidade (%)"
+          style={styles.input}
+          value={umidade}
+          onChangeText={setUmidade}
+        />
+        <TextInput
+          placeholder="Impureza (%)"
+          style={styles.input}
+          value={impureza}
+          onChangeText={setImpureza}
+        />
+        <TextInput
+          placeholder="Ardidos (%)"
+          style={styles.input}
+          value={ardidos}
+          onChangeText={setArdidos}
+        />
+        <TextInput
+          placeholder="Mofados (%)"
+          style={styles.input}
+          value={mofados}
+          onChangeText={setMofados}
+        />
+        <TextInput
+          placeholder="Germinados (%)"
+          style={styles.input}
+          value={germinados}
+          onChangeText={setGerminados}
+        />
 
-      <Touchable.Container onPress={classificar}>
-        <Touchable.Content>Classificar</Touchable.Content>
-      </Touchable.Container>
-    </View>
+        <Touchable.Container onPress={classificar}>
+          <Touchable.Content>Classificar</Touchable.Content>
+        </Touchable.Container>
+      </ScrollView>
+    </>
   );
 }
 

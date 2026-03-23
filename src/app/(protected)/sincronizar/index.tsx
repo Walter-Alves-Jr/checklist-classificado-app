@@ -1,8 +1,11 @@
 import { getChecklistsLocalStorage } from "@/src/localStorage/services/localStorageService";
+import HeaderPage from "@/src/shared/components/Header/header-page";
+import AppText from "@/src/shared/components/Text/text";
 import { Touchable } from "@/src/shared/components/Touchable";
 import { sendWebhookYMS } from "@/src/shared/services/webHookYMSService";
+import { router } from "expo-router";
 import { useState } from "react";
-import { Text, View } from "react-native";
+import { ScrollView, View } from "react-native";
 
 export default function Sincronizar() {
   const [status, setStatus] = useState("");
@@ -24,17 +27,25 @@ export default function Sincronizar() {
     }
   };
 
-  return (
-    <View className="flex flex-1 justify-center">
-      <View className="flex justify-center p-7 text-center">
-        <Text className="text-2xl mb-7 text-center">
-          Sincronização de dados locais
-        </Text>
+  function goBack() {
+    router.back();
+  }
 
-        <Touchable.Container onPress={sincronizar}>
-          <Touchable.Content>Sincronizar</Touchable.Content>
-        </Touchable.Container>
-      </View>
-    </View>
+  return (
+    <>
+      <HeaderPage title="Sincronizar dados" goBack={goBack} />
+
+      <ScrollView className="flex flex-1 justify-center">
+        <View className="flex justify-center p-7 text-center">
+          <AppText className="mb-7 text-center text-2xl">
+            Sincronização de dados locais
+          </AppText>
+
+          <Touchable.Container onPress={sincronizar}>
+            <Touchable.Content>Sincronizar</Touchable.Content>
+          </Touchable.Container>
+        </View>
+      </ScrollView>
+    </>
   );
 }

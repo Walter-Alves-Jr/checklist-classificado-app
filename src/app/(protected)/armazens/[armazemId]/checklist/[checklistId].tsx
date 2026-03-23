@@ -2,11 +2,12 @@ import { useGetStorageNameQueryData } from "@/src/features/armazens/hooks/storag
 import { useChecklistResponse } from "@/src/features/checklist/hooks/mutations/useChecklistResponse";
 import { useGetChecklistNameQueryData } from "@/src/features/checklist/hooks/queries/queryData/useGetChecklistNameQueryData";
 import { useQuestionsChecklist } from "@/src/features/checklist/hooks/queries/useQuestionsChecklist";
+import AppText from "@/src/shared/components/Text/text";
 import { Touchable } from "@/src/shared/components/Touchable";
 import { useGps } from "@/src/shared/hooks/useGps";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function Checklist() {
   const [respostas, setRespostas] = useState<{ [key: string]: string }>({});
@@ -70,12 +71,12 @@ export default function Checklist() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {checklistNameByStorage !== "" && (
-        <Text className="text-2xl mb-6">{checklistNameByStorage}</Text>
+        <AppText className="mb-6 text-2xl">{checklistNameByStorage}</AppText>
       )}
 
-      <Text className="text-lg mb-2">Lista de perguntas:</Text>
+      <AppText className="mb-2 text-lg">Lista de perguntas:</AppText>
 
       {isPending && <Text>Loading...</Text>}
       {isError && <Text>Erro ao obter perguntas.</Text>}
@@ -83,7 +84,7 @@ export default function Checklist() {
       {result &&
         result.map((item, index) => (
           <View key={index}>
-            <Text className="mb-1 text-sm">{item.question}</Text>
+            <AppText className="mb-1 text-sm">{item.question}</AppText>
 
             <View style={styles.botoes}>
               {/* Alterar para check e/ou radio */}
@@ -111,7 +112,7 @@ export default function Checklist() {
             : "Finalizar Checklist"}
         </Touchable.Content>
       </Touchable.Container>
-    </View>
+    </ScrollView>
   );
 }
 

@@ -7,11 +7,20 @@ import { useChecklist } from "@/src/features/checklist/hooks/queries/useChecklis
 import { useQuestionsChecklist } from "@/src/features/checklist/hooks/queries/useQuestionsChecklist";
 import { useQuestion } from "@/src/features/perguntas/hooks/useQuestion";
 import { QuestionChecklistType } from "@/src/features/perguntas/types/QuestionChecklistType";
+import HeaderPage from "@/src/shared/components/Header/header-page";
+import AppText from "@/src/shared/components/Text/text";
 import { Touchable } from "@/src/shared/components/Touchable";
 import { normalizeTextUtil } from "@/src/shared/utils";
 import { useTwTheme } from "@/src/theme/useTwTheme";
+import { router } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, TextInput, Text as TextNative, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  Text as TextNative,
+  View,
+} from "react-native";
 
 import { Dropdown } from "react-native-element-dropdown";
 import { RadioButton, Text } from "react-native-paper";
@@ -155,194 +164,211 @@ export default function CadastroPerguntas() {
     setQuestions([]);
   }
 
+  function goBack() {
+    router.back();
+  }
+
   return (
-    <View className="p-5">
-      <Text className="text-2xl mb-7">Cadastro de Perguntas</Text>
+    <>
+      <HeaderPage title="Cadastro de Perguntas" goBack={goBack} />
+      <ScrollView className="p-4">
+        <Text>Armazém</Text>
 
-      <Text>Armazém</Text>
+        <Dropdown
+          style={styles.dropdown}
+          data={storagesResult ?? []}
+          labelField="name"
+          valueField="id"
+          placeholder={isPendingStorages ? "Loading..." : "Selecione o Armazém"}
+          value={storageId}
+          onChange={(storage) => onChangeStorage(storage.id)}
+          disable={isPendingStorages}
+        />
 
-      <Dropdown
-        style={styles.dropdown}
-        data={storagesResult ?? []}
-        labelField="name"
-        valueField="id"
-        placeholder={isPendingStorages ? "Loading..." : "Selecione o Armazém"}
-        value={storageId}
-        onChange={(storage) => onChangeStorage(storage.id)}
-        disable={isPendingStorages}
-      />
+        {/* CHECKLIST */}
 
-      {/* CHECKLIST */}
+        <Text>Checklist</Text>
 
-      <Text>Checklist</Text>
+        <Dropdown
+          style={styles.dropdown}
+          data={checklistsResult ?? []}
+          labelField="name"
+          valueField="id"
+          placeholder={
+            isPendingChecklists ? "Loading..." : "Selecione o Checklist"
+          }
+          value={checklistId}
+          onChange={(item) => {
+            setChecklistId(item.id);
+            setQuestions([]);
+          }}
+          disable={!storageId || isPendingChecklists}
+        />
 
-      <Dropdown
-        style={styles.dropdown}
-        data={checklistsResult ?? []}
-        labelField="name"
-        valueField="id"
-        placeholder={
-          isPendingChecklists ? "Loading..." : "Selecione o Checklist"
-        }
-        value={checklistId}
-        onChange={(item) => {
-          setChecklistId(item.id);
-          setQuestions([]);
-        }}
-        disable={!storageId || isPendingChecklists}
-      />
+        {/* PERGUNTAS EXISTENTES */}
 
-      {/* PERGUNTAS EXISTENTES */}
+        {isPendingQuestionByChecklist && checklistId && <Text>Loading...</Text>}
 
-      {isPendingQuestionByChecklist && checklistId && <Text>Loading...</Text>}
+        {checklistId &&
+          questionsByChecklist &&
+          questionsByChecklist.length > 0 && (
+            <Text>Perguntas do checklist selecionado:</Text>
+          )}
 
-      {checklistId &&
-        questionsByChecklist &&
-        questionsByChecklist.length > 0 && (
-          <Text>Perguntas do checklist selecionado:</Text>
+        {questionsByChecklist &&
+          questionsByChecklist.length === 0 &&
+          questions.length === 0 && <Text>Nenhuma pergunta cadastrada.</Text>}
+
+        <View className="mb-4 mt-2 flex flex-row gap-2">
+          {questionsByChecklist &&
+            questionsByChecklist?.map((item, index) => (
+              <View key={index} className="rounded-md bg-gray-300 p-2">
+                <Text>{item.question}</Text>
+              </View>
+            ))}
+
+          {questions &&
+            questions?.map((item, index) => (
+              <View key={index} className="rounded-md bg-emerald-500 p-2">
+                <Text>{item.question}</Text>
+              </View>
+            ))}
+        </View>
+
+        {/* BOTÃO ADICIONAR */}
+
+        {checklistId ? (
+          <Touchable.Container
+            disabled={addMode}
+            style={addMode && { opacity: 0.5 }}
+            onPress={() => setAddMode(true)}
+            className="mb-5 w-32"
+          >
+            <Touchable.Content>Adicionar +</Touchable.Content>
+          </Touchable.Container>
+        ) : (
+          <TextNative />
         )}
 
-      {questionsByChecklist &&
-        questionsByChecklist.length === 0 &&
-        questions.length === 0 && <Text>Nenhuma pergunta cadastrada.</Text>}
+        {/* FORMULÁRIO */}
 
-      <View className="flex flex-row gap-2 mt-2 mb-4">
-        {questionsByChecklist &&
-          questionsByChecklist?.map((item, index) => (
-            <View key={index} className="bg-gray-300 p-2 rounded-md">
-              <Text>{item.question}</Text>
+        {addMode && (
+          <View className="mb-5 rounded-md border border-slate-300 p-3">
+            <AppText className="mb-2 text-xl">
+              Adicionar perguntas ao Checklist
+            </AppText>
+            <Text>Pergunta</Text>
+
+            <TextInput
+              placeholder="Digite a pergunta"
+              style={styles.input}
+              value={newTextQuestion}
+              onChangeText={setNewTextQuestion}
+            />
+
+            <View className="mb-4 flex flex-col gap-y-3">
+              <View>
+                <Text>Exige foto?</Text>
+
+                <RadioButton.Group
+                  onValueChange={(newValue) =>
+                    setRequiresPhoto(JSON.parse(newValue))
+                  }
+                  value={requiresPhoto.toString()}
+                >
+                  <View style={{ flexDirection: "row", gap: 8 }}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <RadioButton
+                        value="true"
+                        color={tw.bgPrimary.backgroundColor}
+                      />
+                      <Text>Sim</Text>
+                    </View>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <RadioButton
+                        value="false"
+                        color={tw.bgPrimary.backgroundColor}
+                      />
+                      <Text>Não</Text>
+                    </View>
+                  </View>
+                </RadioButton.Group>
+              </View>
+
+              <View>
+                <Text>Tipo de resposta</Text>
+
+                <RadioButton.Group
+                  onValueChange={(newValue) => setResponseType(newValue)}
+                  value={responseType}
+                >
+                  <View style={{ flexDirection: "row", gap: 8 }}>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <RadioButton
+                        value="text"
+                        color={tw.bgPrimary.backgroundColor}
+                      />
+                      <Text>Texto</Text>
+                    </View>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <RadioButton
+                        value="number"
+                        color={tw.bgPrimary.backgroundColor}
+                      />
+                      <Text>Número</Text>
+                    </View>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <RadioButton
+                        value="multiple"
+                        color={tw.bgPrimary.backgroundColor}
+                      />
+                      <Text>Múltiplo</Text>
+                    </View>
+                  </View>
+                </RadioButton.Group>
+              </View>
             </View>
-          ))}
 
-        {questions &&
-          questions?.map((item, index) => (
-            <View key={index} className="bg-emerald-500 p-2 rounded-md">
-              <Text>{item.question}</Text>
-            </View>
-          ))}
-      </View>
-
-      {/* BOTÃO ADICIONAR */}
-
-      {checklistId ? (
-        <Touchable.Container
-          disabled={addMode}
-          style={addMode && { opacity: 0.5 }}
-          onPress={() => setAddMode(true)}
-          className="w-32 mb-5"
-        >
-          <Touchable.Content>Adicionar +</Touchable.Content>
-        </Touchable.Container>
-      ) : (
-        <TextNative />
-      )}
-
-      {/* FORMULÁRIO */}
-
-      {addMode && (
-        <View className="border rounded-md border-slate-300 p-3 mb-5">
-          <Text className="text-xl mb-2">Adicionar perguntas ao Checklist</Text>
-          <Text>Pergunta</Text>
-
-          <TextInput
-            placeholder="Digite a pergunta"
-            style={styles.input}
-            value={newTextQuestion}
-            onChangeText={setNewTextQuestion}
-          />
-
-          <View className="flex flex-col mb-4 gap-y-3">
-            <View>
-              <Text>Exige foto?</Text>
-
-              <RadioButton.Group
-                onValueChange={(newValue) =>
-                  setRequiresPhoto(JSON.parse(newValue))
-                }
-                value={requiresPhoto.toString()}
+            <View className="mb-1 flex flex-row items-center justify-center gap-2">
+              <Touchable.Container
+                onPress={handleAddQuestion}
+                className="mb-0 w-1/2"
               >
-                <View style={{ flexDirection: "row", gap: 8 }}>
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <RadioButton
-                      value="true"
-                      color={tw.bgPrimary.backgroundColor}
-                    />
-                    <Text>Sim</Text>
-                  </View>
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <RadioButton
-                      value="false"
-                      color={tw.bgPrimary.backgroundColor}
-                    />
-                    <Text>Não</Text>
-                  </View>
-                </View>
-              </RadioButton.Group>
-            </View>
+                <Touchable.Content>Salvar</Touchable.Content>
+              </Touchable.Container>
 
-            <View>
-              <Text>Tipo de resposta</Text>
-
-              <RadioButton.Group
-                onValueChange={(newValue) => setResponseType(newValue)}
-                value={responseType}
+              <Touchable.Container
+                className="mb-0 w-1/2 border border-black bg-transparent text-black"
+                style={{ backgroundColor: "transparent" }}
+                onPress={() => handleCancelar()}
               >
-                <View style={{ flexDirection: "row", gap: 8 }}>
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <RadioButton
-                      value="text"
-                      color={tw.bgPrimary.backgroundColor}
-                    />
-                    <Text>Texto</Text>
-                  </View>
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <RadioButton
-                      value="number"
-                      color={tw.bgPrimary.backgroundColor}
-                    />
-                    <Text>Número</Text>
-                  </View>
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <RadioButton
-                      value="multiple"
-                      color={tw.bgPrimary.backgroundColor}
-                    />
-                    <Text>Múltiplo</Text>
-                  </View>
-                </View>
-              </RadioButton.Group>
+                <Touchable.Content style={{ color: "black" }}>
+                  Cancelar
+                </Touchable.Content>
+              </Touchable.Container>
             </View>
           </View>
+        )}
 
-          <View className="flex items-center justify-center flex-row gap-2 mb-1">
-            <Touchable.Container
-              onPress={handleAddQuestion}
-              className="w-1/2 mb-0"
-            >
-              <Touchable.Content>Salvar</Touchable.Content>
-            </Touchable.Container>
-
-            <Touchable.Container
-              className="text-black bg-transparent border border-black w-1/2 mb-0"
-              style={{ backgroundColor: "transparent" }}
-              onPress={() => handleCancelar()}
-            >
-              <Touchable.Content style={{ color: "black" }}>
-                Cancelar
-              </Touchable.Content>
-            </Touchable.Container>
-          </View>
+        <View>
+          <Touchable.Container onPress={handleRegisterChecklistQuestion}>
+            <Touchable.Content>
+              {postQuestion.isPending ? "Cadastrando..." : "Cadastrar Pergunta"}
+            </Touchable.Content>
+          </Touchable.Container>
         </View>
-      )}
-
-      <View>
-        <Touchable.Container onPress={handleRegisterChecklistQuestion}>
-          <Touchable.Content>
-            {postQuestion.isPending ? "Cadastrando..." : "Cadastrar Pergunta"}
-          </Touchable.Content>
-        </Touchable.Container>
-      </View>
-    </View>
+      </ScrollView>
+    </>
   );
 }
 
