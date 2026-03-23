@@ -5,10 +5,10 @@ export function useBrand() {
 
   return {
     colors: {
-      primary: theme?.primary,
-      secondary: theme?.secondary,
-      background: theme?.background,
-      text: theme?.text,
+      backgroundPrimary: theme?.backgroundPrimary,
+      backgroundSecondary: theme?.backgroundSecondary,
+      textPrimary: theme?.textPrimary,
+      textSecondary: theme?.textSecondary,
     },
     logo: client?.logo,
     name: client?.name,

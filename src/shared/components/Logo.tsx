@@ -1,15 +1,10 @@
 import { useBrand } from "@/src/theme/useBrand";
-import { Image } from "react-native";
+import { Avatar } from "react-native-paper";
 
 export function Logo() {
   const { logo } = useBrand();
 
   if (!logo) return null;
 
-  return (
-    <Image
-      source={{ uri: logo }}
-      style={{ width: 200, height: 200, borderRadius: 8 }}
-    />
-  );
+  return <Avatar.Image size={40} source={require("../../assets/webler.png")} />;
 }
