@@ -1,13 +1,15 @@
 import { generateClassificationPDF } from "@/src/features/classificador/services/classificadorService";
 import { registerClassificationLocalStorage } from "@/src/localStorage/services/localStorageService";
+import { AppButton } from "@/src/shared/components/Button";
+import AppContainer from "@/src/shared/components/Container/container";
 import HeaderPage from "@/src/shared/components/Header/header-page";
 import AppText from "@/src/shared/components/Text/text";
-import { Touchable } from "@/src/shared/components/Touchable";
+import { AppTextInput } from "@/src/shared/components/TextInput/app-text-input";
 import { sendWebhookYMS } from "@/src/shared/services/webHookYMSService";
 import { Picker } from "@react-native-picker/picker";
 import { router } from "expo-router";
 import { useState } from "react";
-import { ScrollView, StyleSheet, TextInput } from "react-native";
+import { View } from "react-native";
 
 export default function Classificador() {
   const [agendamento, setAgendamento] = useState("");
@@ -104,121 +106,135 @@ export default function Classificador() {
   return (
     <>
       <HeaderPage title="Classificador de Grãos" goBack={goBack} />
-      <ScrollView style={styles.container}>
-        <AppText variant="secondary">Classificação de Grãos</AppText>
+      <AppContainer>
+        <View>
+          <AppText variant="grayDark">Agendamento*</AppText>
+          <AppTextInput
+            label="Número do agendamento"
+            value={agendamento}
+            onChangeText={setAgendamento}
+          />
+        </View>
 
-        <TextInput
-          placeholder="Agendamento"
-          style={styles.input}
-          value={agendamento}
-          onChangeText={setAgendamento}
-        />
-        <TextInput
-          placeholder="Placa"
-          style={styles.input}
-          value={placa}
-          onChangeText={setPlaca}
-        />
-        <TextInput
-          placeholder="Motorista"
-          style={styles.input}
-          value={motorista}
-          onChangeText={setMotorista}
-        />
-        <TextInput
-          placeholder="Transportadora"
-          style={styles.input}
-          value={transportadora}
-          onChangeText={setTransportadora}
-        />
-        <TextInput
-          placeholder="Produto"
-          style={styles.input}
-          value={produto}
-          onChangeText={setProduto}
-        />
-        <TextInput
-          placeholder="Terminal"
-          style={styles.input}
-          value={terminal}
-          onChangeText={setTerminal}
-        />
+        <View className="mb-5 mt-5">
+          <AppText variant="grayDark" className="mb-6 text-base">
+            Informações para transporte
+          </AppText>
 
-        <AppText variant="secondary">Cultura</AppText>
+          <View className="flex flex-col gap-3">
+            <View>
+              <AppTextInput
+                label="Placa do veículo"
+                value={placa}
+                onChangeText={setPlaca}
+              />
+            </View>
 
-        <Picker selectedValue={cultura} onValueChange={(v) => setCultura(v)}>
-          <Picker.Item label="Soja" value="Soja" />
-          <Picker.Item label="Milho" value="Milho" />
-          <Picker.Item label="Trigo" value="Trigo" />
-        </Picker>
+            <View>
+              <AppTextInput
+                label="Nome do Motorista"
+                value={motorista}
+                onChangeText={setMotorista}
+              />
+            </View>
 
-        <TextInput
-          placeholder="Umidade (%)"
-          style={styles.input}
-          value={umidade}
-          onChangeText={setUmidade}
-        />
-        <TextInput
-          placeholder="Impureza (%)"
-          style={styles.input}
-          value={impureza}
-          onChangeText={setImpureza}
-        />
-        <TextInput
-          placeholder="Ardidos (%)"
-          style={styles.input}
-          value={ardidos}
-          onChangeText={setArdidos}
-        />
-        <TextInput
-          placeholder="Mofados (%)"
-          style={styles.input}
-          value={mofados}
-          onChangeText={setMofados}
-        />
-        <TextInput
-          placeholder="Germinados (%)"
-          style={styles.input}
-          value={germinados}
-          onChangeText={setGerminados}
-        />
+            <View>
+              <AppTextInput
+                label="Nome da Transportadora"
+                value={transportadora}
+                onChangeText={setTransportadora}
+              />
+            </View>
 
-        <Touchable.Container onPress={classificar}>
-          <Touchable.Content>Classificar</Touchable.Content>
-        </Touchable.Container>
-      </ScrollView>
+            <View>
+              <AppTextInput
+                label="Nome do Produto"
+                value={produto}
+                onChangeText={setProduto}
+              />
+            </View>
+
+            <View>
+              <AppTextInput
+                label="Informe o Terminal"
+                value={terminal}
+                onChangeText={setTerminal}
+              />
+            </View>
+          </View>
+        </View>
+
+        <View>
+          <AppText variant="grayDark" className="text-base">
+            Informações do grão
+          </AppText>
+
+          <View className="mb-10 flex flex-col gap-3">
+            <View className="my-4">
+              <AppText variant="grayDark" className="font-normal">
+                Selecione o grão
+              </AppText>
+              <Picker
+                selectedValue={cultura}
+                onValueChange={(v) => setCultura(v)}
+              >
+                <Picker.Item label="Soja" value="Soja" />
+                <Picker.Item label="Milho" value="Milho" />
+                <Picker.Item label="Trigo" value="Trigo" />
+              </Picker>
+            </View>
+
+            <View>
+              <AppTextInput
+                label="Umidade (%)"
+                value={umidade}
+                onChangeText={setUmidade}
+              />
+            </View>
+
+            <View>
+              <AppTextInput
+                label="Impureza (%)"
+                value={impureza}
+                onChangeText={setImpureza}
+              />
+            </View>
+
+            <View>
+              <AppTextInput
+                label="Ardidos (%)"
+                value={ardidos}
+                onChangeText={setArdidos}
+              />
+            </View>
+
+            <View>
+              <AppTextInput
+                label="Mofados (%)"
+                value={mofados}
+                onChangeText={setMofados}
+              />
+            </View>
+
+            <View>
+              <AppTextInput
+                label="Germinados (%)"
+                value={germinados}
+                onChangeText={setGerminados}
+              />
+            </View>
+          </View>
+        </View>
+
+        <AppButton
+          onPress={classificar}
+          className="flex items-center justify-center"
+        >
+          <AppButton.Text className="text-base font-bold">
+            Classificar
+          </AppButton.Text>
+        </AppButton>
+      </AppContainer>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-
-  titulo: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
-
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 6,
-  },
-
-  botao: {
-    backgroundColor: "#ff6a00",
-    padding: 16,
-    alignItems: "center",
-    borderRadius: 8,
-  },
-
-  textoBotao: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-});

@@ -1,26 +1,28 @@
 import { useTwTheme } from "./useTwTheme";
 
 export function useBrand() {
-  const { colors, logo, name } = useTwTheme();
-
-  const {
-    backgroundPrimary,
-    backgroundSecondary,
-    textPrimary,
-    textSecondary,
-    textTertiary,
-  } = colors;
+  const { theme, logo, name } = useTwTheme();
+  const { background, text, color } = theme;
 
   return {
-    bgPrimary: {
-      backgroundColor: backgroundPrimary,
+    background: {
+      orange: {
+        backgroundColor: background.orange,
+      },
+      grayDark: {
+        backgroundColor: background.grayDark,
+      },
     },
-    bgSecondary: {
-      backgroundColor: backgroundSecondary,
+    text: {
+      grayLight: { color: text.textGrayLight },
+      grayDark: { color: text.textGrayDark },
+      orange: { color: text.textOrange },
     },
-    textPrimary: { color: textPrimary },
-    textSecondary: { color: textSecondary },
-    textTertiary: { color: textTertiary },
+    color: {
+      orange: color.orange,
+      grayLight: color.grayLight,
+      grayDark: color.grayDark,
+    },
     logo,
     name,
   };

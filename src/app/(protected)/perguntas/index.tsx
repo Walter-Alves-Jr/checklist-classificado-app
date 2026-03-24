@@ -282,7 +282,7 @@ export default function CadastroPerguntas() {
                     >
                       <RadioButton
                         value="true"
-                        color={brand.bgPrimary.backgroundColor}
+                        color={brand.background.orange.backgroundColor}
                       />
                       <Text>Sim</Text>
                     </View>
@@ -291,7 +291,7 @@ export default function CadastroPerguntas() {
                     >
                       <RadioButton
                         value="false"
-                        color={brand.bgPrimary.backgroundColor}
+                        color={brand.background.orange.backgroundColor}
                       />
                       <Text>Não</Text>
                     </View>
@@ -312,7 +312,7 @@ export default function CadastroPerguntas() {
                     >
                       <RadioButton
                         value="text"
-                        color={brand.bgPrimary.backgroundColor}
+                        color={brand.background.orange.backgroundColor}
                       />
                       <Text>Texto</Text>
                     </View>
@@ -321,7 +321,7 @@ export default function CadastroPerguntas() {
                     >
                       <RadioButton
                         value="number"
-                        color={brand.bgPrimary.backgroundColor}
+                        color={brand.background.orange.backgroundColor}
                       />
                       <Text>Número</Text>
                     </View>
@@ -330,7 +330,7 @@ export default function CadastroPerguntas() {
                     >
                       <RadioButton
                         value="multiple"
-                        color={brand.bgPrimary.backgroundColor}
+                        color={brand.background.orange.backgroundColor}
                       />
                       <Text>Múltiplo</Text>
                     </View>

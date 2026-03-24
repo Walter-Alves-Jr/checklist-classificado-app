@@ -11,7 +11,7 @@ export default function AppHomeHeader() {
 
   return (
     <>
-      <View style={brand.bgPrimary}>
+      <View style={brand.background.orange}>
         <View className="flex flex-row items-center justify-between">
           <View className="flex flex-row items-center gap-2">
             <Logo />

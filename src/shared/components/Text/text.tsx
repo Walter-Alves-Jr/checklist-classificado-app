@@ -3,27 +3,27 @@ import { useBrand } from "@/src/theme/useBrand";
 import { Text, TextProps } from "react-native";
 
 interface AppTextProps extends TextProps {
-  variant?: "primary" | "secondary" | "tertiary";
+  variant?: "grayLight" | "grayDark" | "orange";
 }
 
 export default function AppText({
   children,
   className,
   style,
-  variant = "primary",
+  variant = "grayLight",
   ...rest
 }: AppTextProps) {
   const brand = useBrand();
 
   const variants = {
-    primary: {
-      color: brand.textPrimary.color,
+    grayLight: {
+      color: brand.text.grayLight.color,
     },
-    secondary: {
-      color: brand.textSecondary.color,
+    grayDark: {
+      color: brand.text.grayDark.color,
     },
-    tertiary: {
-      color: brand.textTertiary.color,
+    orange: {
+      color: brand.text.orange.color,
     },
   };
 
