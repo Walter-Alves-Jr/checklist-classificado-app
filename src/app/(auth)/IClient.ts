@@ -15,4 +15,5 @@ export interface IClientThemeResponse {
   backgroundPrimary: string;
   textPrimary: string;
   textSecondary: string;
+  textTertiary: string;
 }

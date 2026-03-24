@@ -1,9 +1,9 @@
 import { cn } from "@/src/lib/tailwind-merge/tailwind-merge";
-import { useTwTheme } from "@/src/theme/useTwTheme";
+import { useBrand } from "@/src/theme/useBrand";
 import { Text, TextProps } from "react-native";
 
 interface AppTextProps extends TextProps {
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "tertiary";
 }
 
 export default function AppText({
@@ -13,14 +13,17 @@ export default function AppText({
   variant = "primary",
   ...rest
 }: AppTextProps) {
-  const tw = useTwTheme();
+  const brand = useBrand();
 
   const variants = {
     primary: {
-      color: tw.textPrimary.color,
+      color: brand.textPrimary.color,
     },
     secondary: {
-      color: tw.textSecondary.color,
+      color: brand.textSecondary.color,
+    },
+    tertiary: {
+      color: brand.textTertiary.color,
     },
   };
 

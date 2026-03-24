@@ -1,5 +1,5 @@
 import { cn } from "@/src/lib/tailwind-merge/tailwind-merge";
-import { useTwTheme } from "@/src/theme/useTwTheme";
+import { useBrand } from "@/src/theme/useBrand";
 import { createContext } from "react";
 import {
   ActivityIndicator,
@@ -28,7 +28,7 @@ export function AppButtonRoot({
   ...rest
 }: AppButtonRootProps & { loading?: boolean }) {
   const isDisabled = disabled || loading;
-  const tw = useTwTheme();
+  const brand = useBrand();
 
   return (
     <ButtonContext.Provider value={{ loading, disabled: isDisabled }}>
@@ -41,9 +41,9 @@ export function AppButtonRoot({
         disabled={isDisabled}
         style={{
           backgroundColor:
-            tw.bgPrimary && useTheme
-              ? tw.bgPrimary.backgroundColor
-              : tw.bgSecondary.backgroundColor,
+            brand.bgPrimary && useTheme
+              ? brand.bgPrimary.backgroundColor
+              : brand.bgSecondary.backgroundColor,
         }}
       >
         {loading ? <ActivityIndicator /> : children}

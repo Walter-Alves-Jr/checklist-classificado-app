@@ -1,6 +1,7 @@
 import { useAuth } from "@/src/auth/AuthProvider";
 import AppText from "@/src/shared/components/Text/text";
 import { Touchable } from "@/src/shared/components/Touchable";
+import { app_colors } from "@/src/shared/consts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
@@ -30,73 +31,82 @@ export default function LoginScreen() {
   }
 
   return (
-    <View className="flex-1 items-center justify-center bg-white px-6">
-      <View className="mb-6 flex items-center justify-center">
-        <AppText className="absolute bottom-4 text-center text-4xl font-bold text-[#ff3e04]">
-          checklist
-        </AppText>
+    <View className="flex-1 items-center justify-center">
+      <View className="mb-10 flex flex-row items-center gap-0.5">
         <Image
-          source={{
-            uri: "https://institucional.nstech.com.br/core/webp-express/webp-images/themes/theme-wp/src/assets/images/logos/nstech.png.webp",
-          }}
-          className="h-32 w-32"
+          source={require("../../assets/logo-nstech.webp")}
           resizeMode="contain"
+          style={{ width: 68, height: 68 }}
         />
+        <View>
+          <AppText
+            style={{ color: app_colors.text.tertiary }}
+            className="text-7xl font-bold leading-10"
+          >
+            yard
+          </AppText>
+
+          <AppText
+            style={{ color: app_colors.text.secondary }}
+            className="ml-6 mt-1 text-3xl font-bold"
+          >
+            checklist
+          </AppText>
+        </View>
       </View>
-
-      <Controller
-        control={control}
-        rules={{ required: "Login é obrigatório" }}
-        name="username"
-        render={({ field: { value, onChange }, fieldState: { error } }) => (
-          <View className="mb-4 w-full">
-            <TextInput
-              placeholder="Login"
-              value={value}
-              onChangeText={onChange}
-              className="rounded-lg border border-gray-300 p-4 outline-1 outline-orange-500"
-              {...register("username")}
-            />
-            {error && (
-              <AppText className="mt-1 text-sm text-red-500">
-                {error.message}
-              </AppText>
-            )}
-          </View>
-        )}
-      />
-
-      <Controller
-        control={control}
-        name="password"
-        rules={{ required: "Senha é obrigatória" }}
-        render={({ field: { value, onChange }, fieldState: { error } }) => (
-          <View className="mb-6 w-full">
-            <TextInput
-              placeholder="Senha"
-              secureTextEntry
-              value={value}
-              onChangeText={onChange}
-              className="rounded-lg border border-gray-300 p-4 outline-1 outline-orange-500"
-              {...register("password")}
-            />
-            {error && (
-              <AppText className="mt-1 text-sm text-red-500">
-                {error.message}
-              </AppText>
-            )}
-          </View>
-        )}
-      />
-
-      <Touchable.Container
-        onPress={handleSubmit(handleLogin)}
-        className="w-full items-center rounded-lg bg-orange-500"
-      >
-        <Touchable.Content className="text-lg font-bold text-white">
-          Entrar
-        </Touchable.Content>
-      </Touchable.Container>
+      <View className="w-full px-4">
+        <Controller
+          control={control}
+          rules={{ required: "Login é obrigatório" }}
+          name="username"
+          render={({ field: { value, onChange }, fieldState: { error } }) => (
+            <View className="mb-4 w-full">
+              <TextInput
+                placeholder="Login"
+                value={value}
+                onChangeText={onChange}
+                className="rounded-lg border border-gray-300 p-4 outline-1 outline-[#ff3e04]"
+                {...register("username")}
+              />
+              {error && (
+                <AppText className="mt-1 text-sm" variant="tertiary">
+                  {error.message}
+                </AppText>
+              )}
+            </View>
+          )}
+        />
+        <Controller
+          control={control}
+          name="password"
+          rules={{ required: "Senha é obrigatória" }}
+          render={({ field: { value, onChange }, fieldState: { error } }) => (
+            <View className="w-full">
+              <TextInput
+                placeholder="Senha"
+                secureTextEntry
+                value={value}
+                onChangeText={onChange}
+                className="rounded-lg border border-gray-300 p-4 outline-1 outline-[#ff3e04]"
+                {...register("password")}
+              />
+              {error && (
+                <AppText className="mt-1 text-sm" variant="tertiary">
+                  {error.message}
+                </AppText>
+              )}
+            </View>
+          )}
+        />
+        <Touchable.Container
+          onPress={handleSubmit(handleLogin)}
+          className="mt-10 w-full items-center rounded-lg bg-[#ff3e04] outline-[#242424]"
+        >
+          <Touchable.Content className="text-lg font-bold">
+            Entrar
+          </Touchable.Content>
+        </Touchable.Container>
+      </View>
     </View>
   );
 }

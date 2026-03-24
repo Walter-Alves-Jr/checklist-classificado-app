@@ -1,4 +1,5 @@
 import { AppButton } from "@/src/shared/components/Button";
+import { app_colors } from "@/src/shared/consts";
 import {
   ArrowsClockwiseIcon,
   GrainsIcon,
@@ -23,17 +24,17 @@ export default function AppMenuOptions() {
   }
 
   return (
-    <View className="mt-6 flex flex-col gap-4 p-4">
+    <View className="mt-5 flex flex-col gap-4 p-4">
       <View className="flex flex-row gap-4">
         <AppButton useTheme={false} className="flex-1" onPress={goToChecklist}>
           <AppButton.Icon>
-            <ListChecksIcon size={35} color="#e5e7eb" />
+            <ListChecksIcon size={35} color={app_colors.color.primary} />
           </AppButton.Icon>
           <AppButton.Text>Checklist</AppButton.Text>
         </AppButton>
         <AppButton className="flex-1" onPress={goToRegisterQuestions}>
           <AppButton.Icon>
-            <QuestionIcon size={35} color="#e5e7eb" />
+            <QuestionIcon size={35} color={app_colors.color.primary} />
           </AppButton.Icon>
           <AppButton.Text>
             Cadastrar
@@ -46,7 +47,7 @@ export default function AppMenuOptions() {
       <View className="flex flex-row gap-4">
         <AppButton className="flex-1" onPress={goToRate}>
           <AppButton.Icon>
-            <GrainsIcon size={35} color="#e5e7eb" />
+            <GrainsIcon size={35} color={app_colors.color.primary} />
           </AppButton.Icon>
           <AppButton.Text>
             Classificador <br />
@@ -59,7 +60,7 @@ export default function AppMenuOptions() {
           onPress={goToSynchronize}
         >
           <AppButton.Icon>
-            <ArrowsClockwiseIcon size={35} color="#e5e7eb" />
+            <ArrowsClockwiseIcon size={35} color={app_colors.color.primary} />
           </AppButton.Icon>
           <AppButton.Text>Sincronizar</AppButton.Text>
         </AppButton>

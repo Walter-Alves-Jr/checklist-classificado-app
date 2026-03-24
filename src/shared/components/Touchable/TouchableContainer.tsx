@@ -1,4 +1,4 @@
-import { useTwTheme } from "@/src/theme/useTwTheme";
+import { useBrand } from "@/src/theme/useBrand";
 import { TouchableOpacity, TouchableOpacityProps } from "react-native";
 
 interface TouchableContainerProps extends TouchableOpacityProps {
@@ -6,13 +6,13 @@ interface TouchableContainerProps extends TouchableOpacityProps {
 }
 
 export default function TouchableContainer(props: TouchableContainerProps) {
-  const tw = useTwTheme();
+  const brand = useBrand();
   const { style, className, children, ...rest } = props;
 
   return (
     <TouchableOpacity
       {...rest}
-      style={[tw.bgPrimary, style]}
+      style={[brand.bgPrimary, style]}
       className={`mb-4 flex items-center rounded-lg bg-orange-500 p-3 transition-colors duration-200 hover:brightness-105 disabled:bg-orange-200 ${className}`}
     >
       {children}

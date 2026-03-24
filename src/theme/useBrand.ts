@@ -1,16 +1,27 @@
-import { useTheme } from "./ThemeProvider";
+import { useTwTheme } from "./useTwTheme";
 
 export function useBrand() {
-  const { theme, client } = useTheme();
+  const { colors, logo, name } = useTwTheme();
+
+  const {
+    backgroundPrimary,
+    backgroundSecondary,
+    textPrimary,
+    textSecondary,
+    textTertiary,
+  } = colors;
 
   return {
-    colors: {
-      backgroundPrimary: theme?.backgroundPrimary,
-      backgroundSecondary: theme?.backgroundSecondary,
-      textPrimary: theme?.textPrimary,
-      textSecondary: theme?.textSecondary,
+    bgPrimary: {
+      backgroundColor: backgroundPrimary,
     },
-    logo: client?.logo,
-    name: client?.name,
+    bgSecondary: {
+      backgroundColor: backgroundSecondary,
+    },
+    textPrimary: { color: textPrimary },
+    textSecondary: { color: textSecondary },
+    textTertiary: { color: textTertiary },
+    logo,
+    name,
   };
 }
