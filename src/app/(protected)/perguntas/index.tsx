@@ -11,7 +11,7 @@ import HeaderPage from "@/src/shared/components/Header/header-page";
 import AppText from "@/src/shared/components/Text/text";
 import { Touchable } from "@/src/shared/components/Touchable";
 import { normalizeTextUtil } from "@/src/shared/utils";
-import { useTwTheme } from "@/src/theme/useTwTheme";
+import { useBrand } from "@/src/theme/useBrand";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
@@ -27,7 +27,7 @@ import { RadioButton, Text } from "react-native-paper";
 
 export default function CadastroPerguntas() {
   const [addMode, setAddMode] = useState(false);
-  const tw = useTwTheme();
+  const brand = useBrand();
 
   const [storageId, setStorageId] = useState<number | undefined>(undefined);
   const [checklistId, setChecklistId] = useState<number | undefined>(undefined);
@@ -282,7 +282,7 @@ export default function CadastroPerguntas() {
                     >
                       <RadioButton
                         value="true"
-                        color={tw.bgPrimary.backgroundColor}
+                        color={brand.bgPrimary.backgroundColor}
                       />
                       <Text>Sim</Text>
                     </View>
@@ -291,7 +291,7 @@ export default function CadastroPerguntas() {
                     >
                       <RadioButton
                         value="false"
-                        color={tw.bgPrimary.backgroundColor}
+                        color={brand.bgPrimary.backgroundColor}
                       />
                       <Text>Não</Text>
                     </View>
@@ -312,7 +312,7 @@ export default function CadastroPerguntas() {
                     >
                       <RadioButton
                         value="text"
-                        color={tw.bgPrimary.backgroundColor}
+                        color={brand.bgPrimary.backgroundColor}
                       />
                       <Text>Texto</Text>
                     </View>
@@ -321,7 +321,7 @@ export default function CadastroPerguntas() {
                     >
                       <RadioButton
                         value="number"
-                        color={tw.bgPrimary.backgroundColor}
+                        color={brand.bgPrimary.backgroundColor}
                       />
                       <Text>Número</Text>
                     </View>
@@ -330,7 +330,7 @@ export default function CadastroPerguntas() {
                     >
                       <RadioButton
                         value="multiple"
-                        color={tw.bgPrimary.backgroundColor}
+                        color={brand.bgPrimary.backgroundColor}
                       />
                       <Text>Múltiplo</Text>
                     </View>

@@ -1,4 +1,4 @@
-import { useTwTheme } from "@/src/theme/useTwTheme";
+import { useBrand } from "@/src/theme/useBrand";
 import { Appbar } from "react-native-paper";
 
 type HeaderPageProps = {
@@ -7,14 +7,14 @@ type HeaderPageProps = {
 };
 
 export default function HeaderPage({ goBack, title }: HeaderPageProps) {
-  const tw = useTwTheme();
+  const brand = useBrand();
 
   return (
-    <Appbar.Header style={{ backgroundColor: tw.bgPrimary.backgroundColor }}>
-      <Appbar.BackAction onPress={goBack} color={tw.textPrimary.color} />
+    <Appbar.Header style={{ backgroundColor: brand.bgPrimary.backgroundColor }}>
+      <Appbar.BackAction onPress={goBack} color={brand.textPrimary.color} />
       <Appbar.Content
         title={title}
-        titleStyle={{ color: tw.textPrimary.color }}
+        titleStyle={{ color: brand.textPrimary.color }}
       />
     </Appbar.Header>
   );

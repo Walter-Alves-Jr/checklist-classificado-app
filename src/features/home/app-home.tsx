@@ -6,14 +6,14 @@ import {
   AppMenuOptions,
   AppRatings,
 } from "@/src/features/home/components";
-import { useTwTheme } from "@/src/theme/useTwTheme";
+import { useBrand } from "@/src/theme/useBrand";
 
 export default function AppHome() {
-  const tw = useTwTheme();
+  const brand = useBrand();
 
   return (
     <>
-      <View className="rounded-b-3xl p-4" style={tw.bgPrimary}>
+      <View className="rounded-b-3xl p-4" style={brand.bgPrimary}>
         <AppHomeHeader />
         <AppRatings />
       </View>

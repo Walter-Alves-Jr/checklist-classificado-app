@@ -1,4 +1,4 @@
-import { useTwTheme } from "@/src/theme/useTwTheme";
+import { useBrand } from "@/src/theme/useBrand";
 import { Text, TextProps } from "react-native";
 
 interface TouchableContentProps extends TextProps {
@@ -6,14 +6,14 @@ interface TouchableContentProps extends TextProps {
 }
 
 export default function TouchableContent(props: TouchableContentProps) {
-  const tw = useTwTheme();
+  const brand = useBrand();
   const { style, className, children, ...rest } = props;
 
   return (
     <Text
       {...rest}
-      style={[tw.textPrimary, style]}
-      className={`font-bold text-white ${className}`}
+      style={[brand.textPrimary, style]}
+      className={`font-bold ${className}`}
     >
       {children}
     </Text>

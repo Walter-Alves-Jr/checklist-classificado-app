@@ -1,5 +1,6 @@
 import { AppButton } from "@/src/shared/components/Button";
-import { useTwTheme } from "@/src/theme/useTwTheme";
+import { app_colors } from "@/src/shared/consts";
+import { useBrand } from "@/src/theme/useBrand";
 import { ChartBarIcon, GearIcon, HouseIcon } from "@phosphor-icons/react";
 import { router } from "expo-router";
 import { View } from "react-native";
@@ -9,31 +10,35 @@ export default function AppMenuBottomOptions() {
     router.push("/");
   }
 
-  const tw = useTwTheme();
+  const brand = useBrand();
 
   return (
-    <View className="rounded-t-3xl p-1" style={tw.bgPrimary}>
-      <View className="flex flex-row items-center justify-around gap-2">
+    <View className="rounded-t-3xl p-1" style={brand.bgPrimary}>
+      <View className="flex w-full flex-row items-center justify-around">
         <AppButton
-          className="flex flex-col items-center bg-transparent p-1"
+          className="flex w-1/3 flex-col items-center bg-transparent p-1"
           onPress={() => goToHome()}
         >
           <AppButton.Icon>
-            <HouseIcon size={20} color="#e5e7eb" weight="fill" />
+            <HouseIcon
+              size={20}
+              color={app_colors.color.primary}
+              weight="fill"
+            />
           </AppButton.Icon>
           <AppButton.Text className="text-xs">Home</AppButton.Text>
         </AppButton>
 
-        <AppButton className="flex flex-col items-center bg-transparent p-1">
+        <AppButton className="flex w-1/3 flex-col items-center bg-transparent p-1">
           <AppButton.Icon>
-            <ChartBarIcon size={20} color="#e5e7eb" />
+            <ChartBarIcon size={20} color={app_colors.color.primary} />
           </AppButton.Icon>
           <AppButton.Text className="text-xs">Dashboard</AppButton.Text>
         </AppButton>
 
-        <AppButton className="flex flex-col items-center bg-transparent p-1">
+        <AppButton className="flex w-1/3 flex-col items-center bg-transparent p-1">
           <AppButton.Icon>
-            <GearIcon size={20} color="#e5e7eb" />
+            <GearIcon size={20} color={app_colors.color.primary} />
           </AppButton.Icon>
           <AppButton.Text className="text-xs">Configurações</AppButton.Text>
         </AppButton>

@@ -7,7 +7,7 @@ import { sendWebhookYMS } from "@/src/shared/services/webHookYMSService";
 import { Picker } from "@react-native-picker/picker";
 import { router } from "expo-router";
 import { useState } from "react";
-import { ScrollView, StyleSheet, Text, TextInput } from "react-native";
+import { ScrollView, StyleSheet, TextInput } from "react-native";
 
 export default function Classificador() {
   const [agendamento, setAgendamento] = useState("");
@@ -105,7 +105,7 @@ export default function Classificador() {
     <>
       <HeaderPage title="Classificador de Grãos" goBack={goBack} />
       <ScrollView style={styles.container}>
-        <AppText>Classificação de Grãos</AppText>
+        <AppText variant="secondary">Classificação de Grãos</AppText>
 
         <TextInput
           placeholder="Agendamento"
@@ -144,7 +144,7 @@ export default function Classificador() {
           onChangeText={setTerminal}
         />
 
-        <Text>Cultura</Text>
+        <AppText variant="secondary">Cultura</AppText>
 
         <Picker selectedValue={cultura} onValueChange={(v) => setCultura(v)}>
           <Picker.Item label="Soja" value="Soja" />
