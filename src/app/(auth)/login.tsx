@@ -1,11 +1,13 @@
 import { useAuth } from "@/src/auth/AuthProvider";
 import AppText from "@/src/shared/components/Text/text";
+import { AppTextInput } from "@/src/shared/components/TextInput/app-text-input";
 import { Touchable } from "@/src/shared/components/Touchable";
 import { app_colors } from "@/src/shared/consts";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { EyeIcon, LockIcon, UserIcon } from "@phosphor-icons/react";
 import { useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
-import { Image, TextInput, View } from "react-native";
+import { Image, View } from "react-native";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -60,19 +62,15 @@ export default function LoginScreen() {
           rules={{ required: "Login é obrigatório" }}
           name="username"
           render={({ field: { value, onChange }, fieldState: { error } }) => (
-            <View className="mb-4 w-full">
-              <TextInput
-                placeholder="Login"
+            <View className="mb-3">
+              <AppTextInput
+                label="Login"
                 value={value}
                 onChangeText={onChange}
-                className="rounded-lg border border-gray-300 p-4 outline-1 outline-[#ff3e04]"
+                error={error}
+                leftIcon={<UserIcon size={20} />}
                 {...register("username")}
               />
-              {error && (
-                <AppText className="mt-1 text-sm" variant="tertiary">
-                  {error.message}
-                </AppText>
-              )}
             </View>
           )}
         />
@@ -81,21 +79,16 @@ export default function LoginScreen() {
           name="password"
           rules={{ required: "Senha é obrigatória" }}
           render={({ field: { value, onChange }, fieldState: { error } }) => (
-            <View className="w-full">
-              <TextInput
-                placeholder="Senha"
-                secureTextEntry
-                value={value}
-                onChangeText={onChange}
-                className="rounded-lg border border-gray-300 p-4 outline-1 outline-[#ff3e04]"
-                {...register("password")}
-              />
-              {error && (
-                <AppText className="mt-1 text-sm" variant="tertiary">
-                  {error.message}
-                </AppText>
-              )}
-            </View>
+            <AppTextInput
+              label="Senha"
+              value={value}
+              onChangeText={onChange}
+              error={error}
+              leftIcon={<LockIcon size={20} />}
+              rightIcon={<EyeIcon size={20} />}
+              isPassword
+              {...register("password")}
+            />
           )}
         />
         <Touchable.Container

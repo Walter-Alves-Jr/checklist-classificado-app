@@ -13,7 +13,7 @@ export default function AppHome() {
 
   return (
     <>
-      <View className="rounded-b-3xl p-4" style={brand.bgPrimary}>
+      <View className="rounded-b-3xl p-4" style={brand.background.orange}>
         <AppHomeHeader />
         <AppRatings />
       </View>

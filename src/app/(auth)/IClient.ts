@@ -11,8 +11,8 @@ export interface IClientRequest {
 }
 
 export interface IClientThemeResponse {
-  backgroundSecondary: string;
   backgroundPrimary: string;
+  backgroundSecondary: string;
   textPrimary: string;
   textSecondary: string;
   textTertiary: string;

@@ -11,21 +11,21 @@ export default function AppRatings() {
 
       <View className="mt-2 flex flex-row items-center justify-between gap-2">
         <View className="flex items-center">
-          <AppText className="font-semibold leading-none" variant="secondary">
+          <AppText className="font-semibold leading-none" variant="grayDark">
             Realizadas
           </AppText>
           <AppText className="text-lg font-bold">10</AppText>
         </View>
 
         <View className="flex items-center">
-          <AppText className="font-semibold leading-none" variant="secondary">
+          <AppText className="font-semibold leading-none" variant="grayDark">
             Pendentes
           </AppText>
           <AppText className="text-lg font-bold">2</AppText>
         </View>
 
         <View className="flex items-center">
-          <AppText className="font-semibold leading-none" variant="secondary">
+          <AppText className="font-semibold leading-none" variant="grayDark">
             Recusadas
           </AppText>
           <AppText className="text-lg font-bold">4</AppText>
