@@ -1,162 +1,170 @@
-type RegraTipo = {
-  impureza: number;
-  avariados: number;
-};
-
-type RegraProduto = {
-  tipo1: RegraTipo;
-  tipo2: RegraTipo;
-};
-
-// cadastrar no json-server
-const MAPA_RULES: Record<string, RegraProduto> = {
-  soja: {
-    tipo1: {
-      impureza: 1,
-      avariados: 8,
-    },
-    tipo2: {
-      impureza: 2,
-      avariados: 12,
-    },
-  },
-
-  milho: {
-    tipo1: {
-      impureza: 1,
-      avariados: 6,
-    },
-    tipo2: {
-      impureza: 2,
-      avariados: 10,
-    },
-  },
-}; //alterar
-
-export type Cultura = "Soja" | "Milho" | "Trigo";
-
-export interface DadosClassificacao {
-  cultura: Cultura;
-  umidade: number;
-  impureza: number;
-  ardidos?: number;
-  mofados?: number;
-  germinados?: number;
-  quebrados?: number;
-  pesoHectolitro?: number;
-}
-
-export interface ResultadoClassificacao {
-  tipo: string;
-  observacao: string;
-}
+import { foraTipo } from "../helpers";
+import { aplicarMapa } from "../helpers/classificador-helper";
+import { ResultadoClassificacao } from "../types/ClassificacaoResponse";
+import {
+  IClassificacaoRequest,
+  IClassificacaoResponse,
+} from "../types/IClassificacao";
 
 //todo: flag = mapa default; se não, utilizar calculo definido pelo usuario
-export function classificarMAPA(d: DadosClassificacao): ResultadoClassificacao {
-  if (d.cultura === "Soja") {
-    const totalAvariados =
-      (d.ardidos || 0) + (d.mofados || 0) + (d.germinados || 0);
+export function classificarMAPA(
+  d: IClassificacaoRequest,
+): ResultadoClassificacao {
+  const mapa = aplicarMapa(d);
+  const regra = mapa[d.cultura];
 
-    if (d.umidade > 14)
-      return { tipo: "FORA DE TIPO", observacao: "Umidade acima do limite" };
-
-    if (d.impureza > 1)
-      return { tipo: "FORA DE TIPO", observacao: "Impureza acima do limite" };
-
-    if (totalAvariados > 8)
-      return {
-        tipo: "FORA DE TIPO",
-        observacao: "Total de avariados acima do limite",
-      };
-
-    return { tipo: "TIPO 1", observacao: "Produto dentro do padrão" };
+  if (!regra) {
+    return foraTipo("Cultura inválida");
   }
 
-  if (d.cultura === "Milho") {
-    if (d.umidade > 14)
-      return { tipo: "FORA DE TIPO", observacao: "Umidade acima do limite" };
-
-    if (d.impureza > 1)
-      return { tipo: "FORA DE TIPO", observacao: "Impureza acima do limite" };
-
-    if ((d.quebrados || 0) > 6)
-      return { tipo: "TIPO 2", observacao: "Alto índice de quebrados" };
-
-    return { tipo: "TIPO 1", observacao: "Milho padrão" };
-  }
-
-  if (d.cultura === "Trigo") {
-    if ((d.pesoHectolitro || 0) < 72)
-      return { tipo: "FORA DE TIPO", observacao: "PH abaixo do mínimo" };
-
-    return { tipo: "TIPO 1", observacao: "Trigo padrão" };
-  }
-
-  return { tipo: "FORA DE TIPO", observacao: "Cultura inválida" };
+  return regra();
 }
 
-// todo: melhorar ratingcalculation
-export function ratingcalculation(
-  produto: string,
-  valores: any,
-  usarMapa: boolean,
-) {
-  if (!usarMapa) return null;
-
-  const regras = MAPA_RULES[produto];
-
-  if (!regras) return "PRODUTO_SEM_REGRA";
-
-  const avariados = (valores.ardidos || 0) + (valores.quebrados || 0);
-
-  if (
-    valores.impureza <= regras.tipo1.impureza &&
-    avariados <= regras.tipo1.avariados
-  ) {
-    return "TIPO 1";
-  }
-
-  if (
-    valores.impureza <= regras.tipo2.impureza &&
-    avariados <= regras.tipo2.avariados
-  ) {
-    return "TIPO 2";
-  }
-
-  return "FORA_PADRAO";
-}
-
-//todo: melhorar design pdf
-export function generateClassificationPDF(data: any) {
+export function generateClassificationPDF(data: IClassificacaoResponse) {
   if (!data) return;
 
+  const {
+    cultura,
+    umidade,
+    impureza,
+    ardidos,
+    mofados,
+    germinados,
+    // status, todo: verificar de onde virá status, após calculo?
+    resultado,
+  } = data;
+
+  const statusColor = resultado.tipo === "TIPO 1" ? "#16a34a" : "#dc2626";
+
+  //todo: melhorar com retorno de status
+  const statusResult = resultado.tipo === "TIPO 1" ? "APROVADO" : "REPROVADO";
+
   const html = `
- <html>
- <body style="font-family:Arial;padding:30px">
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Relatório de Classificação de Grãos</title>
 
- <h2>CLASSIFICAÇÃO DE GRÃOS</h2>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 40px;
+    color: #1f2937;
+  }
 
- <p><b>Cultura:</b> ${data.cultura}</p>
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+  }
 
- <hr/>
+  .logo {
+    width: 100px;
+    height: 100px;
+    border-radius: 2rem;
+  }
 
- <p>Umidade: ${data.umidade}%</p>
- <p>Impureza: ${data.impureza}%</p>
- <p>Ardidos: ${data.ardidos}%</p>
- <p>Mofados: ${data.mofados}%</p>
- <p>Germinados: ${data.germinados}%</p>
+  .title {
+    text-align: right;
+  }
 
- <hr/>
+  .title h1 {
+    margin: 0;
+    font-size: 20px;
+  }
 
- <h3>Resultado</h3>
+  .card {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
 
- <p><b>Tipo:</b> ${data.tipo}</p>
- <p><b>Status:</b> ${data.status}</p>
- <p>${data.observacao}</p>
+  .section-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
 
- </body>
- </html>
- `;
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .item {
+    font-size: 14px;
+  }
+
+  .result {
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    background: #f9fafb;
+  }
+
+  .tipo {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .status {
+    font-size: 18px;
+    font-weight: bold;
+    color: ${statusColor};
+  }
+
+  .footer {
+    margin-top: 40px;
+    font-size: 12px;
+    text-align: center;
+    color: #6b7280;
+  }
+</style>
+</head>
+
+<body>
+
+  <div class="header">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwVk567XnNO6g3WWibetB0SzNH4vh0cG7H7g&s" class="logo" />
+
+    <div class="title">
+      <h1>RELATÓRIO DE CLASSIFICAÇÃO DE GRÃOS</h1>
+      <p>${new Date().toLocaleDateString()}</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Informações Gerais</div>
+
+    <div class="grid">
+      <div class="item"><b>Cultura:</b> ${cultura.toUpperCase()}</div>
+      <div class="item"><b>Umidade:</b> ${umidade}%</div>
+      <div class="item"><b>Impureza:</b> ${impureza}%</div>
+      <div class="item"><b>Ardidos:</b> ${ardidos}%</div>
+      <div class="item"><b>Mofados:</b> ${mofados}%</div>
+      <div class="item"><b>Germinados:</b> ${germinados}%</div>
+    </div>
+  </div>
+
+  <div class="card result">
+    <div class="section-title">Resultado da Classificação</div>
+
+    <div class="tipo">${resultado.tipo}</div>
+    <div class="status">${statusResult}</div>
+
+    <p style="margin-top:10px">${resultado.observacao}</p>
+  </div>
+
+  <div class="footer">
+    Documento gerado automaticamente • Sistema de Classificação de Grãos
+  </div>
+
+</body>
+</html>
+`;
 
   const win = window.open();
 
