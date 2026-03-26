@@ -1,6 +1,7 @@
 import { useAuth } from "@/src/auth/AuthProvider";
+import AppContainer from "@/src/shared/components/Container/AppContainer";
 import { Redirect, Slot } from "expo-router";
-import { ActivityIndicator, ScrollView } from "react-native";
+import { ActivityIndicator } from "react-native";
 
 // se exisitir usuário/token -> permita que ele veja a tela inicial do app
 // se não existir usuário/token -> redireciona ele para a tela de login
@@ -10,14 +11,14 @@ export default function ProtectedLayout() {
 
   if (isLoading) {
     return (
-      <ScrollView className="flex-1 items-center justify-center">
+      <AppContainer>
         <ActivityIndicator />
-      </ScrollView>
+      </AppContainer>
     );
   }
 
   if (!isAuthenticated) {
-    return <Redirect href="/login" />;
+    return <Redirect href="/(auth)/Login" />;
   }
 
   return <Slot />;

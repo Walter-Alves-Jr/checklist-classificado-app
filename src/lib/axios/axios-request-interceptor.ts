@@ -1,4 +1,4 @@
-import { getClientLocalStorage } from "@/src/app/(auth)/login-service-local-storage";
+import { getClientLocalStorage } from "@/src/features/auth/login-service-local-storage";
 import { api } from "./axios";
 
 api.interceptors.request.use(async (config) => {

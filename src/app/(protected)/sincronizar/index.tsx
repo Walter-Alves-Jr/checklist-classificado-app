@@ -1,10 +1,10 @@
 import { getChecklistsLocalStorage } from "@/src/localStorage/services/localStorageService";
-import HeaderPage from "@/src/shared/components/Header/header-page";
+import AppContainer from "@/src/shared/components/Container/AppContainer";
+import HeaderPage from "@/src/shared/components/Header/HeaderPage";
 import { Touchable } from "@/src/shared/components/Touchable";
 import { sendWebhookYMS } from "@/src/shared/services/webHookYMSService";
 import { router } from "expo-router";
 import { useState } from "react";
-import { ScrollView } from "react-native";
 
 export default function Sincronizar() {
   const [status, setStatus] = useState("");
@@ -34,11 +34,11 @@ export default function Sincronizar() {
     <>
       <HeaderPage title="Sincronizar Dados" goBack={goBack} />
 
-      <ScrollView className="flex flex-1 justify-center p-4">
+      <AppContainer>
         <Touchable.Container onPress={sincronizar}>
           <Touchable.Content>Sincronizar</Touchable.Content>
         </Touchable.Container>
-      </ScrollView>
+      </AppContainer>
     </>
   );
 }

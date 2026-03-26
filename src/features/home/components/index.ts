@@ -1,4 +1,4 @@
-export { default as AppHomeHeader } from "./app-home-header";
-export { default as AppMenuOptions } from "./app-home-menu-options";
-export { default as AppRatings } from "./app-home-ratings";
-export { default as AppMenuBottomOptions } from "./app-menu-bottom-options";
+export { default as AppHomeHeader } from "./AppHomeHeader";
+export { default as AppMenuOptions } from "./AppHomeMenuOptions";
+export { default as AppRatings } from "./AppHomeRatings";
+export { default as AppMenuBottomOptions } from "./AppMenuBottomOptions";

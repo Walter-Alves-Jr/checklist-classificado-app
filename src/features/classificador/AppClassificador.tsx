@@ -1,9 +1,9 @@
 import { registerClassificationLocalStorage } from "@/src/localStorage/services/localStorageService";
 import { AppButton } from "@/src/shared/components/Button";
-import AppContainer from "@/src/shared/components/Container/container";
-import HeaderPage from "@/src/shared/components/Header/header-page";
-import AppText from "@/src/shared/components/Text/text";
-import { AppTextInput } from "@/src/shared/components/TextInput/app-text-input";
+import AppContainer from "@/src/shared/components/Container/AppContainer";
+import HeaderPage from "@/src/shared/components/Header/HeaderPage";
+import AppText from "@/src/shared/components/Text/AppText";
+import { AppTextInput } from "@/src/shared/components/TextInput/AppTextInput";
 import { maskPlaca } from "@/src/shared/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Picker } from "@react-native-picker/picker";
@@ -71,7 +71,7 @@ const classifierSchema = z.object({
 type FormInput = z.input<typeof classifierSchema>;
 type FormOutput = z.output<typeof classifierSchema>;
 
-export default function Classificador() {
+export default function AppClassificador() {
   const { handleSubmit, control } = useForm<FormInput, any, FormOutput>({
     resolver: zodResolver(classifierSchema),
     defaultValues: {

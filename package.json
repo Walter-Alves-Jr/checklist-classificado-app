@@ -10,7 +10,7 @@
     "web": "expo start --web",
     "web-reset": "expo start -c --web",
     "lint": "expo lint",
-    "server": "json-server --watch src/db/db.json"
+    "server": "json-server --watch src/db/db.json --host 0.0.0.0"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
@@ -38,6 +38,7 @@
     "expo-router": "~6.0.23",
     "expo-sharing": "~14.0.8",
     "expo-splash-screen": "~31.0.13",
+    "expo-sqlite": "~16.0.10",
     "expo-status-bar": "~3.0.9",
     "expo-symbols": "~1.0.8",
     "expo-system-ui": "~6.0.9",

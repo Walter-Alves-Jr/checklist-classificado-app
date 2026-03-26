@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { View } from "react-native";
-import { ToastItem } from "./toast-item";
 import { ToastContext, ToastData } from "./ToastContext";
+import { ToastItem } from "./ToastItem";
 
 type ToastProviderProps = {
   children: React.ReactNode;

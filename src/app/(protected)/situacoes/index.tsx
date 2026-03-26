@@ -1,9 +1,10 @@
 import { getClassificationsLocalStorage } from "@/src/localStorage/services/localStorageService";
-import AppText from "@/src/shared/components/Text/text";
+import AppContainer from "@/src/shared/components/Container/AppContainer";
+import AppText from "@/src/shared/components/Text/AppText";
 import { Touchable } from "@/src/shared/components/Touchable";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 export default function Situacoes() {
   const [dados, setDados] = useState<any[]>([]);
@@ -23,7 +24,7 @@ export default function Situacoes() {
   const pendentes = dados.filter((d) => d.status === "PENDENTE");
 
   return (
-    <ScrollView style={styles.container}>
+    <AppContainer style={styles.container}>
       <Touchable.Container
         className="w-24 bg-gray-800"
         onPress={() => router.push("/")}
@@ -55,7 +56,7 @@ export default function Situacoes() {
           </AppText>
         </View>
       </View>
-    </ScrollView>
+    </AppContainer>
   );
 }
 

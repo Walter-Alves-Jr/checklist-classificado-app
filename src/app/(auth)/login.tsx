@@ -1,10 +1,11 @@
 import { useAuth } from "@/src/auth/AuthProvider";
-import AppText from "@/src/shared/components/Text/text";
-import { AppTextInput } from "@/src/shared/components/TextInput/app-text-input";
+import AppText from "@/src/shared/components/Text/AppText";
+import { AppTextInput } from "@/src/shared/components/TextInput/AppTextInput";
 import { Touchable } from "@/src/shared/components/Touchable";
 import { app_colors } from "@/src/shared/consts";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Feather from "@expo/vector-icons/Feather";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { EyeIcon, LockIcon, UserIcon } from "@phosphor-icons/react";
 import { useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { Image, View } from "react-native";
@@ -43,14 +44,14 @@ export default function LoginScreen() {
         <View>
           <AppText
             style={{ color: app_colors.text.tertiary }}
-            className="text-7xl font-bold leading-10"
+            className="text-7xl font-bold"
           >
             yard
           </AppText>
 
           <AppText
             style={{ color: app_colors.text.secondary }}
-            className="ml-6 mt-1 text-3xl font-bold"
+            className="ml-6 mt-1 bg-transparent text-3xl font-bold"
           >
             checklist
           </AppText>
@@ -68,8 +69,7 @@ export default function LoginScreen() {
                 value={value}
                 onChangeText={onChange}
                 error={error}
-                leftIcon={<UserIcon size={20} />}
-                {...register("username")}
+                leftIcon={<Feather name="user" size={20} />}
               />
             </View>
           )}
@@ -84,8 +84,8 @@ export default function LoginScreen() {
               value={value}
               onChangeText={onChange}
               error={error}
-              leftIcon={<LockIcon size={20} />}
-              rightIcon={<EyeIcon size={20} />}
+              leftIcon={<AntDesign name="lock" size={20} />}
+              rightIcon={<AntDesign name="eye-invisible" size={20} />}
               isPassword
               {...register("password")}
             />

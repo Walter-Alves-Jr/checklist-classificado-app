@@ -32,38 +32,38 @@ export async function updateChecklist(id: number, payload: ChecklistType) {
 export const generateChecklistPDF = (data: any) => {
   if (!data) return;
 
-  const html = `
- <html>
- <body style="font-family:Arial;padding:30px">
+  //   const html = `
+  //  <html>
+  //  <body style="font-family:Arial;padding:30px">
 
- <h2>CHECKLIST OPERACIONAL</h2>
+  //  <h2>CHECKLIST OPERACIONAL</h2>
 
- <p><b>Checklist:</b> ${data.checklistName}</p>
- <p><b>Armazém:</b> ${data.armazemName}</p>
- <p><b>Data:</b> ${data.data}</p>
- <p><b>GPS:</b> ${data.gps}</p>
+  //  <p><b>Checklist:</b> ${data.checklistName}</p>
+  //  <p><b>Armazém:</b> ${data.armazemName}</p>
+  //  <p><b>Data:</b> ${data.data}</p>
+  //  <p><b>GPS:</b> ${data.gps}</p>
 
- <hr/>
+  //  <hr/>
 
- ${Object.entries(data.respostas)
-   .map(
-     ([id, res]) => `
-  <p><b>Pergunta ${id}</b>: ${res}</p>
-  `,
-   )
-   .join("")}
+  //  ${Object.entries(data.respostas)
+  //    .map(
+  //      ([id, res]) => `
+  //   <p><b>Pergunta ${id}</b>: ${res}</p>
+  //   `,
+  //    )
+  //    .join("")}
 
- </body>
- </html>
- `;
+  //  </body>
+  //  </html>
+  //  `;
 
   const win = window.open();
 
   if (win) {
-    win.document.write(html);
+    // win.document.write(html);
     win.document.close();
     win.print();
   }
 
-  return html;
+  // return html;
 };

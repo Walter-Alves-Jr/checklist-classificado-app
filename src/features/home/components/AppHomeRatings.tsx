@@ -1,5 +1,5 @@
 import { AppButton } from "@/src/shared/components/Button";
-import AppText from "@/src/shared/components/Text/text";
+import AppText from "@/src/shared/components/Text/AppText";
 import { View } from "react-native";
 
 export default function AppRatings() {
