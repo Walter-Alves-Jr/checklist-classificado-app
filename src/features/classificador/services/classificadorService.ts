@@ -1,5 +1,4 @@
-import { foraTipo } from "../helpers";
-import { aplicarMapa } from "../helpers/classificador-helper";
+import { aplicarMapa, foraTipo } from "../helpers";
 import { ResultadoClassificacao } from "../types/ClassificacaoResponse";
 import {
   IClassificacaoRequest,

@@ -1,3 +1,3 @@
-import { foraTipo, tipo1, tipo2 } from "./classificador-helper";
+import { aplicarMapa, foraTipo, tipo1, tipo2 } from "./classificador-helper";
 
-export { foraTipo, tipo1, tipo2 };
+export { aplicarMapa, foraTipo, tipo1, tipo2 };
