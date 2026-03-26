@@ -5,8 +5,8 @@ import InputContext from "../useInput";
 
 interface AppInputRootProps {
   children: React.ReactNode;
-  error?: FieldError;
   value?: string;
+  error?: FieldError;
 }
 
 export function AppInputRoot({ children, error, value }: AppInputRootProps) {

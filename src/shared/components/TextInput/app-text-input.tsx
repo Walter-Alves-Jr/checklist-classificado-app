@@ -1,26 +1,28 @@
 import { FieldError } from "react-hook-form";
-import { View } from "react-native";
+import { TextInputProps, View } from "react-native";
 import { AppInput } from "./components";
 
-interface FormInputProps {
+interface FormInputProps extends TextInputProps {
   label: string;
   value: string;
+  onChangeText: (text: string) => void;
   error?: FieldError;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   isPassword?: boolean;
-  onChangeText?: (text: string) => void;
+  mask?: (text: string) => string;
 }
 
 export function AppTextInput({
   label,
+  value,
   error,
   leftIcon,
   rightIcon,
-  value,
-  onChangeText,
   isPassword,
-  ...rest //necessário para utilizar  {...register("campo") do hookform}
+  onChangeText,
+  mask,
+  ...rest
 }: FormInputProps) {
   const hasIconLeft = leftIcon ? true : false;
 
@@ -33,12 +35,25 @@ export function AppTextInput({
           {/* hasLeftIcon passado para centralizar a label junto ao ícone, quando houver, somente ao focar no input e quando houver valor nele. */}
           <AppInput.Label hasIconLeft={hasIconLeft}>{label}</AppInput.Label>
 
-          <AppInput.Field
-            value={value}
-            onChangeText={onChangeText}
-            secureTextEntry={isPassword}
-            {...rest}
-          />
+          {mask ? (
+            <View>
+              <AppInput.Field
+                value={value}
+                onChangeText={(text) => {
+                  onChangeText(mask(text));
+                }}
+                secureTextEntry={isPassword}
+                {...rest}
+              />
+            </View>
+          ) : (
+            <AppInput.Field
+              value={value}
+              onChangeText={onChangeText}
+              secureTextEntry={isPassword}
+              {...rest}
+            />
+          )}
         </AppInput.FieldContainer>
 
         {rightIcon && <AppInput.Icon isButton>{rightIcon}</AppInput.Icon>}
