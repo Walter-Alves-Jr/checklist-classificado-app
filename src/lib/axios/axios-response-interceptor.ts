@@ -1,4 +1,4 @@
-import { removeClientLocalStorage } from "@/src/app/(auth)/login-service-local-storage";
+import { removeClientLocalStorage } from "@/src/features/auth/login-service-local-storage";
 import { queryClient } from "../react-query";
 import { api } from "./axios";
 

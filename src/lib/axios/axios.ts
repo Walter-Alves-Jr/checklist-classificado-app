@@ -1,8 +1,14 @@
 import { env } from "@/env";
 import axios from "axios";
+import { Platform } from "react-native";
+
+const BASE_URL =
+  Platform.OS === "android"
+    ? "http://10.0.2.2:3000"
+    : "http://192.168.0.105:3000";
 
 export const api = axios.create({
-  baseURL: env.EXPO_PUBLIC_API_URL,
+  baseURL: BASE_URL,
   // withCredentials: true,
   headers: {
     "Content-Type": "application/json",

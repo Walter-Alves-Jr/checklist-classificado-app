@@ -1,6 +1,9 @@
 import { createContext, useContext } from "react";
-import { IClientResponse, IClientThemeResponse } from "../app/(auth)/IClient";
 import { useAuth } from "../auth/AuthProvider";
+import {
+  IClientResponse,
+  IClientThemeResponse,
+} from "../features/auth/IClient";
 
 type ThemeContextProps = {
   theme: IClientThemeResponse | null;

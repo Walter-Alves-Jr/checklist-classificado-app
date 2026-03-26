@@ -1,13 +1,13 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { IClientRequest, IClientResponse } from "../app/(auth)/IClient";
-import { postLogin } from "../app/(auth)/login-service";
+import { IClientRequest, IClientResponse } from "../features/auth/IClient";
+import { postLogin } from "../features/auth/login-service";
 import {
   getClientLocalStorage,
   getTokenLocalStorage,
   removeClientLocalStorage,
   saveClientLocalStorage,
   saveTokenLocalStorage,
-} from "../app/(auth)/login-service-local-storage";
+} from "../features/auth/login-service-local-storage";
 
 type AuthContextType = {
   client: IClientResponse | undefined;

@@ -10,7 +10,7 @@ import Animated, {
 import { scheduleOnRN } from "react-native-worklets";
 import { app_colors } from "../../consts";
 import { AppButton } from "../Button";
-import AppText from "../Text/text";
+import AppText from "../Text/AppText";
 import { ToastProps } from "./types/ToastProps";
 import { ToastVariantsColors } from "./types/ToastVariantsColors";
 

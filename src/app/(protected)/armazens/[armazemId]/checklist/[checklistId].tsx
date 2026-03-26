@@ -2,12 +2,13 @@ import { useGetStorageNameQueryData } from "@/src/features/armazens/hooks/storag
 import { useChecklistResponse } from "@/src/features/checklist/hooks/mutations/useChecklistResponse";
 import { useGetChecklistNameQueryData } from "@/src/features/checklist/hooks/queries/queryData/useGetChecklistNameQueryData";
 import { useQuestionsChecklist } from "@/src/features/checklist/hooks/queries/useQuestionsChecklist";
-import AppText from "@/src/shared/components/Text/text";
+import AppContainer from "@/src/shared/components/Container/AppContainer";
+import AppText from "@/src/shared/components/Text/AppText";
 import { Touchable } from "@/src/shared/components/Touchable";
 import { useGps } from "@/src/shared/hooks/useGps";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function Checklist() {
   const [respostas, setRespostas] = useState<{ [key: string]: string }>({});
@@ -71,7 +72,7 @@ export default function Checklist() {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <AppContainer style={styles.container}>
       {checklistNameByStorage !== "" && (
         <AppText className="mb-6 text-2xl">{checklistNameByStorage}</AppText>
       )}
@@ -112,7 +113,7 @@ export default function Checklist() {
             : "Finalizar Checklist"}
         </Touchable.Content>
       </Touchable.Container>
-    </ScrollView>
+    </AppContainer>
   );
 }
 

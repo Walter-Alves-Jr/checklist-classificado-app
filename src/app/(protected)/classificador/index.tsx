@@ -1,5 +1,5 @@
-import Classificador from "@/src/features/classificador/classificador";
+import AppClassificador from "@/src/features/classificador/AppClassificador";
 
-export default function Index() {
-  return <Classificador />;
+export default function Classificador() {
+  return <AppClassificador />;
 }

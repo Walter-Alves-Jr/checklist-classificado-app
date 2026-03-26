@@ -1,11 +1,7 @@
 import { AppButton } from "@/src/shared/components/Button";
 import { app_colors } from "@/src/shared/consts";
-import {
-  ArrowsClockwiseIcon,
-  GrainsIcon,
-  ListChecksIcon,
-  QuestionIcon,
-} from "@phosphor-icons/react";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { router } from "expo-router";
 import { View } from "react-native";
 
@@ -28,31 +24,36 @@ export default function AppMenuOptions() {
       <View className="flex flex-row gap-4">
         <AppButton useTheme={false} className="flex-1" onPress={goToChecklist}>
           <AppButton.Icon>
-            <ListChecksIcon size={35} color={app_colors.color.primary} />
+            <MaterialCommunityIcons
+              name="clipboard-edit-outline"
+              size={35}
+              color={app_colors.color.primary}
+            />
           </AppButton.Icon>
           <AppButton.Text>Checklist</AppButton.Text>
         </AppButton>
         <AppButton className="flex-1" onPress={goToRegisterQuestions}>
           <AppButton.Icon>
-            <QuestionIcon size={35} color={app_colors.color.primary} />
+            <AntDesign
+              name="question-circle"
+              size={35}
+              color={app_colors.color.primary}
+            />
           </AppButton.Icon>
-          <AppButton.Text>
-            Cadastrar
-            <br />
-            Perguntas
-          </AppButton.Text>
+          <AppButton.Text>Cadastrar Perguntas</AppButton.Text>
         </AppButton>
       </View>
 
       <View className="flex flex-row gap-4">
         <AppButton className="flex-1" onPress={goToRate}>
           <AppButton.Icon>
-            <GrainsIcon size={35} color={app_colors.color.primary} />
+            <MaterialCommunityIcons
+              name="grain"
+              size={35}
+              color={app_colors.color.primary}
+            />
           </AppButton.Icon>
-          <AppButton.Text>
-            Classificador <br />
-            de Grãos
-          </AppButton.Text>
+          <AppButton.Text>Classificador de Grãos</AppButton.Text>
         </AppButton>
         <AppButton
           className="flex-1"
@@ -60,7 +61,11 @@ export default function AppMenuOptions() {
           onPress={goToSynchronize}
         >
           <AppButton.Icon>
-            <ArrowsClockwiseIcon size={35} color={app_colors.color.primary} />
+            <MaterialCommunityIcons
+              name="sync"
+              size={35}
+              color={app_colors.color.primary}
+            />
           </AppButton.Icon>
           <AppButton.Text>Sincronizar</AppButton.Text>
         </AppButton>

@@ -1,6 +1,6 @@
 import { cn } from "@/src/lib/tailwind-merge/tailwind-merge";
 import { TextProps } from "react-native";
-import AppText from "../Text/text";
+import AppText from "../Text/AppText";
 
 export function AppButtonText({ children, className, ...rest }: TextProps) {
   return (

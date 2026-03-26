@@ -13,7 +13,7 @@ export function AppInputField({ className, style, ...rest }: TextInputProps) {
       value={value}
       onFocus={() => setIsFocused(true)}
       onBlur={() => setIsFocused(false)}
-      className={cn("py-1 text-sm outline-none", className)}
+      className={cn("py-3 text-sm font-semibold outline-none", className)}
       style={[
         {
           color: text.grayDark.color,

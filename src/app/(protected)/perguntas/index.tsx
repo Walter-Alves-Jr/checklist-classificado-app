@@ -7,20 +7,15 @@ import { useChecklist } from "@/src/features/checklist/hooks/queries/useChecklis
 import { useQuestionsChecklist } from "@/src/features/checklist/hooks/queries/useQuestionsChecklist";
 import { useQuestion } from "@/src/features/perguntas/hooks/useQuestion";
 import { QuestionChecklistType } from "@/src/features/perguntas/types/QuestionChecklistType";
-import HeaderPage from "@/src/shared/components/Header/header-page";
-import AppText from "@/src/shared/components/Text/text";
+import AppContainer from "@/src/shared/components/Container/AppContainer";
+import HeaderPage from "@/src/shared/components/Header/HeaderPage";
+import AppText from "@/src/shared/components/Text/AppText";
 import { Touchable } from "@/src/shared/components/Touchable";
 import { normalizeTextUtil } from "@/src/shared/utils";
 import { useBrand } from "@/src/theme/useBrand";
 import { router } from "expo-router";
 import { useState } from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  Text as TextNative,
-  View,
-} from "react-native";
+import { StyleSheet, TextInput, Text as TextNative, View } from "react-native";
 
 import { Dropdown } from "react-native-element-dropdown";
 import { RadioButton, Text } from "react-native-paper";
@@ -171,7 +166,7 @@ export default function CadastroPerguntas() {
   return (
     <>
       <HeaderPage title="Cadastro de Perguntas" goBack={goBack} />
-      <ScrollView className="p-4">
+      <AppContainer>
         <Text>Armazém</Text>
 
         <Dropdown
@@ -367,7 +362,7 @@ export default function CadastroPerguntas() {
             </Touchable.Content>
           </Touchable.Container>
         </View>
-      </ScrollView>
+      </AppContainer>
     </>
   );
 }

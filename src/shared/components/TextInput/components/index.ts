@@ -1,10 +1,10 @@
-import AppInputContainer from "./app-input-container";
-import AppInputFieldContainer from "./app-input-container-field";
-import { AppInputError } from "./app-input-error";
-import { AppInputField } from "./app-input-field";
-import { AppInputIcon } from "./app-input-icon";
-import AppInputLabel from "./app-input-label";
-import { AppInputRoot } from "./app-input-root";
+import AppInputContainer from "./AppInputContainer";
+import AppInputFieldContainer from "./AppInputContainerField";
+import { AppInputError } from "./AppInputError";
+import { AppInputField } from "./AppInputField";
+import { AppInputIcon } from "./AppInputIcon";
+import AppInputLabel from "./AppInputLabel";
+import { AppInputRoot } from "./AppInputRoot";
 
 export const AppInput = {
   Root: AppInputRoot,
