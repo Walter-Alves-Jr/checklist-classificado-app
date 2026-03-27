@@ -6,5 +6,10 @@ export function Logo() {
 
   if (!logo) return null;
 
-  return <Avatar.Image size={40} source={require("../../assets/webler.png")} />;
+  return (
+    <Avatar.Image
+      size={40}
+      source={require("@/src/assets/images/webler.png")}
+    />
+  );
 }
