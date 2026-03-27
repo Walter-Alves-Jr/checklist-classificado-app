@@ -37,7 +37,7 @@ export default function LoginScreen() {
     <View className="flex-1 items-center justify-center">
       <View className="mb-10 flex flex-row items-center gap-0.5">
         <Image
-          source={require("../../assets/logo-nstech.webp")}
+          source={require("@/src/assets/images/logo_nstech.png")}
           resizeMode="contain"
           style={{ width: 68, height: 68 }}
         />

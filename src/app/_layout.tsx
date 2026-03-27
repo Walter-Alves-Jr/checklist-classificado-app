@@ -2,9 +2,11 @@ import { queryClient } from "@/src/lib/react-query";
 import { ThemeProvider } from "@/src/theme/ThemeProvider";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
+import { SQLiteProvider } from "expo-sqlite";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AuthProvider } from "../auth/AuthProvider";
 import { ToastProvider } from "../shared/components/Toast/ToastProvider";
+import { startDatabase } from "../sqlite/start-database";
 import "./global.css";
 
 // configurações de providers e temas globais
@@ -14,15 +16,17 @@ import "./global.css";
 export default function Layout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <QueryClientProvider client={queryClient}>
-        <ToastProvider>
-          <AuthProvider>
-            <ThemeProvider>
-              <Stack screenOptions={{ headerShown: false }} />
-            </ThemeProvider>
-          </AuthProvider>
-        </ToastProvider>
-      </QueryClientProvider>
+      <SQLiteProvider databaseName="nscheckdata.db" onInit={startDatabase}>
+        <QueryClientProvider client={queryClient}>
+          <ToastProvider>
+            <AuthProvider>
+              <ThemeProvider>
+                <Stack screenOptions={{ headerShown: false }} />
+              </ThemeProvider>
+            </AuthProvider>
+          </ToastProvider>
+        </QueryClientProvider>
+      </SQLiteProvider>
     </GestureHandlerRootView>
   );
 }
