@@ -1,5 +1,5 @@
-import { ResultadoClassificacao } from "../types/ClassificacaoResponse";
-import { IClassificacaoRequest } from "../types/IClassificacao";
+import { ResultadoClassificacao } from "../types/classificacao-response.type";
+import { IClassificacaoRequest } from "../types/classificacao.type";
 
 export function tipo1(
   observacao: string = "Produto dentro do padrão",

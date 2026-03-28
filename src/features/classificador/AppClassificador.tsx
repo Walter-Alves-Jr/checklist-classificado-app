@@ -4,18 +4,21 @@ import AppContainer from "@/src/shared/components/Container/AppContainer";
 import HeaderPage from "@/src/shared/components/Header/HeaderPage";
 import AppText from "@/src/shared/components/Text/AppText";
 import { AppTextInput } from "@/src/shared/components/TextInput/AppTextInput";
+import { useDebounce } from "@/src/shared/hooks/useDebounce";
 import { maskPlaca } from "@/src/shared/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Picker } from "@react-native-picker/picker";
 import { router } from "expo-router";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Text, View } from "react-native";
 import { z } from "zod";
+import { useAgendamentoQuery } from "./hooks/storage/queries/use-agendamento-query";
 import {
   classificarMAPA,
   generateClassificationPDF,
-} from "./services/classificadorService";
-import { IClassificacaoResponse } from "./types/IClassificacao";
+} from "./services/classificador-service";
+import { IClassificacaoResponse } from "./types/classificacao.type";
 
 // todo: Refatorar componente e separar responsabilidades
 
@@ -24,7 +27,7 @@ const classifierSchema = z.object({
     .number<string>({ error: "Informe apenas números." })
     .min(1, "Informe um número de agendamento."),
 
-  placa: z
+  placaVeiculo: z
     .string()
     .min(1, "Placa do veículo é obrigatório.")
     .transform((val) => val.replace(/-/g, ""))
@@ -36,8 +39,8 @@ const classifierSchema = z.object({
   transportadora: z.string().min(1, "Transportadora é obrigatório."),
   produto: z.string().min(1, "Produto é obrigatório."),
   terminal: z.string().min(1, "Terminal é obrigatório."),
-  cultura: z.enum(["soja", "milho", "trigo"]),
 
+  cultura: z.enum(["soja", "milho", "trigo"]),
   umidade: z.coerce
     .number<string>({ error: "Informe apenas números." })
     .min(1, "Informe umidade.")
@@ -72,11 +75,15 @@ type FormInput = z.input<typeof classifierSchema>;
 type FormOutput = z.output<typeof classifierSchema>;
 
 export default function AppClassificador() {
-  const { handleSubmit, control } = useForm<FormInput, any, FormOutput>({
+  const { handleSubmit, watch, reset, getValues, control } = useForm<
+    FormInput,
+    any,
+    FormOutput
+  >({
     resolver: zodResolver(classifierSchema),
     defaultValues: {
       numeroAgendamento: "",
-      placa: "",
+      placaVeiculo: "",
       motorista: "",
       transportadora: "",
       produto: "",
@@ -121,6 +128,35 @@ export default function AppClassificador() {
     generateClassificationPDF(dados);
   }
 
+  const numeroAgendamento = watch("numeroAgendamento");
+  const debouncedNumeroAgendamento = useDebounce(numeroAgendamento, 700);
+  const { data } = useAgendamentoQuery(Number(debouncedNumeroAgendamento));
+
+  useEffect(() => {
+    if (!data) {
+      reset({
+        ...getValues(),
+        placaVeiculo: "",
+        motorista: "",
+        transportadora: "",
+        produto: "",
+        terminal: "",
+      });
+      return;
+    }
+
+    const { placaVeiculo, motorista, transportadora, produto, terminal } = data;
+
+    reset({
+      ...getValues(),
+      placaVeiculo,
+      motorista,
+      transportadora,
+      produto,
+      terminal,
+    });
+  }, [data, getValues, reset]);
+
   function goBack() {
     router.back();
   }
@@ -134,14 +170,12 @@ export default function AppClassificador() {
             control={control}
             name="numeroAgendamento"
             render={({ field: { value, onChange }, fieldState: { error } }) => (
-              <View>
-                <AppTextInput
-                  label="Número agendamento"
-                  value={value}
-                  onChangeText={onChange}
-                  error={error}
-                />
-              </View>
+              <AppTextInput
+                label="Número agendamento"
+                value={value}
+                onChangeText={onChange}
+                error={error}
+              />
             )}
           />
         </View>
@@ -155,12 +189,13 @@ export default function AppClassificador() {
             <Controller
               disabled
               control={control}
-              name="placa"
+              name="placaVeiculo"
               render={({
                 field: { value, onChange },
                 fieldState: { error },
               }) => (
                 <AppTextInput
+                  readOnly
                   label="Placa do veículo"
                   value={value}
                   onChangeText={onChange}
@@ -178,6 +213,7 @@ export default function AppClassificador() {
                 fieldState: { error },
               }) => (
                 <AppTextInput
+                  readOnly
                   label="Motorista"
                   value={value}
                   onChangeText={onChange}
@@ -194,6 +230,7 @@ export default function AppClassificador() {
                 fieldState: { error },
               }) => (
                 <AppTextInput
+                  readOnly
                   label="Transportadora"
                   value={value}
                   onChangeText={onChange}
@@ -210,6 +247,7 @@ export default function AppClassificador() {
                 fieldState: { error },
               }) => (
                 <AppTextInput
+                  readOnly
                   label="Produto"
                   value={value}
                   onChangeText={onChange}
@@ -226,6 +264,7 @@ export default function AppClassificador() {
                 fieldState: { error },
               }) => (
                 <AppTextInput
+                  readOnly
                   label="Terminal"
                   value={value}
                   onChangeText={onChange}

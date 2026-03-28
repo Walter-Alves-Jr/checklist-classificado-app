@@ -1,10 +1,10 @@
-import { ResultadoClassificacao } from "./ClassificacaoResponse";
-import { ICultura } from "./ICultura";
+import { ResultadoClassificacao } from "./classificacao-response.type";
+import { ICultura } from "./cultura.type";
 
 //validar se são esses dados para response
 export interface IClassificacaoResponse {
   numeroAgendamento: number;
-  placa: string;
+  placaVeiculo: string;
   motorista: string;
   transportadora: string;
   produto: string;
