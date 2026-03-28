@@ -3,7 +3,8 @@ export type AgendamentoRequest = {
 };
 
 export type AgendamentoResponse = {
-  placa: string;
+  numeroAgendamento: number;
+  placaVeiculo: string;
   motorista: string;
   transportadora: string;
   produto: string;
