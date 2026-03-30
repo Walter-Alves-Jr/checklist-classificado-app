@@ -18,7 +18,7 @@ export default function ProtectedLayout() {
   }
 
   if (!isAuthenticated) {
-    return <Redirect href="/(auth)/Login" />;
+    return <Redirect href="/(auth)/login" />;
   }
 
   return <Slot />;

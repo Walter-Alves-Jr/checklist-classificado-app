@@ -22,7 +22,7 @@ export default function LoginScreen() {
   const { login } = useAuth();
   const router = useRouter();
 
-  const { register, handleSubmit, control } = useForm<LoginSchema>({
+  const { handleSubmit, control } = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
   });
 
@@ -41,7 +41,7 @@ export default function LoginScreen() {
           resizeMode="contain"
           style={{ width: 68, height: 68 }}
         />
-        <View>
+        <View className="-mt-2">
           <AppText
             style={{ color: app_colors.text.tertiary }}
             className="text-7xl font-bold"
@@ -51,7 +51,7 @@ export default function LoginScreen() {
 
           <AppText
             style={{ color: app_colors.text.secondary }}
-            className="ml-6 mt-1 bg-transparent text-3xl font-bold"
+            className="-mt-4 ml-6 bg-transparent text-3xl font-bold"
           >
             checklist
           </AppText>
@@ -87,7 +87,6 @@ export default function LoginScreen() {
               leftIcon={<AntDesign name="lock" size={20} />}
               rightIcon={<AntDesign name="eye-invisible" size={20} />}
               isPassword
-              {...register("password")}
             />
           )}
         />
