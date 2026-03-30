@@ -1,7 +1,10 @@
 import { getChecklistsLocalStorage } from "@/src/localStorage/services/localStorageService";
+import AppContainer from "@/src/shared/components/Container/AppContainer";
+import HeaderPage from "@/src/shared/components/Header/HeaderPage";
+import { Touchable } from "@/src/shared/components/Touchable";
 import { sendWebhookYMS } from "@/src/shared/services/webHookYMSService";
+import { router } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function Sincronizar() {
   const [status, setStatus] = useState("");
@@ -23,38 +26,19 @@ export default function Sincronizar() {
     }
   };
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.titulo}>Sincronização</Text>
+  function goBack() {
+    router.back();
+  }
 
-      <TouchableOpacity style={styles.botao} onPress={sincronizar}>
-        <Text style={styles.textoBotao}>Sincronizar</Text>
-      </TouchableOpacity>
-    </View>
+  return (
+    <>
+      <HeaderPage title="Sincronizar Dados" goBack={goBack} />
+
+      <AppContainer>
+        <Touchable.Container onPress={sincronizar}>
+          <Touchable.Content>Sincronizar</Touchable.Content>
+        </Touchable.Container>
+      </AppContainer>
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 30,
-  },
-
-  titulo: {
-    fontSize: 24,
-    textAlign: "center",
-    marginBottom: 30,
-  },
-
-  botao: {
-    backgroundColor: "#ff6a00",
-    padding: 15,
-    alignItems: "center",
-  },
-
-  textoBotao: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-});

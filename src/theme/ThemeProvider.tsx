@@ -1,0 +1,28 @@
+import { createContext, useContext } from "react";
+import { useAuth } from "../auth/AuthProvider";
+import {
+  IClientResponse,
+  IClientThemeResponse,
+} from "../features/auth/IClient";
+
+type ThemeContextProps = {
+  theme: IClientThemeResponse | null;
+  client: IClientResponse | undefined;
+};
+
+const ThemeContext = createContext({} as ThemeContextProps);
+
+export function ThemeProvider({ children }: any) {
+  const { client } = useAuth();
+  const theme = client?.theme ?? null;
+
+  return (
+    <ThemeContext.Provider value={{ theme, client }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+
+export function useTheme() {
+  return useContext(ThemeContext);
+}

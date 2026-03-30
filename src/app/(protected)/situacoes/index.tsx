@@ -1,13 +1,10 @@
 import { getClassificationsLocalStorage } from "@/src/localStorage/services/localStorageService";
+import AppContainer from "@/src/shared/components/Container/AppContainer";
+import AppText from "@/src/shared/components/Text/AppText";
+import { Touchable } from "@/src/shared/components/Touchable";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, View } from "react-native";
 
 export default function Situacoes() {
   const [dados, setDados] = useState<any[]>([]);
@@ -27,28 +24,39 @@ export default function Situacoes() {
   const pendentes = dados.filter((d) => d.status === "PENDENTE");
 
   return (
-    <ScrollView style={styles.container}>
-      <TouchableOpacity style={styles.voltar} onPress={() => router.back()}>
-        <Text style={{ color: "white" }}>← Voltar</Text>
-      </TouchableOpacity>
+    <AppContainer style={styles.container}>
+      <Touchable.Container
+        className="w-24 bg-gray-800"
+        onPress={() => router.push("/")}
+      >
+        <Touchable.Content className="text-white">← Voltar</Touchable.Content>
+      </Touchable.Container>
 
-      <Text style={styles.title}>Situação das Classificações</Text>
+      <AppText style={styles.title}>Situação das Classificações</AppText>
 
-      <View style={styles.card}>
-        <Text style={styles.label}>Realizadas</Text>
-        <Text style={styles.valor}>{realizadas.length}</Text>
+      <View className="flex flex-1 flex-col gap-2">
+        <View className="rounded-md border border-gray-400 p-4 font-bold">
+          <AppText className="font-bold">Realizadas</AppText>
+          <AppText className="text-2xl font-bold text-emerald-700">
+            {realizadas.length}
+          </AppText>
+        </View>
+
+        <View className="rounded-md border border-gray-400 p-4">
+          <AppText className="font-bold">Pendentes</AppText>
+          <AppText className="text-2xl font-bold text-yellow-500">
+            {pendentes.length}
+          </AppText>
+        </View>
+
+        <View className="rounded-md border border-gray-400 p-4">
+          <AppText className="font-bold">Recusadas</AppText>
+          <AppText className="text-2xl font-bold text-red-700">
+            {recusadas.length}
+          </AppText>
+        </View>
       </View>
-
-      <View style={styles.card}>
-        <Text style={styles.label}>Pendentes</Text>
-        <Text style={styles.valor}>{pendentes.length}</Text>
-      </View>
-
-      <View style={styles.card}>
-        <Text style={styles.label}>Recusadas</Text>
-        <Text style={styles.valor}>{recusadas.length}</Text>
-      </View>
-    </ScrollView>
+    </AppContainer>
   );
 }
 

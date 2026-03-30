@@ -1,6 +1,6 @@
 import { ChecklistExecuteType } from "@/src/features/checklist/types/ChecklistExecuteType";
-import { ClassificacaoType } from "@/src/features/classificador/types/ClassificacaoType";
-import { QuestionType } from "@/src/features/questions/types/QuestionType";
+import { IClassificacaoResponse } from "@/src/features/classificador/types/classificacao.type";
+import { QuestionType } from "@/src/features/perguntas/types/QuestionType";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // CHAVES STORAGE
@@ -58,7 +58,7 @@ CLASSIFICAÇÃO DE GRÃOS
 */
 
 export async function registerClassificationLocalStorage(
-  dados: ClassificacaoType,
+  dados: IClassificacaoResponse,
 ) {
   const atual = await AsyncStorage.getItem(CLASSIFICACAO_KEY);
 
@@ -70,7 +70,7 @@ export async function registerClassificationLocalStorage(
 }
 
 export async function getClassificationsLocalStorage(): Promise<
-  ClassificacaoType[]
+  IClassificacaoResponse[]
 > {
   const dados = await AsyncStorage.getItem(CLASSIFICACAO_KEY);
 
