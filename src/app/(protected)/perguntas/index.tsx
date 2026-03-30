@@ -11,7 +11,7 @@ import AppContainer from "@/src/shared/components/Container/AppContainer";
 import HeaderPage from "@/src/shared/components/Header/HeaderPage";
 import AppText from "@/src/shared/components/Text/AppText";
 import { Touchable } from "@/src/shared/components/Touchable";
-import { normalizeTextUtil } from "@/src/shared/utils";
+import { toLowerAndTrim } from "@/src/shared/utils";
 import { useBrand } from "@/src/theme/useBrand";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -107,13 +107,13 @@ export default function CadastroPerguntas() {
   }
 
   function checksQuestionHasAlreadyBeenRegistered(): boolean {
-    const newQuestionNormalized = normalizeTextUtil(newTextQuestion);
+    const newQuestionNormalized = toLowerAndTrim(newTextQuestion);
 
     if (!newQuestionNormalized) return false;
 
     const allQuestions = new Set([
-      ...(questionName ? [normalizeTextUtil(questionName)] : []),
-      ...questions.map((q) => normalizeTextUtil(q.question)),
+      ...(questionName ? [toLowerAndTrim(questionName)] : []),
+      ...questions.map((q) => toLowerAndTrim(q.question)),
     ]);
 
     if (allQuestions.has(newQuestionNormalized)) {

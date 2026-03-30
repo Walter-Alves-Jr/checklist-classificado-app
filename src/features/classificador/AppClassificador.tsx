@@ -441,7 +441,7 @@ export default function AppClassificador() {
 
         <AppButton
           onPress={handleSubmit(onSubmit)}
-          className="mb-8 flex items-center justify-center"
+          className="mb-12 flex items-center justify-center"
         >
           <AppButton.Text className="text-base font-bold">
             Classificar

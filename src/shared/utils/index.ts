@@ -1,4 +1,4 @@
 import { maskPlaca } from "./mask-placa";
-import { normalizeTextUtil } from "./normalize-text-util";
+import { toLowerAndTrim, toLowerNoAccentAndSpace } from "./normalize-text-util";
 
-export { maskPlaca, normalizeTextUtil };
+export { maskPlaca, toLowerAndTrim, toLowerNoAccentAndSpace };
