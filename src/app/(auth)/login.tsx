@@ -1,12 +1,12 @@
 import { useAuth } from "@/src/auth/AuthProvider";
 import AppText from "@/src/shared/components/Text/AppText";
 import { AppTextInput } from "@/src/shared/components/TextInput/AppTextInput";
+import { useToast } from "@/src/shared/components/Toast";
 import { Touchable } from "@/src/shared/components/Touchable";
 import { app_colors } from "@/src/shared/consts";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { Image, View } from "react-native";
 import { z } from "zod";
@@ -19,25 +19,39 @@ const loginSchema = z.object({
 type LoginSchema = z.infer<typeof loginSchema>;
 
 export default function LoginScreen() {
-  const { login } = useAuth();
-  const router = useRouter();
-
   const { handleSubmit, control } = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
   });
 
-  async function handleLogin({ username, password }: LoginSchema) {
-    const user = await login({ username, password });
-    if (!user) return alert("Usuário não encontrado!");
+  // const { signIn } = useAuthServer();
 
-    router.replace("/");
+  const { show } = useToast();
+  const { login } = useAuth();
+
+  async function handleLogin({ username, password }: LoginSchema) {
+    const result = await login({ username, password });
+
+    // if (!result) {
+    //   show({
+    //     type: "error",
+    //     title: "Erro",
+    //     description: "Usuário ou senha inválidos.",
+    //   });
+    //   return;
+    // }
+
+    show({
+      type: "success",
+      title: "Sucesso",
+      description: "Login realizado.",
+    });
   }
 
   return (
     <View className="flex-1 items-center justify-center">
       <View className="mb-10 flex flex-row items-center gap-0.5">
         <Image
-          source={require("@/src/assets/images/logo-nstech.png")}
+          source={require("@/src/assets/images/logonstech.png")}
           resizeMode="contain"
           style={{ width: 68, height: 68 }}
         />
@@ -51,7 +65,7 @@ export default function LoginScreen() {
 
           <AppText
             style={{ color: app_colors.text.secondary }}
-            className="-mt-4 ml-6 bg-transparent text-3xl font-bold"
+            className="-mt-4 ml-5 bg-transparent text-[1.8rem] font-bold"
           >
             checklist
           </AppText>

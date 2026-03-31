@@ -1,4 +1,4 @@
-import { removeClientLocalStorage } from "@/src/features/auth/login-service-local-storage";
+import { authStorage } from "@/src/features/auth/services/auth-storage.service";
 import { queryClient } from "../react-query";
 import { api } from "./axios";
 
@@ -12,7 +12,7 @@ api.interceptors.response.use(
     }
 
     if (error.response?.status === 401) {
-      await removeClientLocalStorage();
+      await authStorage.remove();
       queryClient.clear();
 
       return Promise.reject(error);

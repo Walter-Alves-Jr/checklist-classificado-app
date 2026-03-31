@@ -11,6 +11,7 @@ import AppContainer from "@/src/shared/components/Container/AppContainer";
 import HeaderPage from "@/src/shared/components/Header/HeaderPage";
 import AppText from "@/src/shared/components/Text/AppText";
 import { Touchable } from "@/src/shared/components/Touchable";
+import { app_colors } from "@/src/shared/consts";
 import { toLowerAndTrim } from "@/src/shared/utils";
 import { useBrand } from "@/src/theme/useBrand";
 import { router } from "expo-router";
@@ -249,7 +250,10 @@ export default function CadastroPerguntas() {
 
         {addMode && (
           <View className="mb-5 rounded-md border border-slate-300 p-3">
-            <AppText className="mb-2 text-xl">
+            <AppText
+              className="mb-2 text-xl"
+              style={{ color: app_colors.text.secondary }}
+            >
               Adicionar perguntas ao Checklist
             </AppText>
             <Text>Pergunta</Text>
@@ -343,11 +347,14 @@ export default function CadastroPerguntas() {
               </Touchable.Container>
 
               <Touchable.Container
-                className="mb-0 w-1/2 border border-black bg-transparent text-black"
-                style={{ backgroundColor: "transparent" }}
+                className="mb-0 w-1/2 border border-black bg-transparent"
+                style={{
+                  backgroundColor: "transparent",
+                  borderColor: app_colors.background.secondary,
+                }}
                 onPress={() => handleCancelar()}
               >
-                <Touchable.Content style={{ color: "black" }}>
+                <Touchable.Content style={{ color: app_colors.text.secondary }}>
                   Cancelar
                 </Touchable.Content>
               </Touchable.Container>
