@@ -1,9 +1,9 @@
-import { ChecklistType } from "../../checklist/types/ChecklistType";
+import { Checklist } from "../../checklists/types/Checklist";
 
 export type StorageType = {
   id: number;
   name: string;
-  checklist: ChecklistType[];
+  checklist: Checklist[];
 };
 
 export interface ICheckLinkStorageChecklistRequest {

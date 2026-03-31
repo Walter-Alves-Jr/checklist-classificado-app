@@ -1,6 +1,6 @@
 import { api } from "@/src/lib/axios/axios";
-import { ChecklistExecuteType } from "../../checklist/types/ChecklistExecuteType";
-import { ChecklistType } from "../../checklist/types/ChecklistType";
+import { Checklist } from "../../checklists/types/Checklist";
+import { ChecklistExecuteType } from "../../checklists/types/ChecklistExecuteType";
 
 export const registerChecklistResponse = async (
   payload: ChecklistExecuteType,
@@ -14,17 +14,17 @@ export async function getChecklistByName(name: string) {
   return data[0];
 }
 
-export async function getChecklistById(id: number): Promise<ChecklistType> {
-  const { data } = await api.get<ChecklistType>(`/checklists/${id}`);
+export async function getChecklistById(id: number): Promise<Checklist> {
+  const { data } = await api.get<Checklist>(`/checklists/${id}`);
   return data;
 }
 
-export async function createChecklist(payload: ChecklistType) {
+export async function createChecklist(payload: Checklist) {
   const { data } = await api.post("/checklists", payload);
   return data;
 }
 
-export async function updateChecklist(id: number, payload: ChecklistType) {
+export async function updateChecklist(id: number, payload: Checklist) {
   const { data } = await api.put(`/checklists/${id}`, payload);
   return data;
 }

@@ -1,10 +1,10 @@
 import { useGetStorageNameQueryData } from "@/src/features/armazens/hooks/storage/queries/queryData/useGetStorageNameQueryData";
 import { useCheckLinkStorageChecklistQuery } from "@/src/features/armazens/hooks/storage/queries/useCheckLinkStorageChecklistQuery";
 import { useStorage } from "@/src/features/armazens/hooks/storage/queries/useStorage";
-import { usePostChecklistQuery } from "@/src/features/checklist/hooks/mutations/usePostChecklistQuery";
-import { useGetChecklistNameQueryData } from "@/src/features/checklist/hooks/queries/queryData/useGetChecklistNameQueryData";
 import { useChecklist } from "@/src/features/checklist/hooks/queries/useChecklist";
-import { useQuestionsChecklist } from "@/src/features/checklist/hooks/queries/useQuestionsChecklist";
+import { usePostChecklistQuery } from "@/src/features/checklists/hooks/mutations/usePostChecklistQuery";
+import { useGetChecklistNameQueryData } from "@/src/features/checklists/hooks/queries/queryData/useGetChecklistNameQueryData";
+import { useQuestionsChecklist } from "@/src/features/checklists/hooks/queries/useQuestionsChecklist";
 import { useQuestion } from "@/src/features/perguntas/hooks/useQuestion";
 import { QuestionChecklistType } from "@/src/features/perguntas/types/QuestionChecklistType";
 import AppContainer from "@/src/shared/components/Container/AppContainer";

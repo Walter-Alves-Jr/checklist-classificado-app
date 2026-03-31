@@ -2,7 +2,7 @@ import { type SQLiteDatabase } from "expo-sqlite";
 
 export async function createTabelaArmazens(db: SQLiteDatabase) {
   await db.execAsync(`
-    CREATE TABLE IF NOT EXISTS tabela_armazens (
+    CREATE TABLE IF NOT EXISTS armazens (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       nome TEXT NOT NULL
     );
@@ -11,7 +11,7 @@ export async function createTabelaArmazens(db: SQLiteDatabase) {
 
 export async function createTabelaChecklists(db: SQLiteDatabase) {
   await db.execAsync(`
-    CREATE TABLE IF NOT EXISTS tabela_checklists (
+    CREATE TABLE IF NOT EXISTS checklists (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       nome TEXT NOT NULL
     );
@@ -20,7 +20,7 @@ export async function createTabelaChecklists(db: SQLiteDatabase) {
 
 export async function createTabelaPerguntas(db: SQLiteDatabase) {
   await db.execAsync(`
-    CREATE TABLE IF NOT EXISTS tabela_perguntas (
+    CREATE TABLE IF NOT EXISTS perguntas (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       checklist_id INTEGER NOT NULL,
       pergunta TEXT NOT NULL,

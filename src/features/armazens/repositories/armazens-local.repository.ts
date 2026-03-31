@@ -5,6 +5,6 @@ export class ArmazensLocalRepository {
   constructor(private db: SQLiteDatabase) {}
 
   async obterListaArmazens() {
-    return await this.db.getAllAsync<Armazem>(`SELECT * FROM tabela_armazens`);
+    return await this.db.getAllAsync<Armazem>(`SELECT * FROM armazens`);
   }
 }

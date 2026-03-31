@@ -1,4 +1,4 @@
-import { ChecklistExecuteType } from "@/src/features/checklist/types/ChecklistExecuteType";
+import { ChecklistExecuteType } from "@/src/features/checklists/types/ChecklistExecuteType";
 import { IClassificacaoResponse } from "@/src/features/classificador/types/classificacao.type";
 import { QuestionType } from "@/src/features/perguntas/types/QuestionType";
 import AsyncStorage from "@react-native-async-storage/async-storage";

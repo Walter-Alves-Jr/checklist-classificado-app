@@ -5,7 +5,7 @@ import { ArmazemService } from "./armazens.service";
 
 /* centralizador(container) para "criação" dos serviços, 
  se precisar de outro é só referenciar ele aqui seguindo padrão abaixo. 
- O uso deles é feito através do hook useClassificadorServices */
+ O uso deles é feito através do hook useArmazensServices */
 
 export function createArmazensServices(db: SQLiteDatabase) {
   const armazensRepository = new ArmazensRepository();

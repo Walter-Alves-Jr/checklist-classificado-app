@@ -1,6 +1,6 @@
 import { api } from "@/src/lib/axios/axios";
-import { CheckListStorageRelationRequest } from "../../checklist/types/ChecklistStorageRelationType";
-import { ChecklistType } from "../../checklist/types/ChecklistType";
+import { Checklist } from "../../checklists/types/Checklist";
+import { CheckListStorageRelationRequest } from "../../checklists/types/ChecklistStorageRelationType";
 import { QuestionChecklistType } from "../../perguntas/types/QuestionChecklistType";
 import { QuestionType } from "../../perguntas/types/QuestionType";
 import {
@@ -14,8 +14,8 @@ export async function getStorages(): Promise<StorageType[]> {
   return data;
 }
 
-export async function getChecklists(): Promise<ChecklistType[]> {
-  const { data } = await api.get<ChecklistType[]>("/checklists");
+export async function getChecklists(): Promise<Checklist[]> {
+  const { data } = await api.get<Checklist[]>("/checklists");
   return data;
 }
 
@@ -83,15 +83,13 @@ export async function postChecklist(
 
 export async function getChecklistsByStorage(
   armazemId: number,
-): Promise<ChecklistType[]> {
+): Promise<Checklist[]> {
   const relation = await api.get(`/armazemChecklists?armazemId=${armazemId}`);
 
   const checklistIds = relation.data.map((r: any) => r.checklistId);
 
   const checklists = await Promise.all(
-    checklistIds.map((id: number) =>
-      api.get<ChecklistType[]>(`/checklists/${id}`),
-    ),
+    checklistIds.map((id: number) => api.get<Checklist[]>(`/checklists/${id}`)),
   );
 
   return checklists.map((c) => c.data);
