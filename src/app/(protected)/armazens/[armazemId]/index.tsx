@@ -15,6 +15,16 @@ export default function Checklists() {
     Number(armazemId),
   );
 
+  function handleSelectChecklist(id: number) {
+    router.push({
+      pathname: "/armazens/[armazemId]/checklist/[checklistId]",
+      params: {
+        armazemId: armazemId.toString(),
+        checklistId: id.toString(),
+      },
+    });
+  }
+
   function goBack() {
     router.back();
   }
@@ -33,7 +43,10 @@ export default function Checklists() {
 
         {data &&
           data.map((item: Checklist) => (
-            <Touchable.Container key={item.id}>
+            <Touchable.Container
+              key={item.id}
+              onPress={() => handleSelectChecklist(item.id)}
+            >
               <Touchable.Content>{item.nome}</Touchable.Content>
             </Touchable.Container>
           ))}
