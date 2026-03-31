@@ -1,7 +1,7 @@
 import { useGetStorageNameQueryData } from "@/src/features/armazens/hooks/storage/queries/queryData/useGetStorageNameQueryData";
 import { useChecklistResponse } from "@/src/features/checklists/hooks/mutations/useChecklistResponse";
-import { useGetChecklistNameQueryData } from "@/src/features/checklists/hooks/queries/queryData/useGetChecklistNameQueryData";
-import { useQuestionsChecklist } from "@/src/features/checklists/hooks/queries/useQuestionsChecklist";
+import { useNomeChecklistQueryData } from "@/src/features/checklists/hooks/queries/data/use-nome-checklist-query-data";
+import { usePerguntasChecklistQuery } from "@/src/features/perguntas/hooks/storage/queries/use-perguntas-checklist-query";
 import AppContainer from "@/src/shared/components/Container/AppContainer";
 import HeaderPage from "@/src/shared/components/Header/HeaderPage";
 import AppText from "@/src/shared/components/Text/AppText";
@@ -20,21 +20,19 @@ export default function Checklist() {
   }>();
 
   const {
-    data: result,
+    data: perguntasChecklist,
     isPending,
     isError,
-  } = useQuestionsChecklist({
-    checklistId: Number(checklistId),
-  });
+  } = usePerguntasChecklistQuery(Number(checklistId));
 
   const { data: gpsResult } = useGps();
 
   const { mutateAsync, isPending: isPendingChecklistResponse } =
     useChecklistResponse();
 
-  const { checklistNameByStorage } = useGetChecklistNameQueryData({
+  const { nomeChecklistSelecionado } = useNomeChecklistQueryData({
     checklistId: Number(checklistId),
-    storageId: Number(armazemId),
+    armazemId: Number(armazemId),
   });
 
   const { storageName } = useGetStorageNameQueryData({
@@ -49,10 +47,10 @@ export default function Checklist() {
   }
 
   const salvar = async () => {
-    if (!respostas || !checklistNameByStorage || !storageName) return;
+    if (!respostas || !nomeChecklistSelecionado || !storageName) return;
 
     const dados = {
-      checklistName: checklistNameByStorage,
+      checklistName: nomeChecklistSelecionado,
       armazemName: storageName,
       fotos: [],
       data: new Date().toISOString(),
@@ -80,39 +78,39 @@ export default function Checklist() {
     <>
       <HeaderPage goBack={goBack} title="Lista de perguntas" />
       <AppContainer style={styles.container}>
-        {checklistNameByStorage !== "" && (
+        {nomeChecklistSelecionado !== "" && (
           <AppText
             className="mb-3 text-2xl"
             style={{ color: app_colors.text.secondary }}
           >
-            {checklistNameByStorage}
+            {nomeChecklistSelecionado}
           </AppText>
         )}
 
         {isPending && <Text>Loading...</Text>}
         {isError && <Text>Erro ao obter perguntas.</Text>}
 
-        {result &&
-          result.map((item, index) => (
+        {perguntasChecklist &&
+          perguntasChecklist.map((item, index) => (
             <View key={index}>
               <AppText
                 className="mb-1 text-sm"
                 style={{ color: app_colors.text.secondary }}
               >
-                {item.question}
+                {item.pergunta}
               </AppText>
 
               <View style={styles.botoes}>
                 {/* Alterar para check e/ou radio */}
                 <Touchable.Container
-                  onPress={() => responder(item.question, "sim")}
+                  onPress={() => responder(item.pergunta, "sim")}
                   className="bg-green-500"
                 >
                   <Touchable.Content>Sim</Touchable.Content>
                 </Touchable.Container>
 
                 <Touchable.Container
-                  onPress={() => responder(item.question, "não")}
+                  onPress={() => responder(item.pergunta, "não")}
                   className="bg-red-500"
                 >
                   <Touchable.Content>Não</Touchable.Content>

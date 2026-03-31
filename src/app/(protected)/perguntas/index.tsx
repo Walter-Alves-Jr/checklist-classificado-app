@@ -1,10 +1,10 @@
 import { useGetStorageNameQueryData } from "@/src/features/armazens/hooks/storage/queries/queryData/useGetStorageNameQueryData";
+import { useArmazensQuery } from "@/src/features/armazens/hooks/storage/queries/use-armazens-query";
 import { useCheckLinkStorageChecklistQuery } from "@/src/features/armazens/hooks/storage/queries/useCheckLinkStorageChecklistQuery";
-import { useStorage } from "@/src/features/armazens/hooks/storage/queries/useStorage";
-import { useChecklist } from "@/src/features/checklist/hooks/queries/useChecklist";
 import { usePostChecklistQuery } from "@/src/features/checklists/hooks/mutations/usePostChecklistQuery";
-import { useGetChecklistNameQueryData } from "@/src/features/checklists/hooks/queries/queryData/useGetChecklistNameQueryData";
-import { useQuestionsChecklist } from "@/src/features/checklists/hooks/queries/useQuestionsChecklist";
+import { useNomeChecklistQueryData } from "@/src/features/checklists/hooks/queries/data/use-nome-checklist-query-data";
+import { useChecklistsQuery } from "@/src/features/checklists/hooks/queries/use-checklists-query";
+import { usePerguntasChecklistQuery } from "@/src/features/perguntas/hooks/storage/queries/use-perguntas-checklist-query";
 import { useQuestion } from "@/src/features/perguntas/hooks/useQuestion";
 import { QuestionChecklistType } from "@/src/features/perguntas/types/QuestionChecklistType";
 import AppContainer from "@/src/shared/components/Container/AppContainer";
@@ -34,14 +34,15 @@ export default function CadastroPerguntas() {
   const [responseType, setResponseType] = useState("text"); //todo: implementar hookform
   const [requiresPhoto, setRequiresPhoto] = useState<boolean>(false); //todo: implementar hookform
 
-  const { data: storagesResult, isPending: isPendingStorages } = useStorage();
+  const { data: storagesResult, isPending: isPendingStorages } =
+    useArmazensQuery();
   const { data: checklistsResult, isPending: isPendingChecklists } =
-    useChecklist();
+    useChecklistsQuery();
 
   const {
     data: questionsByChecklist,
     isPending: isPendingQuestionByChecklist,
-  } = useQuestionsChecklist({ checklistId: Number(checklistId) });
+  } = usePerguntasChecklistQuery(Number(checklistId));
 
   const { postQuestion, questionName } = useQuestion(
     Number(checklistId),
@@ -55,7 +56,7 @@ export default function CadastroPerguntas() {
     checklistId,
   });
 
-  const { checklistName } = useGetChecklistNameQueryData({
+  const { nomeChecklist } = useNomeChecklistQueryData({
     checklistId: Number(checklistId),
   });
 
@@ -72,7 +73,7 @@ export default function CadastroPerguntas() {
 
       if (isLinked && !hasQuestions) {
         alert(
-          `Checklist ${checklistName} já vinculado ao Armazém ${storageName}. Cadastre uma nova pergunta ou um novo checklist.`,
+          `Checklist ${nomeChecklist} já vinculado ao Armazém ${storageName}. Cadastre uma nova pergunta ou um novo checklist.`,
         );
         return;
       }
@@ -118,7 +119,7 @@ export default function CadastroPerguntas() {
     ]);
 
     if (allQuestions.has(newQuestionNormalized)) {
-      alert(`Pergunta já existe no ${checklistName}`);
+      alert(`Pergunta já existe no ${nomeChecklist}`);
       return false;
     }
 
@@ -173,7 +174,7 @@ export default function CadastroPerguntas() {
         <Dropdown
           style={styles.dropdown}
           data={storagesResult ?? []}
-          labelField="name"
+          labelField="nome"
           valueField="id"
           placeholder={isPendingStorages ? "Loading..." : "Selecione o Armazém"}
           value={storageId}
@@ -188,7 +189,7 @@ export default function CadastroPerguntas() {
         <Dropdown
           style={styles.dropdown}
           data={checklistsResult ?? []}
-          labelField="name"
+          labelField="nome"
           valueField="id"
           placeholder={
             isPendingChecklists ? "Loading..." : "Selecione o Checklist"
@@ -219,7 +220,7 @@ export default function CadastroPerguntas() {
           {questionsByChecklist &&
             questionsByChecklist?.map((item, index) => (
               <View key={index} className="rounded-md bg-gray-300 p-2">
-                <Text>{item.question}</Text>
+                <Text>{item.pergunta}</Text>
               </View>
             ))}
 
