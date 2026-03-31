@@ -3,8 +3,10 @@ import { useChecklistResponse } from "@/src/features/checklist/hooks/mutations/u
 import { useGetChecklistNameQueryData } from "@/src/features/checklist/hooks/queries/queryData/useGetChecklistNameQueryData";
 import { useQuestionsChecklist } from "@/src/features/checklist/hooks/queries/useQuestionsChecklist";
 import AppContainer from "@/src/shared/components/Container/AppContainer";
+import HeaderPage from "@/src/shared/components/Header/HeaderPage";
 import AppText from "@/src/shared/components/Text/AppText";
 import { Touchable } from "@/src/shared/components/Touchable";
+import { app_colors } from "@/src/shared/consts";
 import { useGps } from "@/src/shared/hooks/useGps";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
@@ -70,50 +72,64 @@ export default function Checklist() {
 
     router.back(); //todo: back somente se for gerado com sucesso.
   };
+  function goBack() {
+    router.back();
+  }
 
   return (
-    <AppContainer style={styles.container}>
-      {checklistNameByStorage !== "" && (
-        <AppText className="mb-6 text-2xl">{checklistNameByStorage}</AppText>
-      )}
+    <>
+      <HeaderPage goBack={goBack} title="Lista de perguntas" />
+      <AppContainer style={styles.container}>
+        {checklistNameByStorage !== "" && (
+          <AppText
+            className="mb-3 text-2xl"
+            style={{ color: app_colors.text.secondary }}
+          >
+            {checklistNameByStorage}
+          </AppText>
+        )}
 
-      <AppText className="mb-2 text-lg">Lista de perguntas:</AppText>
+        {isPending && <Text>Loading...</Text>}
+        {isError && <Text>Erro ao obter perguntas.</Text>}
 
-      {isPending && <Text>Loading...</Text>}
-      {isError && <Text>Erro ao obter perguntas.</Text>}
-
-      {result &&
-        result.map((item, index) => (
-          <View key={index}>
-            <AppText className="mb-1 text-sm">{item.question}</AppText>
-
-            <View style={styles.botoes}>
-              {/* Alterar para check e/ou radio */}
-              <Touchable.Container
-                onPress={() => responder(item.question, "sim")}
-                className="bg-green-500"
+        {result &&
+          result.map((item, index) => (
+            <View key={index}>
+              <AppText
+                className="mb-1 text-sm"
+                style={{ color: app_colors.text.secondary }}
               >
-                <Touchable.Content>Sim</Touchable.Content>
-              </Touchable.Container>
+                {item.question}
+              </AppText>
 
-              <Touchable.Container
-                onPress={() => responder(item.question, "não")}
-                className="bg-red-500"
-              >
-                <Touchable.Content>Não</Touchable.Content>
-              </Touchable.Container>
+              <View style={styles.botoes}>
+                {/* Alterar para check e/ou radio */}
+                <Touchable.Container
+                  onPress={() => responder(item.question, "sim")}
+                  className="bg-green-500"
+                >
+                  <Touchable.Content>Sim</Touchable.Content>
+                </Touchable.Container>
+
+                <Touchable.Container
+                  onPress={() => responder(item.question, "não")}
+                  className="bg-red-500"
+                >
+                  <Touchable.Content>Não</Touchable.Content>
+                </Touchable.Container>
+              </View>
             </View>
-          </View>
-        ))}
+          ))}
 
-      <Touchable.Container onPress={salvar} className="mt-7">
-        <Touchable.Content>
-          {isPendingChecklistResponse
-            ? "Finalizando..."
-            : "Finalizar Checklist"}
-        </Touchable.Content>
-      </Touchable.Container>
-    </AppContainer>
+        <Touchable.Container onPress={salvar} className="mt-7">
+          <Touchable.Content>
+            {isPendingChecklistResponse
+              ? "Finalizando..."
+              : "Finalizar Checklist"}
+          </Touchable.Content>
+        </Touchable.Container>
+      </AppContainer>
+    </>
   );
 }
 
