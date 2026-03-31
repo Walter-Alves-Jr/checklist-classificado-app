@@ -10,6 +10,7 @@ import {
   createTabelaPerguntas,
   createTabelaRespostas,
 } from "./migrations/31032026_create_checklist_module";
+import { createIndexArmazemChecklists } from "./migrations/31032026_create_index_armazem_checklists";
 
 export async function runMigrations(db: SQLiteDatabase) {
   await db.withTransactionAsync(async () => {
@@ -22,5 +23,6 @@ export async function runMigrations(db: SQLiteDatabase) {
     await createTabelaArmazemChecklists(db);
     await createTabelaChecklistExecucoes(db);
     await createTabelaRespostas(db);
+    await createIndexArmazemChecklists(db);
   });
 }

@@ -1,7 +1,7 @@
 import { useGetStorageNameQueryData } from "@/src/features/armazens/hooks/storage/queries/queryData/useGetStorageNameQueryData";
-import { useChecklistResponse } from "@/src/features/checklist/hooks/mutations/useChecklistResponse";
-import { useGetChecklistNameQueryData } from "@/src/features/checklist/hooks/queries/queryData/useGetChecklistNameQueryData";
-import { useQuestionsChecklist } from "@/src/features/checklist/hooks/queries/useQuestionsChecklist";
+import { useChecklistResponse } from "@/src/features/checklists/hooks/mutations/useChecklistResponse";
+import { useGetChecklistNameQueryData } from "@/src/features/checklists/hooks/queries/queryData/useGetChecklistNameQueryData";
+import { useQuestionsChecklist } from "@/src/features/checklists/hooks/queries/useQuestionsChecklist";
 import AppContainer from "@/src/shared/components/Container/AppContainer";
 import HeaderPage from "@/src/shared/components/Header/HeaderPage";
 import AppText from "@/src/shared/components/Text/AppText";

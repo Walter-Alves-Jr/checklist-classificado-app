@@ -1,4 +1,5 @@
-import { useChecklistByStorage } from "@/src/features/checklist/hooks/queries/useChecklistByStorage";
+import { useChecklistArmazemQuery } from "@/src/features/checklists/hooks/queries/use-checklist-armazem-query";
+import { Checklist } from "@/src/features/checklists/types/Checklist";
 import AppContainer from "@/src/shared/components/Container/AppContainer";
 import HeaderPage from "@/src/shared/components/Header/HeaderPage";
 import { Touchable } from "@/src/shared/components/Touchable";
@@ -10,12 +11,9 @@ export default function Checklists() {
     armazemId: string;
   }>();
 
-  const {
-    data: result,
-    isPending,
-    isError,
-    selectedCheckList,
-  } = useChecklistByStorage(Number(armazemId));
+  const { data, isPending, isError } = useChecklistArmazemQuery(
+    Number(armazemId),
+  );
 
   function goBack() {
     router.back();
@@ -30,16 +28,13 @@ export default function Checklists() {
         {/* todo: alterar para toast */}
         {isPending && <Text>Loading...</Text>}
         {/*menos esse */}
-        {result?.length === 0 && <Text>Nenhum checklist cadastrado.</Text>}
+        {data?.length === 0 && <Text>Nenhum checklist cadastrado.</Text>}
         {isError && <Text>Erro ao obter checklists.</Text>}
 
-        {result &&
-          result.map((item: any) => (
-            <Touchable.Container
-              key={item.id}
-              onPress={() => selectedCheckList(item.id)}
-            >
-              <Touchable.Content>{item.name}</Touchable.Content>
+        {data &&
+          data.map((item: Checklist) => (
+            <Touchable.Container key={item.id}>
+              <Touchable.Content>{item.nome}</Touchable.Content>
             </Touchable.Container>
           ))}
       </AppContainer>

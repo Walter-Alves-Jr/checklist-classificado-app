@@ -6,7 +6,16 @@ import { router } from "expo-router";
 import { Text, View } from "react-native";
 
 export default function Armazens() {
-  const { data, isPending, isError } = useArmazensQuery();
+  const { isPending, isError, data } = useArmazensQuery();
+
+  function handleSelectArmazem(id: number) {
+    router.push({
+      pathname: "/armazens/[armazemId]",
+      params: {
+        armazemId: id.toString(),
+      },
+    });
+  }
 
   function goBack() {
     router.back();
@@ -26,7 +35,10 @@ export default function Armazens() {
 
           {data &&
             data.map((item) => (
-              <Touchable.Container key={item.id}>
+              <Touchable.Container
+                key={item.id}
+                onPress={() => handleSelectArmazem(item.id)}
+              >
                 <Touchable.Content>{item.nome}</Touchable.Content>
               </Touchable.Container>
             ))}
