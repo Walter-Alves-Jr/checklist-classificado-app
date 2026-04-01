@@ -31,7 +31,7 @@ export default function AppText({
     <Text
       {...rest}
       style={[{ color: variants[variant].color }, style]}
-      className={cn(`text-sm font-semibold`, className)}
+      className={cn(`text-base font-semibold`, className)}
     >
       {children}
     </Text>

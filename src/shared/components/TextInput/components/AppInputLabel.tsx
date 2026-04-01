@@ -37,12 +37,12 @@ export default function AppInputLabel({
     left: hasIconLeft
       ? interpolate(progress.value, [0, 1], [0, -24])
       : validateValueOrFocus
-        ? -2
+        ? 3
         : 2,
-    top: progress.value ? interpolate(progress.value, [0, 1], [4, -27]) : 12.5,
+    top: progress.value ? interpolate(progress.value, [0, 1], [4, -27]) : 11,
     transform: [
       {
-        scale: interpolate(progress.value, [0, 1], [1, 0.85]),
+        scale: interpolate(progress.value, [0, 1], [1, 1]),
       },
     ],
     fontWeight: validateValueOrFocus ? "600" : "400",
@@ -54,7 +54,7 @@ export default function AppInputLabel({
   }));
 
   return (
-    <Animated.Text style={animatedStyle} className="text-sm">
+    <Animated.Text style={animatedStyle} className="text-base">
       {children}
     </Animated.Text>
   );
