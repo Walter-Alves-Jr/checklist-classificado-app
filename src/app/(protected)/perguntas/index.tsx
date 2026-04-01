@@ -1,15 +1,13 @@
-import { useGetStorageNameQueryData } from "@/src/features/armazens/hooks/storage/queries/queryData/useGetStorageNameQueryData";
 import { useArmazensQuery } from "@/src/features/armazens/hooks/storage/queries/use-armazens-query";
-import { useCheckLinkStorageChecklistQuery } from "@/src/features/armazens/hooks/storage/queries/useCheckLinkStorageChecklistQuery";
-import { usePostChecklistQuery } from "@/src/features/checklists/hooks/mutations/usePostChecklistQuery";
-import { useNomeChecklistQueryData } from "@/src/features/checklists/hooks/queries/data/use-nome-checklist-query-data";
 import { useChecklistsQuery } from "@/src/features/checklists/hooks/queries/use-checklists-query";
+import { usePerguntasMutation } from "@/src/features/perguntas/hooks/storage/mutations/use-perguntas.mutation";
 import { usePerguntasChecklistQuery } from "@/src/features/perguntas/hooks/storage/queries/use-perguntas-checklist-query";
-import { useQuestion } from "@/src/features/perguntas/hooks/useQuestion";
-import { QuestionChecklistType } from "@/src/features/perguntas/types/QuestionChecklistType";
+import { usePerguntas } from "@/src/features/perguntas/hooks/use-perguntas";
+import { Pergunta } from "@/src/features/perguntas/types/Pergunta";
 import AppContainer from "@/src/shared/components/Container/AppContainer";
 import HeaderPage from "@/src/shared/components/Header/HeaderPage";
 import AppText from "@/src/shared/components/Text/AppText";
+import { useToast } from "@/src/shared/components/Toast";
 import { Touchable } from "@/src/shared/components/Touchable";
 import { app_colors } from "@/src/shared/consts";
 import { toLowerAndTrim } from "@/src/shared/utils";
@@ -28,116 +26,94 @@ export default function CadastroPerguntas() {
   const [storageId, setStorageId] = useState<number | undefined>(undefined);
   const [checklistId, setChecklistId] = useState<number | undefined>(undefined);
 
-  const [questions, setQuestions] = useState<QuestionChecklistType[]>([]);
+  const [questions, setQuestions] = useState<Pergunta[]>([]);
   const [newTextQuestion, setNewTextQuestion] = useState("");
 
-  const [responseType, setResponseType] = useState("text"); //todo: implementar hookform
+  const [responseType, setResponseType] = useState("multiple"); //todo: implementar hookform
   const [requiresPhoto, setRequiresPhoto] = useState<boolean>(false); //todo: implementar hookform
 
-  const { data: storagesResult, isPending: isPendingStorages } =
-    useArmazensQuery();
+  const { data: armazens, isPending: isPendingArmazens } = useArmazensQuery();
   const { data: checklistsResult, isPending: isPendingChecklists } =
     useChecklistsQuery();
 
+  const { data: perguntasChecklist, isPending: isPendingPerguntasChecklist } =
+    usePerguntasChecklistQuery(Number(checklistId));
+
   const {
-    data: questionsByChecklist,
-    isPending: isPendingQuestionByChecklist,
-  } = usePerguntasChecklistQuery(Number(checklistId));
+    mutateAsync: cadastrarPerguntas,
+    isPending: isPendingCadastroPerguntas,
+  } = usePerguntasMutation();
+  const { perguntaExisteNoChecklist } = usePerguntas();
 
-  const { postQuestion, questionName } = useQuestion(
-    Number(checklistId),
-    newTextQuestion,
-  );
+  const { show } = useToast();
 
-  const { mutateAsync: postChecklistQuery } = usePostChecklistQuery();
-
-  const { data: relationChecklistStorage } = useCheckLinkStorageChecklistQuery({
-    storageId,
-    checklistId,
-  });
-
-  const { nomeChecklist } = useNomeChecklistQueryData({
-    checklistId: Number(checklistId),
-  });
-
-  const { storageName } = useGetStorageNameQueryData({
-    armazemId: Number(storageId),
-  });
-
-  async function registerQuestion(questionRequest: QuestionChecklistType[]) {
-    if (!storageId || !checklistId || !relationChecklistStorage) return;
+  async function registerQuestion(perguntas: Pergunta[]) {
+    if (!storageId || !checklistId || perguntas.length <= 0) return;
 
     try {
-      const hasQuestions = questionRequest.length > 0;
-      const isLinked = relationChecklistStorage.length > 0;
+      const response = await cadastrarPerguntas({
+        checklistId: checklistId,
+        perguntas,
+      });
 
-      if (isLinked && !hasQuestions) {
-        alert(
-          `Checklist ${nomeChecklist} já vinculado ao Armazém ${storageName}. Cadastre uma nova pergunta ou um novo checklist.`,
-        );
-        return;
-      }
-
-      if (!isLinked) {
-        await postChecklistQuery({ armazemId: storageId, checklistId });
-      }
-
-      if (hasQuestions) {
-        await postQuestion.mutateAsync({
-          questions: questionRequest,
-          checklistId,
+      if (!response)
+        show({
+          title: "Erro!",
+          description: "Não foi possível cadastrar perguntas.",
+          type: "error",
         });
 
-        alert("Perguntas cadastradas com sucesso");
-        resetFormNewQuestion();
+      show({ title: "Sucesso!", description: "Perguntas cadastradas." });
+      resetFormNewQuestion();
 
-        //implementar hookform
-        setQuestions([]);
-        setStorageId(undefined);
-        setChecklistId(undefined);
-        setQuestions([]);
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Erro ao cadastrar perguntas");
+      //implementar hookform
+      setQuestions([]);
+      setStorageId(undefined);
+      setChecklistId(undefined);
+      setQuestions([]);
+    } catch {
+      show({
+        title: "Erro!",
+        description: "Não foi possível cadastrar perguntas.",
+        type: "error",
+      });
     }
   }
 
-  async function handleRegisterChecklistQuestion() {
+  async function handleCadastrarPerguntasChecklist() {
     if (!checklistId) return;
     await registerQuestion(questions);
-  }
-
-  function checksQuestionHasAlreadyBeenRegistered(): boolean {
-    const newQuestionNormalized = toLowerAndTrim(newTextQuestion);
-
-    if (!newQuestionNormalized) return false;
-
-    const allQuestions = new Set([
-      ...(questionName ? [toLowerAndTrim(questionName)] : []),
-      ...questions.map((q) => toLowerAndTrim(q.question)),
-    ]);
-
-    if (allQuestions.has(newQuestionNormalized)) {
-      alert(`Pergunta já existe no ${nomeChecklist}`);
-      return false;
-    }
-
-    return true;
   }
 
   async function handleAddQuestion() {
     if (!newTextQuestion.trim() || !checklistId) return;
 
-    const newQuestion: QuestionChecklistType = {
+    const newQuestion: Pergunta = {
       id: Date.now(),
-      checklistId: Number(checklistId),
-      question: newTextQuestion,
-      requiresPhoto,
-      responseType,
+      checklist_id: Number(checklistId),
+      pergunta: newTextQuestion,
+      requires_photo: requiresPhoto ? 1 : 0,
+      response_type: responseType,
     };
 
-    if (!checksQuestionHasAlreadyBeenRegistered()) return;
+    const response = await perguntaExisteNoChecklist(
+      checklistId,
+      toLowerAndTrim(newTextQuestion),
+    );
+
+    const existePerguntaNoState = questions.filter(
+      (q) => toLowerAndTrim(q.pergunta) === toLowerAndTrim(newTextQuestion),
+    );
+
+    if (response) return;
+    if (existePerguntaNoState.length > 0) {
+      show({
+        title: "Ops!",
+        description: "Pergunta já existe no checklist.",
+        type: "warning",
+      });
+      return;
+    }
 
     resetFormNewQuestion();
     setQuestions((prev) => [...prev, newQuestion]);
@@ -145,13 +121,13 @@ export default function CadastroPerguntas() {
 
   function resetFormNewQuestion() {
     setRequiresPhoto(false);
-    setResponseType("text");
+    setResponseType("multiple");
     setNewTextQuestion("");
-    setAddMode(false);
   }
 
   function handleCancelar() {
     resetFormNewQuestion();
+    setAddMode(false);
   }
 
   function onChangeStorage(storageId: number) {
@@ -173,13 +149,13 @@ export default function CadastroPerguntas() {
 
         <Dropdown
           style={styles.dropdown}
-          data={storagesResult ?? []}
+          data={armazens ?? []}
           labelField="nome"
           valueField="id"
-          placeholder={isPendingStorages ? "Loading..." : "Selecione o Armazém"}
+          placeholder={isPendingArmazens ? "Loading..." : "Selecione o Armazém"}
           value={storageId}
           onChange={(storage) => onChangeStorage(storage.id)}
-          disable={isPendingStorages}
+          disable={isPendingArmazens}
         />
 
         {/* CHECKLIST */}
@@ -204,21 +180,19 @@ export default function CadastroPerguntas() {
 
         {/* PERGUNTAS EXISTENTES */}
 
-        {isPendingQuestionByChecklist && checklistId && <Text>Loading...</Text>}
+        {isPendingPerguntasChecklist && checklistId && <Text>Loading...</Text>}
 
-        {checklistId &&
-          questionsByChecklist &&
-          questionsByChecklist.length > 0 && (
-            <Text>Perguntas do checklist selecionado:</Text>
-          )}
+        {checklistId && perguntasChecklist && perguntasChecklist.length > 0 && (
+          <Text>Perguntas do checklist selecionado:</Text>
+        )}
 
-        {questionsByChecklist &&
-          questionsByChecklist.length === 0 &&
+        {perguntasChecklist &&
+          perguntasChecklist.length === 0 &&
           questions.length === 0 && <Text>Nenhuma pergunta cadastrada.</Text>}
 
-        <View className="mb-4 mt-2 flex flex-row gap-2">
-          {questionsByChecklist &&
-            questionsByChecklist?.map((item, index) => (
+        <View className="mb-4 mt-2 flex flex-row flex-wrap gap-2">
+          {perguntasChecklist &&
+            perguntasChecklist?.map((item, index) => (
               <View key={index} className="rounded-md bg-gray-300 p-2">
                 <Text>{item.pergunta}</Text>
               </View>
@@ -227,7 +201,7 @@ export default function CadastroPerguntas() {
           {questions &&
             questions?.map((item, index) => (
               <View key={index} className="rounded-md bg-emerald-500 p-2">
-                <Text>{item.question}</Text>
+                <Text>{item.pergunta}</Text>
               </View>
             ))}
         </View>
@@ -264,6 +238,7 @@ export default function CadastroPerguntas() {
               style={styles.input}
               value={newTextQuestion}
               onChangeText={setNewTextQuestion}
+              autoFocus
             />
 
             <View className="mb-4 flex flex-col gap-y-3">
@@ -311,6 +286,15 @@ export default function CadastroPerguntas() {
                       style={{ flexDirection: "row", alignItems: "center" }}
                     >
                       <RadioButton
+                        value="multiple"
+                        color={brand.background.orange.backgroundColor}
+                      />
+                      <Text>Múltiplo</Text>
+                    </View>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <RadioButton
                         value="text"
                         color={brand.background.orange.backgroundColor}
                       />
@@ -324,15 +308,6 @@ export default function CadastroPerguntas() {
                         color={brand.background.orange.backgroundColor}
                       />
                       <Text>Número</Text>
-                    </View>
-                    <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
-                    >
-                      <RadioButton
-                        value="multiple"
-                        color={brand.background.orange.backgroundColor}
-                      />
-                      <Text>Múltiplo</Text>
                     </View>
                   </View>
                 </RadioButton.Group>
@@ -364,9 +339,11 @@ export default function CadastroPerguntas() {
         )}
 
         <View>
-          <Touchable.Container onPress={handleRegisterChecklistQuestion}>
+          <Touchable.Container onPress={handleCadastrarPerguntasChecklist}>
             <Touchable.Content>
-              {postQuestion.isPending ? "Cadastrando..." : "Cadastrar Pergunta"}
+              {isPendingCadastroPerguntas
+                ? "Cadastrando..."
+                : "Cadastrar Perguntas"}
             </Touchable.Content>
           </Touchable.Container>
         </View>

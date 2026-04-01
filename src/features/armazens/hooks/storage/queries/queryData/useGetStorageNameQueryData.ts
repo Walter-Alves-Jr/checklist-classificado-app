@@ -2,7 +2,7 @@ import { queryClient } from "@/src/lib/react-query";
 
 type QueryDataType = {
   id: number;
-  name: string;
+  nome: string;
 };
 
 type UseStorageProps = {
@@ -10,11 +10,11 @@ type UseStorageProps = {
 };
 
 export function useGetStorageNameQueryData({ armazemId }: UseStorageProps) {
-  const storagesData = queryClient.getQueryData<QueryDataType[]>(["storages"]);
+  const storagesData = queryClient.getQueryData<QueryDataType[]>(["armazens"]);
 
   const storageName = storagesData?.find(
     (storage) => Number(storage.id) === Number(armazemId),
-  )?.name;
+  )?.nome;
 
   return {
     storageName,

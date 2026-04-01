@@ -24,7 +24,8 @@ export default function AppHomeHeader() {
             <View className="items-left flex flex-col">
               <AppText className="text-xs font-normal">Bem-vindo(a),</AppText>
               <AppText className="font-semibold leading-3 text-gray-200">
-                {brand.name}
+                {/* {brand.name} */}
+                Admin
               </AppText>
             </View>
           </View>

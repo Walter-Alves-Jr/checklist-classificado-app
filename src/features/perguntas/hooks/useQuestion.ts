@@ -30,7 +30,7 @@ export function useQuestion(questionId: number, newQuestion: string) {
   });
 
   const questionsQueryData = queryClient.getQueryData<QuestionChecklistType[]>([
-    "questionsChecklist",
+    "perguntas_checklist",
     Number(questionId),
   ]);
 

@@ -5,19 +5,25 @@ import { usePerguntasChecklistQuery } from "@/src/features/perguntas/hooks/stora
 import AppContainer from "@/src/shared/components/Container/AppContainer";
 import HeaderPage from "@/src/shared/components/Header/HeaderPage";
 import AppText from "@/src/shared/components/Text/AppText";
+import { useToast } from "@/src/shared/components/Toast";
 import { Touchable } from "@/src/shared/components/Touchable";
 import { app_colors } from "@/src/shared/consts";
 import { useGps } from "@/src/shared/hooks/useGps";
+import { useBrand } from "@/src/theme/useBrand";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { RadioButton } from "react-native-paper";
 
 export default function Checklist() {
-  const [respostas, setRespostas] = useState<{ [key: string]: string }>({});
   const { checklistId, armazemId } = useLocalSearchParams<{
     checklistId: string;
     armazemId: string;
   }>();
+
+  const [respostas, setRespostas] = useState<Record<number, boolean>>({});
+
+  const brand = useBrand();
 
   const {
     data: perguntasChecklist,
@@ -35,26 +41,33 @@ export default function Checklist() {
     armazemId: Number(armazemId),
   });
 
+  const { show } = useToast();
+
   const { storageName } = useGetStorageNameQueryData({
     armazemId: Number(armazemId),
   });
 
-  function responder(pergunta: string, resposta: string) {
-    setRespostas({
-      ...respostas,
-      [pergunta]: resposta,
-    });
+  function handleChange(perguntaId: number, value: string) {
+    setRespostas((prev) => ({
+      ...prev,
+      [perguntaId]: value === "true",
+    }));
   }
 
   const salvar = async () => {
     if (!respostas || !nomeChecklistSelecionado || !storageName) return;
+
+    if (!gpsResult?.coords)
+      return alert("Informe sua localização para gerar o relatório!");
+
+    const { latitude, longitude } = gpsResult?.coords;
 
     const dados = {
       checklistName: nomeChecklistSelecionado,
       armazemName: storageName,
       fotos: [],
       data: new Date().toISOString(),
-      gps: gpsResult?.toString() || "",
+      gps: `${latitude}, ${longitude}`,
       respostas,
     };
 
@@ -66,9 +79,8 @@ export default function Checklist() {
     //   dados,
     // });
 
-    // alert("Checklist registrado"); todo: Inserir toast para mensagens.
-
-    router.back(); //todo: back somente se for gerado com sucesso.
+    router.back();
+    show({ title: "Relatório gerado com sucesso!" });
   };
   function goBack() {
     router.back();
@@ -77,7 +89,7 @@ export default function Checklist() {
   return (
     <>
       <HeaderPage goBack={goBack} title="Lista de perguntas" />
-      <AppContainer style={styles.container}>
+      <AppContainer>
         {nomeChecklistSelecionado !== "" && (
           <AppText
             className="mb-3 text-2xl"
@@ -90,34 +102,43 @@ export default function Checklist() {
         {isPending && <Text>Loading...</Text>}
         {isError && <Text>Erro ao obter perguntas.</Text>}
 
-        {perguntasChecklist &&
-          perguntasChecklist.map((item, index) => (
-            <View key={index}>
-              <AppText
-                className="mb-1 text-sm"
-                style={{ color: app_colors.text.secondary }}
-              >
-                {item.pergunta}
-              </AppText>
+        {perguntasChecklist?.map((item) => (
+          <View key={item.id} style={{ marginBottom: 16 }}>
+            <AppText
+              className="mb-1 text-sm"
+              style={{ color: app_colors.text.secondary }}
+            >
+              {item.pergunta}
+            </AppText>
 
-              <View style={styles.botoes}>
-                {/* Alterar para check e/ou radio */}
-                <Touchable.Container
-                  onPress={() => responder(item.pergunta, "sim")}
-                  className="bg-green-500"
-                >
-                  <Touchable.Content>Sim</Touchable.Content>
-                </Touchable.Container>
+            <RadioButton.Group
+              onValueChange={(value) => handleChange(item.id, value)}
+              value={
+                respostas[item.id] !== undefined
+                  ? respostas[item.id].toString()
+                  : ""
+              }
+            >
+              <View style={{ flexDirection: "row", gap: 8 }}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <RadioButton
+                    value="true"
+                    color={brand.background.orange.backgroundColor}
+                  />
+                  <Text>Sim</Text>
+                </View>
 
-                <Touchable.Container
-                  onPress={() => responder(item.pergunta, "não")}
-                  className="bg-red-500"
-                >
-                  <Touchable.Content>Não</Touchable.Content>
-                </Touchable.Container>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <RadioButton
+                    value="false"
+                    color={brand.background.orange.backgroundColor}
+                  />
+                  <Text>Não</Text>
+                </View>
               </View>
-            </View>
-          ))}
+            </RadioButton.Group>
+          </View>
+        ))}
 
         <Touchable.Container onPress={salvar} className="mt-7">
           <Touchable.Content>
@@ -130,46 +151,3 @@ export default function Checklist() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-
-  titulo: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
-
-  pergunta: {
-    marginBottom: 20,
-  },
-
-  textoPergunta: {
-    marginBottom: 10,
-  },
-
-  botoes: {
-    flexDirection: "row",
-    gap: 10,
-  },
-
-  botao: {
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 6,
-  },
-
-  salvar: {
-    backgroundColor: "#ff6a00",
-    padding: 16,
-    alignItems: "center",
-    borderRadius: 8,
-  },
-
-  textoSalvar: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-});

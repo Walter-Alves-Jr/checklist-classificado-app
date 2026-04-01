@@ -1,8 +1,11 @@
+import { useGetStorageNameQueryData } from "@/src/features/armazens/hooks/storage/queries/queryData/useGetStorageNameQueryData";
 import { useChecklistArmazemQuery } from "@/src/features/checklists/hooks/queries/use-checklist-armazem-query";
 import { Checklist } from "@/src/features/checklists/types/Checklist";
 import AppContainer from "@/src/shared/components/Container/AppContainer";
 import HeaderPage from "@/src/shared/components/Header/HeaderPage";
+import AppText from "@/src/shared/components/Text/AppText";
 import { Touchable } from "@/src/shared/components/Touchable";
+import { app_colors } from "@/src/shared/consts";
 import { router, useLocalSearchParams } from "expo-router";
 import { Text } from "react-native";
 
@@ -14,6 +17,10 @@ export default function Checklists() {
   const { data, isPending, isError } = useChecklistArmazemQuery(
     Number(armazemId),
   );
+
+  const { storageName } = useGetStorageNameQueryData({
+    armazemId: Number(armazemId),
+  });
 
   function handleSelectChecklist(id: number) {
     router.push({
@@ -35,6 +42,12 @@ export default function Checklists() {
     <>
       <HeaderPage goBack={goBack} title="Selecionar Checklist" />
       <AppContainer>
+        <AppText
+          className="mb-5 text-2xl"
+          style={{ color: app_colors.text.secondary }}
+        >
+          {storageName}
+        </AppText>
         {/* todo: alterar para toast */}
         {isPending && <Text>Loading...</Text>}
         {/*menos esse */}

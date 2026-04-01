@@ -42,4 +42,44 @@ export class PerguntasService {
       checklistId,
     );
   }
+
+  async cadastrarPerguntas(checklistId: number, perguntas: Pergunta[]) {
+    const connection = await NetInfo.fetch();
+
+    if (connection.isConnected) {
+      try {
+        return await this.perguntasRepository.cadastrarPerguntas(
+          checklistId,
+          perguntas,
+        );
+      } catch {
+        throw new Error("Erro ao obter perguntas do checklist.");
+      }
+    }
+
+    return await this.perguntasLocalRepository.cadastrarPerguntas(
+      checklistId,
+      perguntas,
+    );
+  }
+
+  async perguntaExisteNoChecklist(checklistId: number, pergunta: string) {
+    const connection = await NetInfo.fetch();
+
+    if (connection.isConnected) {
+      try {
+        return await this.perguntasRepository.perguntaExisteNoChecklist(
+          checklistId,
+          pergunta,
+        );
+      } catch {
+        throw new Error("Erro ao obter perguntas do checklist.");
+      }
+    }
+
+    return await this.perguntasLocalRepository.perguntaExisteNoChecklist(
+      checklistId,
+      pergunta,
+    );
+  }
 }
