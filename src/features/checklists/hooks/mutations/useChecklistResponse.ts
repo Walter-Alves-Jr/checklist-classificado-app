@@ -1,16 +1,12 @@
-import { registerChecklistResponseLocalStorage } from "@/src/localStorage/services/localStorageService";
 import { useMutation } from "@tanstack/react-query";
-import {
-  generateChecklistPDF,
-  registerChecklistResponse,
-} from "../../../armazens/services/checklistService";
+import { generateChecklistPDF } from "../../services/checklists-execucao.service";
 import { ChecklistExecuteType } from "../../types/ChecklistExecuteType";
 
 export function useChecklistResponse() {
   return useMutation({
     mutationFn: async (dados: ChecklistExecuteType) => {
-      await registerChecklistResponseLocalStorage(dados);
-      await registerChecklistResponse(dados);
+      // await registerChecklistResponseLocalStorage(dados);
+      // await registerChecklistResponse(dados);
 
       return dados;
     },
