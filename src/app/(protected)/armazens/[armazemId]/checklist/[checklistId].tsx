@@ -40,7 +40,6 @@ export default function Checklist() {
     checklistId: Number(checklistId),
     armazemId: Number(armazemId),
   });
-
   const { show } = useToast();
 
   const { storageName } = useGetStorageNameQueryData({
@@ -79,9 +78,10 @@ export default function Checklist() {
     //   dados,
     // });
 
-    router.back();
+    goBack();
     show({ title: "Relatório gerado com sucesso!" });
   };
+
   function goBack() {
     router.back();
   }
