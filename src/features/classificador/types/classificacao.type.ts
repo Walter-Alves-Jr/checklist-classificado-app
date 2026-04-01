@@ -10,21 +10,22 @@ export interface IClassificacaoResponse {
   produto: string;
   terminal: string;
   cultura: ICultura;
-  umidade: number;
-  impureza: number;
-  ardidos: number;
-  mofados: number;
-  germinados: number;
-  quebrados: number;
-  resultado: ResultadoClassificacao;
+  umidade?: number;
+  impureza?: number;
+  ardidos?: number;
+  mofados?: number;
+  germinados?: number;
+  quebrados?: number;
+  resultado?: ResultadoClassificacao;
+  pesoHectolitro?: number;
   status?: string;
   data?: string; // DATE
 }
 
 export interface IClassificacaoRequest {
   cultura: ICultura;
-  umidade: number;
-  impureza: number;
+  umidade?: number;
+  impureza?: number;
   ardidos?: number;
   mofados?: number;
   germinados?: number;

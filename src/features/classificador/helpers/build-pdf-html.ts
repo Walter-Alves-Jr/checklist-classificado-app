@@ -5,13 +5,20 @@ export function buildHTML(data: IClassificacaoResponse) {
     cultura,
     umidade,
     impureza,
+    quebrados,
     ardidos,
     mofados,
     germinados,
+    pesoHectolitro,
     resultado,
   } = data;
 
-  const aprovado = resultado.tipo === "TIPO 1";
+  function renderItem(label: string, value?: number) {
+    if (value === undefined || value === null) return "";
+    return `<div class="item"><b>${label}:</b> ${value}%</div>`;
+  }
+
+  const aprovado = resultado?.tipo === "TIPO 1";
   const statusColor = aprovado ? "#16a34a" : "#dc2626";
   const statusText = aprovado ? "APROVADO" : "REPROVADO";
 
@@ -114,24 +121,26 @@ export function buildHTML(data: IClassificacaoResponse) {
 
     <div class="card">
       <div class="section-title">Informações Gerais</div>
-
+      
       <div class="grid">
         <div class="item"><b>Cultura:</b> ${cultura.toUpperCase()}</div>
-        <div class="item"><b>Umidade:</b> ${umidade}%</div>
-        <div class="item"><b>Impureza:</b> ${impureza}%</div>
-        <div class="item"><b>Ardidos:</b> ${ardidos}%</div>
-        <div class="item"><b>Mofados:</b> ${mofados}%</div>
-        <div class="item"><b>Germinados:</b> ${germinados}%</div>
+        ${renderItem("Umidade", umidade)}
+        ${renderItem("Impureza", impureza)}
+        ${renderItem("Quebrados", quebrados)}
+        ${renderItem("Ardidos", ardidos)}
+        ${renderItem("Mofados", mofados)}
+        ${renderItem("Germinados", germinados)}
+        ${renderItem("Peso Hectolitro", pesoHectolitro)}
       </div>
     </div>
 
     <div class="card result">
       <div class="section-title">Resultado da Classificação</div>
 
-      <div class="tipo">${resultado.tipo}</div>
+      <div class="tipo">${resultado?.tipo}</div>
       <div class="status">${statusText}</div>
 
-      <p style="margin-top:10px">${resultado.observacao}</p>
+      <p style="margin-top:10px">${resultado?.observacao}</p>
     </div>
 
     <div class="footer">

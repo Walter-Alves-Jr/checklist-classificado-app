@@ -18,6 +18,7 @@ import {
   classificarMAPA,
   generateClassificationPDF,
 } from "./services/classificador-service";
+import { ResultadoClassificacao } from "./types/classificacao-response.type";
 import { IClassificacaoResponse } from "./types/classificacao.type";
 
 // todo: Refatorar componente e separar responsabilidades
@@ -43,33 +44,55 @@ const classifierSchema = z.object({
   cultura: z.enum(["soja", "milho", "trigo"]),
   umidade: z.coerce
     .number<string>({ error: "Informe apenas números." })
-    .min(1, "Informe umidade.")
-    .max(100, "Informe um número entre 0 e 100."),
+    .optional(),
   impureza: z.coerce
     .number<string>({ error: "Informe apenas números." })
-    .min(1, "Informe impureza.")
-    .max(100, "Informe um número entre 0 e 100."),
+    .optional(),
   ardidos: z.coerce
     .number<string>({ error: "Informe apenas números." })
-    .min(1, "Informe ardidos.")
-    .max(100, "Informe um número entre 0 e 100."),
+    .optional(),
   mofados: z.coerce
     .number<string>({ error: "Informe apenas números." })
-    .min(1, "Informe mofados.")
-    .max(100, "Informe um número entre 0 e 100."),
+    .optional(),
   germinados: z.coerce
     .number<string>({ error: "Informe apenas números." })
-    .min(1, "Informe germinados.")
-    .max(100, "Informe um número entre 0 e 100."),
+    .optional(),
   quebrados: z.coerce
     .number<string>({ error: "Informe apenas números." })
-    .min(1, "Informe quebrados.")
-    .max(100, "Informe um número entre 0 e 100."),
+    .optional(),
   pesoHectolitro: z.coerce
     .number<string>({ error: "Informe apenas números." })
-    .min(1, "Informe Peso hectolitro.")
-    .max(100, "Informe um número entre 0 e 100."),
+    .optional(),
 });
+
+// umidade: z.coerce
+//   .number<string>({ error: "Informe apenas números." })
+//   .min(1, "Informe umidade.")
+//   .max(100, "Informe um número entre 0 e 100."),
+// impureza: z.coerce
+//   .number<string>({ error: "Informe apenas números." })
+//   .min(1, "Informe impureza.")
+//   .max(100, "Informe um número entre 0 e 100."),
+// ardidos: z.coerce
+//   .number<string>({ error: "Informe apenas números." })
+//   .min(1, "Informe ardidos.")
+//   .max(100, "Informe um número entre 0 e 100."),
+// mofados: z.coerce
+//   .number<string>({ error: "Informe apenas números." })
+//   .min(1, "Informe mofados.")
+//   .max(100, "Informe um número entre 0 e 100."),
+// germinados: z.coerce
+//   .number<string>({ error: "Informe apenas números." })
+//   .min(1, "Informe germinados.")
+//   .max(100, "Informe um número entre 0 e 100."),
+// quebrados: z.coerce
+//   .number<string>({ error: "Informe apenas números." })
+//   .min(1, "Informe quebrados.")
+//   .max(100, "Informe um número entre 0 e 100."),
+// pesoHectolitro: z.coerce
+//   .number<string>({ error: "Informe apenas números." })
+//   .min(1, "Informe Peso hectolitro.")
+//   .max(100, "Informe um número entre 0 e 100."),
 
 type FormInput = z.input<typeof classifierSchema>;
 type FormOutput = z.output<typeof classifierSchema>;
@@ -88,7 +111,7 @@ export default function AppClassificador() {
       transportadora: "",
       produto: "",
       terminal: "",
-      cultura: "soja",
+      cultura: "trigo",
       umidade: "",
       impureza: "",
       ardidos: "",
@@ -99,7 +122,24 @@ export default function AppClassificador() {
     },
   });
 
+  const { cultura } = watch();
+
+  useEffect(() => {
+    reset({
+      cultura,
+      umidade: undefined,
+      impureza: undefined,
+      ardidos: undefined,
+      mofados: undefined,
+      germinados: undefined,
+      quebrados: undefined,
+      pesoHectolitro: undefined,
+    });
+  }, [cultura]);
+
   function onSubmit(data: FormOutput) {
+    let resultadoClassificacao = {} as ResultadoClassificacao | undefined;
+
     const {
       cultura,
       umidade,
@@ -111,18 +151,39 @@ export default function AppClassificador() {
       quebrados,
     } = data;
 
-    const resultado = classificarMAPA({
-      cultura,
-      umidade,
-      impureza,
-      ardidos,
-      mofados,
-      germinados,
-      quebrados,
-      pesoHectolitro,
-    });
+    if (cultura === "soja") {
+      resultadoClassificacao = classificarMAPA({
+        cultura,
+        ardidos,
+        mofados,
+        germinados,
+        umidade,
+        impureza,
+      });
+    }
 
-    const dados: IClassificacaoResponse = { resultado, ...data };
+    if (cultura === "milho") {
+      resultadoClassificacao = classificarMAPA({
+        cultura,
+        umidade,
+        impureza,
+        quebrados,
+      });
+    }
+
+    if (cultura === "trigo") {
+      resultadoClassificacao = classificarMAPA({
+        cultura,
+        pesoHectolitro,
+      });
+    }
+
+    if (!resultadoClassificacao) return;
+
+    const dados: IClassificacaoResponse = {
+      resultado: resultadoClassificacao,
+      ...data,
+    };
 
     registerClassificationLocalStorage(dados);
     generateClassificationPDF(dados);
@@ -311,131 +372,143 @@ export default function AppClassificador() {
               />
             </View>
 
-            <Controller
-              control={control}
-              name="umidade"
-              render={({
-                field: { value, onChange },
-                fieldState: { error },
-              }) => (
-                <View>
-                  <AppTextInput
-                    label="Umidade (%)"
-                    value={value}
-                    onChangeText={onChange}
-                    error={error}
-                  />
-                </View>
-              )}
-            />
+            {(cultura === "milho" || cultura === "soja") && (
+              <>
+                <Controller
+                  control={control}
+                  name="umidade"
+                  render={({
+                    field: { value, onChange },
+                    fieldState: { error },
+                  }) => (
+                    <View>
+                      <AppTextInput
+                        label="Umidade (%)"
+                        value={value ?? ""}
+                        onChangeText={onChange}
+                        error={error}
+                      />
+                    </View>
+                  )}
+                />
 
-            <Controller
-              control={control}
-              name="impureza"
-              render={({
-                field: { value, onChange },
-                fieldState: { error },
-              }) => (
-                <View>
-                  <AppTextInput
-                    label="Impureza (%)"
-                    value={value}
-                    onChangeText={onChange}
-                    error={error}
-                  />
-                </View>
-              )}
-            />
+                <Controller
+                  control={control}
+                  name="impureza"
+                  render={({
+                    field: { value, onChange },
+                    fieldState: { error },
+                  }) => (
+                    <View>
+                      <AppTextInput
+                        label="Impureza (%)"
+                        value={value ?? ""}
+                        onChangeText={onChange}
+                        error={error}
+                      />
+                    </View>
+                  )}
+                />
+              </>
+            )}
 
-            <Controller
-              control={control}
-              name="ardidos"
-              render={({
-                field: { value, onChange },
-                fieldState: { error },
-              }) => (
-                <View>
-                  <AppTextInput
-                    label="Ardidos (%)"
-                    value={value}
-                    onChangeText={onChange}
-                    error={error}
-                  />
-                </View>
-              )}
-            />
+            {cultura === "milho" && (
+              <Controller
+                control={control}
+                name="quebrados"
+                render={({
+                  field: { value, onChange },
+                  fieldState: { error },
+                }) => (
+                  <View>
+                    <AppTextInput
+                      label="Quebrados (%)"
+                      value={value ?? ""}
+                      onChangeText={onChange}
+                      error={error}
+                    />
+                  </View>
+                )}
+              />
+            )}
 
-            <Controller
-              control={control}
-              name="mofados"
-              render={({
-                field: { value, onChange },
-                fieldState: { error },
-              }) => (
-                <View>
-                  <AppTextInput
-                    label="Mofados (%)"
-                    value={value}
-                    onChangeText={onChange}
-                    error={error}
-                  />
-                </View>
-              )}
-            />
+            {cultura === "soja" && (
+              <>
+                <Controller
+                  control={control}
+                  name="ardidos"
+                  render={({
+                    field: { value, onChange },
+                    fieldState: { error },
+                  }) => (
+                    <View>
+                      <AppTextInput
+                        label="Ardidos (%)"
+                        value={value ?? ""}
+                        onChangeText={onChange}
+                        error={error}
+                      />
+                    </View>
+                  )}
+                />
 
-            <Controller
-              control={control}
-              name="germinados"
-              render={({
-                field: { value, onChange },
-                fieldState: { error },
-              }) => (
-                <View>
-                  <AppTextInput
-                    label="Germinados (%)"
-                    value={value}
-                    onChangeText={onChange}
-                    error={error}
-                  />
-                </View>
-              )}
-            />
+                <Controller
+                  control={control}
+                  name="mofados"
+                  render={({
+                    field: { value, onChange },
+                    fieldState: { error },
+                  }) => (
+                    <View>
+                      <AppTextInput
+                        label="Mofados (%)"
+                        value={value ?? ""}
+                        onChangeText={onChange}
+                        error={error}
+                      />
+                    </View>
+                  )}
+                />
 
-            <Controller
-              control={control}
-              name="quebrados"
-              render={({
-                field: { value, onChange },
-                fieldState: { error },
-              }) => (
-                <View>
-                  <AppTextInput
-                    label="Quebrados (%)"
-                    value={value}
-                    onChangeText={onChange}
-                    error={error}
-                  />
-                </View>
-              )}
-            />
+                <Controller
+                  control={control}
+                  name="germinados"
+                  render={({
+                    field: { value, onChange },
+                    fieldState: { error },
+                  }) => (
+                    <View>
+                      <AppTextInput
+                        label="Germinados (%)"
+                        value={value ?? ""}
+                        onChangeText={onChange}
+                        error={error}
+                      />
+                    </View>
+                  )}
+                />
+              </>
+            )}
 
-            <Controller
-              control={control}
-              name="pesoHectolitro"
-              render={({
-                field: { value, onChange },
-                fieldState: { error },
-              }) => (
-                <View>
-                  <AppTextInput
-                    label="Peso Hectolitro (%)"
-                    value={value}
-                    onChangeText={onChange}
-                    error={error}
-                  />
-                </View>
-              )}
-            />
+            {cultura === "trigo" && (
+              <Controller
+                control={control}
+                name="pesoHectolitro"
+                render={({
+                  field: { value, onChange },
+                  fieldState: { error },
+                }) => (
+                  <View>
+                    <AppTextInput
+                      label="Peso Hectolitro (%)"
+                      value={value ?? ""}
+                      onChangeText={onChange}
+                      error={error}
+                    />
+                  </View>
+                )}
+              />
+            )}
           </View>
         </View>
 

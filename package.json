@@ -10,7 +10,8 @@
     "web": "expo start --web",
     "web-reset": "expo start -c --web",
     "lint": "expo lint",
-    "server": "json-server --watch src/db/db.json --host 0.0.0.0"
+    "server": "json-server --watch src/db/db.json --host 0.0.0.0",
+    "build": "eas build -p android --profile preview"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",

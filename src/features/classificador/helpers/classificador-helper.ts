@@ -18,6 +18,7 @@ export function foraTipo(observacao: string): ResultadoClassificacao {
 export function aplicarMapa(d: IClassificacaoRequest) {
   const mapa = {
     soja: () => {
+      if (!d.umidade || !d.impureza) return;
       const totalAvariados =
         (d.ardidos ?? 0) + (d.mofados ?? 0) + (d.germinados ?? 0);
 
@@ -32,6 +33,7 @@ export function aplicarMapa(d: IClassificacaoRequest) {
     },
 
     milho: () => {
+      if (!d.umidade || !d.impureza) return;
       if (d.umidade > 14) return foraTipo("Umidade acima do limite");
 
       if (d.impureza > 1) return foraTipo("Impureza acima do limite");

@@ -14,10 +14,7 @@ export default function AppMenuBottomOptions() {
   const brand = useBrand();
 
   return (
-    <View
-      className="rounded-t-3xl p-1 pb-6 pt-2"
-      style={brand.background.orange}
-    >
+    <View className="rounded-t-3xl p-1 pt-2" style={brand.background.orange}>
       <View className="flex w-full flex-row items-center justify-around">
         <AppButton
           className="flex w-1/3 flex-col items-center bg-transparent p-1"

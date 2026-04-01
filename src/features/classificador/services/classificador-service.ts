@@ -12,7 +12,7 @@ import * as Sharing from "expo-sharing";
 
 export function classificarMAPA(
   d: IClassificacaoRequest,
-): ResultadoClassificacao {
+): ResultadoClassificacao | undefined {
   const mapa = aplicarMapa(d);
   const regra = mapa[d.cultura];
 

@@ -1,8 +1,28 @@
 import { AppButton } from "@/src/shared/components/Button";
 import AppText from "@/src/shared/components/Text/AppText";
-import { View } from "react-native";
+import { runMigrations } from "@/src/sqlite/create-database";
+import { useSQLiteContext } from "expo-sqlite";
+import { Alert, View } from "react-native";
 
 export default function AppRatings() {
+  const db = useSQLiteContext();
+
+  function handleRunMigrations() {
+    Alert.alert(
+      "Atenção",
+      "Isso vai resetar todas as tabelas. Deseja continuar?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Confirmar",
+          onPress: async () => {
+            await runMigrations(db);
+          },
+        },
+      ],
+    );
+  }
+
   return (
     <View className="mt-5 flex flex-col gap-y-2">
       <AppText className="text-center text-xl font-bold">
@@ -33,8 +53,8 @@ export default function AppRatings() {
       </View>
 
       <View className="mt-5 items-center">
-        <AppButton useTheme={false}>
-          <AppButton.Text>Sincronizar</AppButton.Text>
+        <AppButton useTheme={false} onPress={handleRunMigrations}>
+          <AppButton.Text>Resetar Tabelas</AppButton.Text>
         </AppButton>
       </View>
     </View>
