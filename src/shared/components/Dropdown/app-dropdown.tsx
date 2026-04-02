@@ -4,20 +4,20 @@ import { DropdownOption } from "./components/app-dropdown-list";
 
 type AppDropdownProps<T> = {
   value: T;
-  setValue: React.Dispatch<T>;
+  onChange: () => void;
   options: DropdownOption<T>[];
   placeholder?: string;
 };
 
 export default function AppDropdown({
   value,
-  setValue,
+  onChange,
   options,
   placeholder = "Selecionar...",
 }: AppDropdownProps<any>) {
   return (
     <View className="p-4">
-      <Dropdown value={value} onChange={setValue}>
+      <Dropdown value={value} onChange={onChange}>
         <Dropdown.Trigger placeholder={placeholder} />
 
         <Dropdown.Content>

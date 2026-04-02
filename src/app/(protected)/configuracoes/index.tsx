@@ -3,10 +3,10 @@ import HeaderPage from "@/src/shared/components/Header/HeaderPage";
 import AppText from "@/src/shared/components/Text/AppText";
 import { router } from "expo-router";
 
-export default function Dashboard() {
+export default function Configuracoes() {
   return (
     <>
-      <HeaderPage title="Dashboard" goBack={() => router.push("/")} />
+      <HeaderPage title="Configurações" goBack={() => router.push("/")} />
       <AppContainer>
         <AppText style={{ color: "#242424" }}>Em breve...</AppText>
       </AppContainer>

@@ -11,10 +11,22 @@ export default function HeaderPage({ goBack, title }: HeaderPageProps) {
 
   return (
     <Appbar.Header
-      style={{ backgroundColor: brand.background.orange.backgroundColor }}
+      style={{
+        backgroundColor: "transparent",
+        marginTop: -20,
+        marginBottom: -20,
+      }}
     >
-      <Appbar.BackAction onPress={goBack} color={brand.text.grayLight.color} />
-      <Appbar.Content title={title} titleStyle={brand.text.grayLight} />
+      <Appbar.BackAction
+        onPress={goBack}
+        color={brand.text.grayDark.color}
+        style={{
+          margin: 0,
+          marginRight: -10,
+          padding: 0,
+        }}
+      />
+      <Appbar.Content title={title} titleStyle={brand.text.grayDark} />
     </Appbar.Header>
   );
 }
