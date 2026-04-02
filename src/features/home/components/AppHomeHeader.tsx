@@ -21,7 +21,7 @@ export default function AppHomeHeader() {
         <View className="flex flex-row items-center justify-between">
           <View className="flex flex-row items-center gap-2">
             <Logo />
-            <View className="items-left flex flex-col">
+            <View className="items-left flex flex-col p-4">
               <AppText className="text-xs font-normal">Bem-vindo(a),</AppText>
               <AppText className="font-semibold leading-3 text-gray-200">
                 {/* {brand.name} */}

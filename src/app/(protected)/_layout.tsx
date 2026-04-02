@@ -1,4 +1,9 @@
+import {
+  AppHomeHeader,
+  AppMenuBottomOptions,
+} from "@/src/features/home/components";
 import { Slot } from "expo-router";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // se exisitir usuário/token -> permita que ele veja a tela inicial do app
@@ -18,8 +23,18 @@ export default function ProtectedLayout() {
   // }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Slot />
-    </SafeAreaView>
+    <>
+      <SafeAreaView style={{ flex: 1 }}>
+        <AppHomeHeader />
+
+        <Slot />
+
+        <View className="absolute bottom-0 w-full">
+          <SafeAreaView>
+            <AppMenuBottomOptions />
+          </SafeAreaView>
+        </View>
+      </SafeAreaView>
+    </>
   );
 }
