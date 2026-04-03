@@ -1,14 +1,16 @@
-import { useAuth } from "@/src/auth/AuthProvider";
+import { useAuthenticateMutation } from "@/src/features/clientes/hooks/storage/mutations/use-clientes-mutation";
+import { AppButton } from "@/src/shared/components/Button";
 import AppText from "@/src/shared/components/Text/AppText";
 import { AppTextInput } from "@/src/shared/components/TextInput/AppTextInput";
-import { useToast } from "@/src/shared/components/Toast";
-import { Touchable } from "@/src/shared/components/Touchable";
 import { app_colors } from "@/src/shared/consts";
+import { runMigrations } from "@/src/sqlite/create-database";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { router } from "expo-router";
+import { useSQLiteContext } from "expo-sqlite";
 import { Controller, useForm } from "react-hook-form";
-import { Image, View } from "react-native";
+import { Alert, Image, View } from "react-native";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -23,28 +25,39 @@ export default function LoginScreen() {
     resolver: zodResolver(loginSchema),
   });
 
-  // const { signIn } = useAuthServer();
+  const db = useSQLiteContext();
 
-  const { show } = useToast();
-  const { login } = useAuth();
+  function handleRunMigrations() {
+    Alert.alert(
+      "Atenção",
+      "Isso vai resetar todas as tabelas. Deseja continuar?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Confirmar",
+          onPress: async () => {
+            await runMigrations(db);
+          },
+        },
+      ],
+    );
+  }
+
+  const { mutateAsync: authenticate } = useAuthenticateMutation();
 
   async function handleLogin({ username, password }: LoginSchema) {
-    const result = await login({ username, password });
+    try {
+      const user = await authenticate({
+        username,
+        password,
+      });
 
-    // if (!result) {
-    //   show({
-    //     type: "error",
-    //     title: "Erro",
-    //     description: "Usuário ou senha inválidos.",
-    //   });
-    //   return;
-    // }
-
-    show({
-      type: "success",
-      title: "Sucesso",
-      description: "Login realizado.",
-    });
+      if (user) {
+        router.replace("/");
+      }
+    } catch (err) {
+      console.log("Erro:", err);
+    }
   }
 
   return (
@@ -104,14 +117,21 @@ export default function LoginScreen() {
             />
           )}
         />
-        <Touchable.Container
+        <AppButton
           onPress={handleSubmit(handleLogin)}
-          className="mt-10 w-full items-center rounded-lg bg-[#ff3e04] outline-[#242424]"
+          className="mt-4 flex items-center justify-center"
         >
-          <Touchable.Content className="text-lg font-bold">
-            Entrar
-          </Touchable.Content>
-        </Touchable.Container>
+          <AppButton.Text className="text-lg font-bold">Entrar</AppButton.Text>
+        </AppButton>
+      </View>
+      <View className="absolute bottom-24">
+        <AppButton
+          useTheme={false}
+          onPress={handleRunMigrations}
+          className="flex items-center justify-center"
+        >
+          <AppButton.Text>Resetar Tabelas</AppButton.Text>
+        </AppButton>
       </View>
     </View>
   );

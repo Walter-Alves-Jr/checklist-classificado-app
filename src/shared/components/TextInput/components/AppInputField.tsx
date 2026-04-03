@@ -16,7 +16,7 @@ export function AppInputField({ className, style, ...rest }: TextInputProps) {
       className={cn("py-3 text-base font-semibold outline-none", className)}
       style={[
         {
-          color: text.grayDark.color,
+          color: text.secondary.color,
         },
         style,
       ]}

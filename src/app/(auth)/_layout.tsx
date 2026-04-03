@@ -1,4 +1,4 @@
-import { useAuth } from "@/src/auth/AuthProvider";
+import { useSession } from "@/src/features/clientes/hooks/storage/queries/use-session-query";
 import { Redirect, Slot } from "expo-router";
 import { ActivityIndicator, View } from "react-native";
 
@@ -6,7 +6,7 @@ import { ActivityIndicator, View } from "react-native";
 // se usuário deslogado/sem token -> permita que ele veja a tela para efetuar login
 
 export default function AuthLayout() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { data: cliente, isLoading } = useSession();
 
   if (isLoading) {
     return (
@@ -16,7 +16,7 @@ export default function AuthLayout() {
     );
   }
 
-  if (isAuthenticated) {
+  if (cliente) {
     return <Redirect href="/" />;
   }
 

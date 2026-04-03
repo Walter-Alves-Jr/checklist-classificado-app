@@ -266,7 +266,7 @@ export default function CadastroPerguntas() {
                       >
                         <RadioButton
                           value="true"
-                          color={brand.background.orange.backgroundColor}
+                          color={brand.background.primary.backgroundColor}
                         />
                         <Text>Sim</Text>
                       </View>
@@ -275,7 +275,7 @@ export default function CadastroPerguntas() {
                       >
                         <RadioButton
                           value="false"
-                          color={brand.background.orange.backgroundColor}
+                          color={brand.background.primary.backgroundColor}
                         />
                         <Text>Não</Text>
                       </View>
@@ -296,7 +296,7 @@ export default function CadastroPerguntas() {
                       >
                         <RadioButton
                           value="multiple"
-                          color={brand.background.orange.backgroundColor}
+                          color={brand.background.primary.backgroundColor}
                         />
                         <Text>Múltiplo</Text>
                       </View>
@@ -305,7 +305,7 @@ export default function CadastroPerguntas() {
                       >
                         <RadioButton
                           value="text"
-                          color={brand.background.orange.backgroundColor}
+                          color={brand.background.primary.backgroundColor}
                         />
                         <Text>Texto</Text>
                       </View>
@@ -314,7 +314,7 @@ export default function CadastroPerguntas() {
                       >
                         <RadioButton
                           value="number"
-                          color={brand.background.orange.backgroundColor}
+                          color={brand.background.primary.backgroundColor}
                         />
                         <Text>Número</Text>
                       </View>

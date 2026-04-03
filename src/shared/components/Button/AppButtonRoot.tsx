@@ -35,16 +35,16 @@ export function AppButtonRoot({
       <TouchableOpacity
         {...rest}
         className={cn(
-          `flex flex-row items-center gap-1 rounded-lg p-3.5 text-left font-semibold${isDisabled ? "opacity-70" : ""}`,
+          `flex flex-row items-center gap-1 rounded-lg p-3.5 font-semibold${isDisabled ? "opacity-70" : ""}`,
           className,
         )}
         disabled={isDisabled}
         style={[
           {
             backgroundColor:
-              brand.background.orange && useTheme
-                ? brand.background.orange.backgroundColor
-                : brand.background.grayDark.backgroundColor,
+              brand.background.primary && useTheme
+                ? brand.background.primary.backgroundColor
+                : brand.background.secondary.backgroundColor,
           },
           style,
         ]}

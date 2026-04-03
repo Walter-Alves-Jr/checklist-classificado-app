@@ -6,22 +6,22 @@ export function useBrand() {
 
   return {
     background: {
-      orange: {
-        backgroundColor: background.orange,
+      primary: {
+        backgroundColor: background.primary,
       },
-      grayDark: {
-        backgroundColor: background.grayDark,
+      secondary: {
+        backgroundColor: background.secondary,
       },
     },
     text: {
-      grayLight: { color: text.textGrayLight },
-      grayDark: { color: text.textGrayDark },
-      orange: { color: text.textOrange },
+      primary: { color: text.primary },
+      secondary: { color: text.secondary },
+      tertiary: { color: text.tertiary },
     },
     color: {
-      orange: color.orange,
-      grayLight: color.grayLight,
-      grayDark: color.grayDark,
+      primary: color.primary,
+      secondary: color.secondary,
+      tertiary: color.tertiary,
     },
     logo,
     name,

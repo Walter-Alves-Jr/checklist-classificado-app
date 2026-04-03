@@ -8,7 +8,7 @@ export default function Dashboard() {
     <>
       <HeaderPage title="Dashboard" goBack={() => router.push("/")} />
       <AppContainer>
-        <AppText style={{ color: "#242424" }}>Em breve...</AppText>
+        <AppText variant="secondary">Em breve...</AppText>
       </AppContainer>
     </>
   );

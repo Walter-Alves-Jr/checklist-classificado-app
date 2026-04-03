@@ -49,7 +49,7 @@ export default function AppInputLabel({
     color: interpolateColor(
       progress.value,
       [0, 1],
-      ["#9ca3af", text.grayDark.color],
+      ["#9ca3af", text.secondary.color],
     ),
   }));
 

@@ -19,14 +19,14 @@ export default function HeaderPage({ goBack, title }: HeaderPageProps) {
     >
       <Appbar.BackAction
         onPress={goBack}
-        color={brand.text.grayDark.color}
+        color={brand.text.secondary.color}
         style={{
           margin: 0,
           marginRight: -10,
           padding: 0,
         }}
       />
-      <Appbar.Content title={title} titleStyle={brand.text.grayDark} />
+      <Appbar.Content title={title} titleStyle={brand.text.secondary} />
     </Appbar.Header>
   );
 }

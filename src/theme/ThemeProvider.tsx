@@ -1,23 +1,39 @@
 import { createContext, useContext } from "react";
-import { useAuth } from "../auth/AuthProvider";
-import {
-  IClientResponse,
-  IClientThemeResponse,
-} from "../features/auth/IClient";
+import { useSession } from "../features/clientes/hooks/storage/queries/use-session-query";
 
 type ThemeContextProps = {
-  theme: IClientThemeResponse | null;
-  client: IClientResponse | undefined;
+  theme: {
+    backgroundPrimary?: string | null;
+    textPrimary?: string | null;
+    logo?: string | null;
+    nome?: string | null;
+  } | null;
 };
 
 const ThemeContext = createContext({} as ThemeContextProps);
 
 export function ThemeProvider({ children }: any) {
-  const { client } = useAuth();
-  const theme = client?.theme ?? null;
+  const { data: cliente, isLoading } = useSession();
+
+  if (isLoading) return null;
+
+  if (!cliente) {
+    return (
+      <ThemeContext.Provider value={{ theme: null }}>
+        {children}
+      </ThemeContext.Provider>
+    );
+  }
+
+  const theme = {
+    backgroundPrimary: cliente.background_primary,
+    textPrimary: cliente.text_color,
+    logo: cliente.logo,
+    nome: cliente.nome,
+  };
 
   return (
-    <ThemeContext.Provider value={{ theme, client }}>
+    <ThemeContext.Provider value={{ theme }} key={cliente?.id ?? "guest"}>
       {children}
     </ThemeContext.Provider>
   );
