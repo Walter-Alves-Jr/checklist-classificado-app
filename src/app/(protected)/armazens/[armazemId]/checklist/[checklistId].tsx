@@ -123,7 +123,7 @@ export default function Checklist() {
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <RadioButton
                     value="true"
-                    color={brand.background.orange.backgroundColor}
+                    color={brand.background.primary.backgroundColor}
                   />
                   <Text>Sim</Text>
                 </View>
@@ -131,7 +131,7 @@ export default function Checklist() {
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <RadioButton
                     value="false"
-                    color={brand.background.orange.backgroundColor}
+                    color={brand.background.primary.backgroundColor}
                   />
                   <Text>Não</Text>
                 </View>

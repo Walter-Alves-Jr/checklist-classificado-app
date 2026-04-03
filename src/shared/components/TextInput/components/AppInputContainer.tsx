@@ -21,8 +21,8 @@ export default function AppInputContainer({
       style={[
         isFocused && {
           outlineWidth: 1,
-          outlineColor: background.orange.backgroundColor,
-          borderColor: background.orange.backgroundColor,
+          outlineColor: background.primary.backgroundColor,
+          borderColor: background.primary.backgroundColor,
           outlineStyle: "solid",
         },
       ]}

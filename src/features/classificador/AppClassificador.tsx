@@ -247,7 +247,7 @@ export default function AppClassificador() {
           </View>
 
           <View className="mb-5 mt-5">
-            <AppText variant="grayDark" className="mb-6 text-base">
+            <AppText variant="secondary" className="mb-6 text-base">
               Informações para transporte
             </AppText>
 
@@ -342,13 +342,13 @@ export default function AppClassificador() {
           </View>
 
           <View>
-            <AppText variant="grayDark" className="text-base">
+            <AppText variant="secondary" className="text-base">
               Informações do grão
             </AppText>
 
             <View className="mb-10 flex flex-col gap-3">
               <View className="my-4">
-                <AppText variant="grayDark" className="font-normal">
+                <AppText variant="secondary" className="font-normal">
                   Selecione o grão
                 </AppText>
 

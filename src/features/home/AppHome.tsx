@@ -8,7 +8,7 @@ export default function AppHome() {
 
   return (
     <>
-      <View className="rounded-b-3xl p-4" style={brand.background.orange}>
+      <View className="rounded-b-3xl p-4" style={brand.background.primary}>
         <AppRatings />
       </View>
 

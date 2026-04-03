@@ -1,26 +1,25 @@
+import { useSession } from "@/src/features/clientes/hooks/storage/queries/use-session-query";
 import {
   AppHomeHeader,
   AppMenuBottomOptions,
 } from "@/src/features/home/components";
-import { Slot } from "expo-router";
-import { View } from "react-native";
+import { Redirect, Slot } from "expo-router";
+import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // se exisitir usuário/token -> permita que ele veja a tela inicial do app
 // se não existir usuário/token -> redireciona ele para a tela de login
 
 export default function ProtectedLayout() {
-  // const { isAuthenticated, isLoading } = useAuth();
+  const { data: cliente, isLoading } = useSession();
 
-  // return (
-  //   <AppContainer>
-  //     <ActivityIndicator />
-  //   </AppContainer>
-  // );
+  if (isLoading) {
+    return <Text>Carregando...</Text>;
+  }
 
-  // if (!isAuthenticated) {
-  //   return <Redirect href="/(auth)/login" />;
-  // }
+  if (!cliente) {
+    return <Redirect href="/(auth)/login" />;
+  }
 
   return (
     <>

@@ -12,7 +12,6 @@ export function useChecklistResponse() {
     },
 
     onSuccess: (dados) => {
-      // 🔥 gerar PDF após sucesso
       generateChecklistPDF(dados);
     },
   });

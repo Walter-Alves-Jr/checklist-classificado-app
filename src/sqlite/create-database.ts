@@ -1,4 +1,5 @@
 import { type SQLiteDatabase } from "expo-sqlite";
+import { createTabelaClientes } from "./migrations/02042026_tabela_clientes";
 import { createTabelaAgendamentos } from "./migrations/27_03_2026_tabela_agendamentos";
 import { createTabelaCultura } from "./migrations/27_03_2026_tabela_cultura";
 import { createTabelaGraos } from "./migrations/27_03_2026_tabela_graos";
@@ -38,6 +39,7 @@ export async function runMigrations(db: SQLiteDatabase) {
     await createTabelaChecklistExecucoes(db);
     await createTabelaRespostas(db);
     await createIndexArmazemChecklists(db);
+    await createTabelaClientes(db);
   });
 
   await db.execAsync(`
@@ -78,6 +80,39 @@ export async function runMigrations(db: SQLiteDatabase) {
     (2, "Pergunta 4", 0, "text"),
     (3, "Pergunta 5", 1, "number"),
     (3, "Pergunta 6", 1, "number");
+
+    INSERT OR IGNORE INTO clientes (
+      username,
+      password,
+      nome,
+      logo,
+      background_primary,
+      text_color
+    ) VALUES 
+    (
+      'green',
+      'green',
+      'Green',
+      '',
+      '#22c55e',
+      '#e5e7eb'
+    ),
+    (
+      'blue',
+      'blue',
+      'Blue',
+      '',
+      '#2291c5',
+      '#e5e7eb'
+    ),
+    (
+      'admin',
+      'admin',
+      'Admin',
+      '',
+      '#ff3e04',
+      '#e5e7eb'
+    );
   `);
 
   alert("Tabelas criadas com sucesso.");
