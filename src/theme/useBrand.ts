@@ -1,7 +1,7 @@
 import { useTwTheme } from "./useTwTheme";
 
 export function useBrand() {
-  const { theme, logo, name } = useTwTheme();
+  const { theme, logo, nome } = useTwTheme();
   const { background, text, color } = theme;
 
   return {
@@ -24,6 +24,6 @@ export function useBrand() {
       tertiary: color.tertiary,
     },
     logo,
-    name,
+    nome,
   };
 }

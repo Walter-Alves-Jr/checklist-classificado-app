@@ -1,4 +1,4 @@
-import { useAuthenticateMutation } from "@/src/features/clientes/hooks/storage/mutations/use-clientes-mutation";
+import { useAuthMutation } from "@/src/features/auth/hooks/storage/mutations/use-auth.mutation";
 import { AppButton } from "@/src/shared/components/Button";
 import AppText from "@/src/shared/components/Text/AppText";
 import { AppTextInput } from "@/src/shared/components/TextInput/AppTextInput";
@@ -7,22 +7,27 @@ import { runMigrations } from "@/src/sqlite/create-database";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { router } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { Controller, useForm } from "react-hook-form";
 import { Alert, Image, View } from "react-native";
 import { z } from "zod";
 
 const loginSchema = z.object({
-  username: z.string().min(1, "Informe seu login."),
-  password: z.string().min(1, "Informe sua senha."),
+  login: z.string().min(1, "Informe seu login."),
+  senha: z.string().min(1, "Informe sua senha."),
 });
 
 type LoginSchema = z.infer<typeof loginSchema>;
 
 export default function LoginScreen() {
+  const { mutateAsync: authenticate, isPending } = useAuthMutation();
+
   const { handleSubmit, control } = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      login: "",
+      senha: "",
+    },
   });
 
   const db = useSQLiteContext();
@@ -43,18 +48,12 @@ export default function LoginScreen() {
     );
   }
 
-  const { mutateAsync: authenticate } = useAuthenticateMutation();
-
-  async function handleLogin({ username, password }: LoginSchema) {
+  async function handleLogin({ login, senha }: LoginSchema) {
     try {
-      const user = await authenticate({
-        username,
-        password,
+      await authenticate({
+        login,
+        senha,
       });
-
-      if (user) {
-        router.replace("/");
-      }
     } catch (err) {
       console.log("Erro:", err);
     }
@@ -88,7 +87,7 @@ export default function LoginScreen() {
         <Controller
           control={control}
           rules={{ required: "Login é obrigatório" }}
-          name="username"
+          name="login"
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <View className="mb-3">
               <AppTextInput
@@ -103,7 +102,7 @@ export default function LoginScreen() {
         />
         <Controller
           control={control}
-          name="password"
+          name="senha"
           rules={{ required: "Senha é obrigatória" }}
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <AppTextInput
@@ -120,6 +119,8 @@ export default function LoginScreen() {
         <AppButton
           onPress={handleSubmit(handleLogin)}
           className="mt-4 flex items-center justify-center"
+          loading={isPending}
+          disabled={isPending}
         >
           <AppButton.Text className="text-lg font-bold">Entrar</AppButton.Text>
         </AppButton>

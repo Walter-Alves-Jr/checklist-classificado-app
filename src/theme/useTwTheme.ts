@@ -23,6 +23,6 @@ export function useTwTheme() {
       },
     },
     logo: theme?.logo,
-    name: theme?.nome,
+    nome: theme?.nome,
   };
 }

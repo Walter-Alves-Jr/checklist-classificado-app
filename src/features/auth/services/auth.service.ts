@@ -1,30 +1,22 @@
 import { AuthRepository } from "../repositories/auth.repository";
-import { authStorage } from "./auth-storage.service";
+import { AuthResponse } from "../types/auth-response";
 
 export class AuthService {
-  constructor(private repository: AuthRepository) {}
+  constructor(private authRepository: AuthRepository) {}
 
-  async login(username: string, password: string) {
-    if (!username || !password) {
-      throw new Error("Credenciais inválidas");
+  async authenticate(login: string, senha: string): Promise<AuthResponse> {
+    if (!login?.trim() || !senha?.trim()) {
+      throw new Error("Informe login e senha");
     }
 
-    const response = await this.repository.login(username, password);
-
-    if (!response.token?.accessToken) {
-      throw new Error("Token inválido");
+    try {
+      return await this.authRepository.authenticate(login, senha);
+    } catch {
+      throw new Error("Login ou senha incorretos.");
     }
-
-    await authStorage.save(response.token);
-
-    return response;
   }
 
   async logout() {
-    await authStorage.remove();
-  }
-
-  async getSession() {
-    return await authStorage.get();
+    await this.authRepository.logout();
   }
 }

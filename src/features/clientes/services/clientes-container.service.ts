@@ -1,5 +1,6 @@
 import { SQLiteDatabase } from "expo-sqlite";
 import { ClientesLocalRepository } from "../repositories/clientes-local.repository";
+import { ClientesRepository } from "../repositories/clientes.repository";
 import { ClientesService } from "./clientes.service";
 
 /* centralizador(container) para "criação" dos serviços, 
@@ -8,8 +9,12 @@ import { ClientesService } from "./clientes.service";
 
 export function createClientesServices(db: SQLiteDatabase) {
   const clientesLocalRepository = new ClientesLocalRepository(db);
+  const clientesRepository = new ClientesRepository();
 
-  const clientesService = new ClientesService(clientesLocalRepository);
+  const clientesService = new ClientesService(
+    clientesLocalRepository,
+    clientesRepository,
+  );
 
   return {
     clientesService,
