@@ -1,4 +1,4 @@
-import { useSession } from "@/src/features/clientes/hooks/storage/queries/use-session-query";
+import { useSessaoUsuario } from "@/src/features/auth/hooks/storage/queries/use-sessao-usuario.query";
 import {
   AppHomeHeader,
   AppMenuBottomOptions,
@@ -11,13 +11,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 // se não existir usuário/token -> redireciona ele para a tela de login
 
 export default function ProtectedLayout() {
-  const { data: cliente, isLoading } = useSession();
+  const { data: sessao, isLoading } = useSessaoUsuario();
 
   if (isLoading) {
     return <Text>Carregando...</Text>;
   }
 
-  if (!cliente) {
+  if (!sessao?.accessToken) {
     return <Redirect href="/(auth)/login" />;
   }
 

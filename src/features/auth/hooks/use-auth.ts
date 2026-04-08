@@ -1,33 +1,61 @@
-import { AuthRepository } from "../repositories/auth.repository";
-import { AuthService } from "../services/auth.service";
+import { useToast } from "@/src/shared/components/Toast";
+import { useCallback } from "react";
+import { AuthResponse } from "../types/auth-response";
+import { useAuthService } from "./use-auth-service";
 
-export function useAuthServer() {
-  const repository = new AuthRepository();
-  const service = new AuthService(repository);
+export function useAuth() {
+  const { authService } = useAuthService();
+  const { show } = useToast();
 
-  async function signIn(username: string, password: string) {
+  const authenticate = useCallback(
+    async (login: string, senha: string): Promise<AuthResponse> => {
+      try {
+        const response = await authService.authenticate(login, senha);
+
+        if (!response?.token) {
+          show({
+            title: "Ops!",
+            description: "Login ou senha incorretos.",
+            type: "info",
+          });
+        }
+
+        show({
+          title: "Sucesso!",
+          description: "Login efetuado.",
+          type: "success",
+        });
+
+        return response;
+      } catch {
+        show({
+          title: "Ops!",
+          description: "Login ou senha incorretos.",
+          type: "info",
+        });
+
+        throw Error;
+      }
+    },
+    [authService, show],
+  );
+
+  const logout = useCallback(async () => {
     try {
-      const response = await service.login(username, password);
-      return {
-        success: true,
-        data: response,
-      };
-    } catch (error) {
-      console.error("error", error);
+      await authService.logout();
+    } catch {
+      show({
+        title: "Erro!",
+        description: "Ocorreu um erro ao deslogar.",
+        type: "error",
+      });
 
-      return {
-        success: false,
-        error: "Usuário ou senha inválidos.",
-      };
+      throw Error;
     }
-  }
-
-  async function signOut() {
-    await service.logout();
-  }
+  }, [authService, show]);
 
   return {
-    signIn,
-    signOut,
+    authenticate,
+    logout,
   };
 }

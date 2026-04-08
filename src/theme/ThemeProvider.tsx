@@ -29,7 +29,7 @@ export function ThemeProvider({ children }: any) {
     backgroundPrimary: cliente.background_primary,
     textPrimary: cliente.text_color,
     logo: cliente.logo,
-    nome: cliente.nome,
+    nome: "Admin",
   };
 
   return (

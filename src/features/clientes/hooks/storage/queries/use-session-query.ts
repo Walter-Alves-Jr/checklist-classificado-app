@@ -6,11 +6,11 @@ export function useSession() {
   return useQuery({
     queryKey: ["cliente"],
     queryFn: async (): Promise<ClienteResponse | null> => {
-      const stored = await AsyncStorage.getItem("cliente");
+      const token = await AsyncStorage.getItem("token");
 
-      if (!stored) return null;
+      if (!token) return null;
 
-      return JSON.parse(stored);
+      return JSON.parse(token);
     },
   });
 }
