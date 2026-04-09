@@ -93,9 +93,7 @@ export default function AppDropdownList<T>({
                 size={28}
                 color={palette.grayDark}
               />
-              <AppText variant="secondary">
-                Sua busca não foi encontrada.
-              </AppText>
+              <AppText variant="secondary">Nenhum registro encontrado.</AppText>
             </View>
           )}
         </>

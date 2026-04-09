@@ -5,17 +5,17 @@ import { Dropdown } from "./components";
 type AppDropdownProps<T> = {
   value: string | number | null;
   data: T[];
-  search: string;
-  placeholder?: string;
   loading: boolean;
-
   onChange: (value: string | number) => void;
-  onSearchChange: (value: string) => void;
-
   options: (item: T) => {
     label: string;
     value: string | number;
   };
+  disabled?: boolean;
+  search?: string;
+  onSearchChange?: (value: string) => void;
+  filterable?: boolean;
+  placeholder?: string;
 };
 
 export default function AppDropdown<T>({
@@ -24,6 +24,8 @@ export default function AppDropdown<T>({
   data,
   search,
   loading,
+  disabled,
+  filterable,
   options,
   onChange,
   onSearchChange,
@@ -44,10 +46,14 @@ export default function AppDropdown<T>({
         search={search}
         onSearchChange={onSearchChange}
       >
-        <Dropdown.Trigger placeholder={placeholder} loading={loading} />
+        <Dropdown.Trigger
+          placeholder={placeholder}
+          loading={loading}
+          disabled={disabled}
+        />
 
         <Dropdown.Content>
-          <Dropdown.Search />
+          {filterable ? <Dropdown.Search /> : <></>}
           <Dropdown.List options={mappedOptions} loading={loading} />
         </Dropdown.Content>
       </Dropdown>

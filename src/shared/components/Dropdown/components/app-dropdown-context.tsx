@@ -11,8 +11,8 @@ type DropdownContextContextType = {
   } | null;
   onChange: (value: DropdownOption) => void;
 
-  search: string;
-  setSearch: (value: string) => void;
+  search?: string;
+  setSearch?: (value: string) => void;
 };
 
 export const AppDropdownContext =
