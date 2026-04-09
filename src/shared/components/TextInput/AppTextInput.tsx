@@ -3,9 +3,9 @@ import { TextInputProps, View } from "react-native";
 import { AppInput } from "./components";
 
 interface FormInputProps extends TextInputProps {
-  label: string;
   value: string;
   onChangeText: (text: string) => void;
+  label?: string;
   error?: FieldError;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;

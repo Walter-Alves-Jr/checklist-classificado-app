@@ -9,7 +9,7 @@ export class ArmazemService {
     private armazensLocalRepository: ArmazensLocalRepository,
   ) {}
 
-  async obterListaArmazens(): Promise<Armazem[] | null> {
+  async obterListaArmazens(search: string): Promise<Armazem[] | null> {
     const connection = await NetInfo.fetch();
 
     if (connection.isConnected) {
@@ -20,6 +20,6 @@ export class ArmazemService {
       }
     }
 
-    return await this.armazensLocalRepository.obterListaArmazens();
+    return await this.armazensLocalRepository.obterListaArmazens(search);
   }
 }

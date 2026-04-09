@@ -33,7 +33,7 @@ export default function CadastroPerguntas() {
   const [responseType, setResponseType] = useState("multiple"); //todo: implementar hookform
   const [requiresPhoto, setRequiresPhoto] = useState<boolean>(false); //todo: implementar hookform
 
-  const { data: armazens, isPending: isPendingArmazens } = useArmazensQuery();
+  const { data: armazens, isPending: isPendingArmazens } = useArmazensQuery("");
   const { data: checklistsResult, isPending: isPendingChecklists } =
     useChecklistsQuery();
 

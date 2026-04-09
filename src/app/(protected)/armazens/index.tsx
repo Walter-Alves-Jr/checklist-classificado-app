@@ -1,12 +1,31 @@
 import { useArmazensQuery } from "@/src/features/armazens/hooks/storage/queries/use-armazens-query";
-import AppContainer from "@/src/shared/components/Container/AppContainer";
+import AppDropdown from "@/src/shared/components/Dropdown/app-dropdown";
 import HeaderPage from "@/src/shared/components/Header/HeaderPage";
-import { Touchable } from "@/src/shared/components/Touchable";
+import { useDebounce } from "@/src/shared/hooks/useDebounce";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { router } from "expo-router";
-import { Text, View } from "react-native";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+
+const armazemSchema = z.object({
+  armazemId: z.number().min(1, "Selecione um armazém."),
+});
+
+type ArmazemSchema = z.infer<typeof armazemSchema>;
 
 export default function Armazens() {
-  const { isPending, isError, data } = useArmazensQuery();
+  const [search, setSearch] = useState("");
+  const searchDebounced = useDebounce(search);
+
+  const { data, isLoading } = useArmazensQuery(searchDebounced);
+
+  const { control } = useForm<ArmazemSchema>({
+    resolver: zodResolver(armazemSchema),
+    defaultValues: {
+      armazemId: 0,
+    },
+  });
 
   function handleSelectArmazem(id: number) {
     router.push({
@@ -25,11 +44,31 @@ export default function Armazens() {
     <>
       <HeaderPage goBack={goBack} title="Selecionar Armazém" />
 
-      <AppContainer>
+      <Controller
+        control={control}
+        name="armazemId"
+        render={({ field }) => {
+          return (
+            <AppDropdown
+              placeholder="Selecionar Armazém"
+              value={field.value}
+              onChange={field.onChange}
+              data={data ?? []}
+              onSearchChange={setSearch}
+              search={search}
+              loading={isLoading}
+              options={(item) => ({
+                value: item.id,
+                label: item.nome,
+              })}
+            />
+          );
+        }}
+      />
+
+      {/* <AppContainer>
         <View className="flex flex-1">
-          {/* todo: alterar para spinner */}
           {isPending && <Text>Loading...</Text>}
-          {/*menos esse */}
           {data?.length === 0 && <Text>Nenhum armazem cadastrado.</Text>}
           {isError && <Text>Erro ao obter armazens.</Text>}
 
@@ -42,8 +81,10 @@ export default function Armazens() {
                 <Touchable.Content>{item.nome}</Touchable.Content>
               </Touchable.Container>
             ))}
+
+          
         </View>
-      </AppContainer>
+      </AppContainer> */}
     </>
   );
 }

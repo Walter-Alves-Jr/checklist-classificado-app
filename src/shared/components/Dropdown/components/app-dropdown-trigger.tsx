@@ -1,12 +1,17 @@
+import Entypo from "@expo/vector-icons/Entypo";
 import { app_colors } from "../../../consts";
 import { AppButton } from "../../Button";
 import { useSelect } from "./app-dropdown-context";
 
+type AppDropdownTriggerProps = {
+  loading: boolean;
+  placeholder: string;
+};
+
 export default function AppDropdownTrigger({
+  loading,
   placeholder,
-}: {
-  placeholder?: string;
-}) {
+}: AppDropdownTriggerProps) {
   const { open, setOpen, value } = useSelect();
 
   return (
@@ -15,21 +20,38 @@ export default function AppDropdownTrigger({
       style={{
         borderWidth: 1,
         borderColor: open ? app_colors.background.primary : "#ccc",
-        padding: 14,
-        borderRadius: 10,
+        paddingTop: 14,
+        paddingBottom: 14,
+        borderRadius: 8,
         backgroundColor: "transparent",
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: loading ? "center" : "space-between",
         alignItems: "center",
       }}
+      disabled={loading}
+      loading={loading}
     >
-      <AppButton.Text style={{ color: value?.value ? "#111827" : "#9ca3af" }}>
+      <AppButton.Text
+        style={{ color: value?.value ? app_colors.color.secondary : "#9ca3af" }}
+      >
         {value?.value ? value.label : placeholder}
       </AppButton.Text>
 
-      <AppButton.Text style={{ color: "#6b7280" }}>
-        {open ? "▲" : "▼"}
-      </AppButton.Text>
+      <AppButton.Icon>
+        {open ? (
+          <Entypo
+            name="triangle-down"
+            size={24}
+            color={app_colors.background.secondary}
+          />
+        ) : (
+          <Entypo
+            name="triangle-left"
+            size={24}
+            color={app_colors.background.secondary}
+          />
+        )}
+      </AppButton.Icon>
     </AppButton>
   );
 }
