@@ -11,8 +11,8 @@ type DropdownRootProps = {
   children: React.ReactNode;
   onChange: (value: DropdownOption) => void;
 
-  search: string;
-  onSearchChange: (value: string) => void;
+  search?: string;
+  onSearchChange?: (value: string) => void;
 };
 
 export default function DropdownContextProvider({

@@ -6,11 +6,13 @@ import { useSelect } from "./app-dropdown-context";
 type AppDropdownTriggerProps = {
   loading: boolean;
   placeholder: string;
+  disabled?: boolean;
 };
 
 export default function AppDropdownTrigger({
   loading,
   placeholder,
+  disabled,
 }: AppDropdownTriggerProps) {
   const { open, setOpen, value } = useSelect();
 
@@ -28,13 +30,15 @@ export default function AppDropdownTrigger({
         justifyContent: loading ? "center" : "space-between",
         alignItems: "center",
       }}
-      disabled={loading}
+      disabled={disabled || loading}
       loading={loading}
     >
       <AppButton.Text
-        style={{ color: value?.value ? app_colors.color.secondary : "#9ca3af" }}
+        style={{
+          color: value?.value ? app_colors.color.secondary : "#9ca3af",
+        }}
       >
-        {value?.value ? value.label : placeholder}
+        {value?.label ? value.label : placeholder}
       </AppButton.Text>
 
       <AppButton.Icon>

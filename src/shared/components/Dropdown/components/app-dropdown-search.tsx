@@ -17,10 +17,9 @@ export default function AppDropdownSearch() {
       }}
     >
       <AppTextInput
-        value={search}
-        label=""
+        value={search ?? ""}
         placeholder="Buscar..."
-        onChangeText={setSearch}
+        onChangeText={setSearch!}
         style={{ paddingBottom: 7, paddingTop: 7 }}
         leftIcon={
           <MaterialIcons name="search" size={24} color={palette.grayDark} />
