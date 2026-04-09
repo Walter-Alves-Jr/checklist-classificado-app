@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useArmazens } from "../../use-armazens";
 
-export function useArmazensQuery() {
-  const { obterListaArmazens } = useArmazens();
+export function useArmazensQuery(search: string) {
+  const { obterListaArmazens } = useArmazens(search);
 
   return useQuery({
-    queryKey: ["armazens"],
+    queryKey: ["armazens", search],
+    enabled: true,
     queryFn: async () => {
       const data = await obterListaArmazens();
 

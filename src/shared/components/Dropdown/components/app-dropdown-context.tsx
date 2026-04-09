@@ -1,19 +1,22 @@
 import { createContext, useContext } from "react";
 import { DropdownOption } from "./app-dropdown-list";
 
-type DropdownContextContextType<T> = {
+type DropdownContextContextType = {
   open: boolean;
   setOpen: (value: boolean) => void;
 
-  value: DropdownOption<T>;
-  onChange: (value: DropdownOption<T>) => void;
+  value: {
+    value: string | number;
+    label: string;
+  } | null;
+  onChange: (value: DropdownOption) => void;
 
   search: string;
   setSearch: (value: string) => void;
 };
 
 export const AppDropdownContext =
-  createContext<DropdownContextContextType<any> | null>(null);
+  createContext<DropdownContextContextType | null>(null);
 
 export function useSelect() {
   const ctx = useContext(AppDropdownContext);
@@ -24,5 +27,5 @@ export function useSelect() {
     );
   }
 
-  return ctx as DropdownContextContextType<any>;
+  return ctx as DropdownContextContextType;
 }

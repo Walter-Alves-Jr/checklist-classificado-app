@@ -2,6 +2,10 @@ export const palette = {
   orange: "#ff3e04",
   grayLight: "#e5e7eb",
   grayDark: "#242424",
+  success: "#22c55e",
+  error: "#ef4444",
+  warning: "#eab308",
+  info: "#3b82f6",
 } as const;
 
 export const app_colors = {
@@ -18,5 +22,6 @@ export const app_colors = {
 
   color: {
     primary: palette.grayLight,
+    secondary: palette.grayDark,
   },
 } as const;

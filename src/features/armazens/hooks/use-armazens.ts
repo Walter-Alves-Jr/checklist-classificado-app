@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { Armazem } from "../types/Armazem";
 import { useArmazensServices } from "./use-armazens-services";
 
-export function useArmazens() {
+export function useArmazens(search: string) {
   const { armazensService } = useArmazensServices();
   const { show } = useToast();
 
@@ -11,7 +11,7 @@ export function useArmazens() {
     Armazem[] | null
   > => {
     try {
-      const response = await armazensService.obterListaArmazens();
+      const response = await armazensService.obterListaArmazens(search);
 
       if (!response) {
         show({
@@ -32,7 +32,7 @@ export function useArmazens() {
       });
     }
     return null;
-  }, [armazensService, show]);
+  }, [armazensService, show, search]);
 
   return {
     obterListaArmazens,

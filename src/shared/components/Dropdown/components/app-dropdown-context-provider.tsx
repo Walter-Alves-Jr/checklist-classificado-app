@@ -3,19 +3,26 @@ import { View } from "react-native";
 import { AppDropdownContext } from "./app-dropdown-context";
 import { DropdownOption } from "./app-dropdown-list";
 
-type DropdownRootProps<T> = {
-  value: DropdownOption<T>;
+type DropdownRootProps = {
+  value: {
+    value: string | number;
+    label: string;
+  } | null;
   children: React.ReactNode;
-  onChange: (v: DropdownOption<T>) => void;
+  onChange: (value: DropdownOption) => void;
+
+  search: string;
+  onSearchChange: (value: string) => void;
 };
 
 export default function DropdownContextProvider({
   value,
   children,
+  search,
   onChange,
-}: DropdownRootProps<any>) {
+  onSearchChange,
+}: DropdownRootProps) {
   const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState("");
 
   return (
     <AppDropdownContext.Provider
@@ -25,7 +32,7 @@ export default function DropdownContextProvider({
         search,
         setOpen,
         onChange,
-        setSearch,
+        setSearch: onSearchChange,
       }}
     >
       <View style={{ position: "relative" }}>{children}</View>
