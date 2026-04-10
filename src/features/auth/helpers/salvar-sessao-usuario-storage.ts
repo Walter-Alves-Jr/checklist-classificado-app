@@ -1,4 +1,5 @@
 import { queryClient } from "@/src/lib/react-query";
+import { STORAGE } from "@/src/shared/consts/storage-keys";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthResponse } from "../types/auth-response";
 import { SessaoUsuario } from "../types/sessao-usuario";
@@ -17,6 +18,7 @@ export async function salvarSessaoUsuarioStorage(response: AuthResponse) {
     },
   };
 
-  queryClient.setQueryData(["sessao_usuario"], session);
-  await AsyncStorage.setItem("sessao_usuario", JSON.stringify(session));
+  queryClient.setQueryData([STORAGE.SESSION_USUARIO], session);
+  await AsyncStorage.setItem(STORAGE.SESSION_USUARIO, JSON.stringify(session));
+  await AsyncStorage.setItem(STORAGE.TOKEN_USUARIO, accessToken);
 }

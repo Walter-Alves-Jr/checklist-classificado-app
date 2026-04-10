@@ -6,7 +6,7 @@ export class AgendamentosRepository {
     numeroAgendamento: number,
   ): Promise<AgendamentoResponse | null> {
     const { data } = await api.get<AgendamentoResponse[]>(
-      `/agendamentos?numeroAgendamento=${numeroAgendamento}`,
+      `https://api-teste.yms.trizy.com.br/api/v1/Agendamento/Search?Cesv=${numeroAgendamento}`,
     );
 
     return data.length > 0 ? data[0] : null;

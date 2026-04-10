@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { Checklist } from "../types/Checklist";
 import { useChecklistsServices } from "./use-checklists-services";
 
-export function useChecklists() {
+export function useChecklists(search: string) {
   const { checklistsService } = useChecklistsServices();
   const { show } = useToast();
 
@@ -11,7 +11,7 @@ export function useChecklists() {
     Checklist[] | null
   > => {
     try {
-      const response = await checklistsService.obterListaChecklist();
+      const response = await checklistsService.obterListaChecklist(search);
 
       if (!response) {
         show({

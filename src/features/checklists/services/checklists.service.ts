@@ -9,7 +9,7 @@ export class ChecklistsService {
     private checklistsLocalRepository: ChecklistsLocalRepository,
   ) {}
 
-  async obterListaChecklist(): Promise<Checklist[] | null> {
+  async obterListaChecklist(search: string): Promise<Checklist[] | null> {
     const connection = await NetInfo.fetch();
 
     if (connection.isConnected) {
@@ -20,7 +20,7 @@ export class ChecklistsService {
       }
     }
 
-    return await this.checklistsLocalRepository.obterListaChecklist();
+    return await this.checklistsLocalRepository.obterListaChecklist(search);
   }
 
   async obterChecklistPorArmazem(

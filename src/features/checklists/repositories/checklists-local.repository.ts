@@ -4,8 +4,15 @@ import { Checklist } from "../types/Checklist";
 export class ChecklistsLocalRepository {
   constructor(private db: SQLiteDatabase) {}
 
-  async obterListaChecklist() {
-    return await this.db.getAllAsync<Checklist>(`SELECT * FROM checklists`);
+  async obterListaChecklist(search: string) {
+    return await this.db.getAllAsync<Checklist>(
+      `
+      SELECT *
+      FROM checklists
+      WHERE (? = '' OR LOWER(nome) LIKE LOWER(?))
+      `,
+      [search, `%${search}%`],
+    );
   }
 
   async obterChecklistPorArmazem(armazemId: number) {
