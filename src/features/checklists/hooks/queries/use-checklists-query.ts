@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useChecklists } from "../use-checklists";
 
-export function useChecklistsQuery() {
-  const { obterListaChecklist } = useChecklists();
+export function useChecklistsQuery(search: string) {
+  const { obterListaChecklist } = useChecklists(search);
 
   return useQuery({
-    queryKey: ["checklists"],
+    queryKey: ["checklists", search],
+    enabled: true,
     queryFn: async () => {
       const data = await obterListaChecklist();
 

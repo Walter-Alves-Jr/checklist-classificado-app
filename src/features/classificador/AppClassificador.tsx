@@ -38,7 +38,7 @@ const classifierSchema = z.object({
       "A placa informada não segue o padrão: AAA1A11",
     ),
   motorista: z.string().min(1, "Motorista é obrigatório."),
-  transportadora: z.string().min(1, "Transportadora é obrigatório."),
+  transportadora: z.string(),
   produto: z.string().min(1, "Produto é obrigatório."),
   terminal: z.string().min(1, "Terminal é obrigatório."),
 
@@ -125,19 +125,6 @@ export default function AppClassificador() {
 
   const { cultura } = watch();
 
-  useEffect(() => {
-    reset({
-      cultura,
-      umidade: undefined,
-      impureza: undefined,
-      ardidos: undefined,
-      mofados: undefined,
-      germinados: undefined,
-      quebrados: undefined,
-      pesoHectolitro: undefined,
-    });
-  }, [cultura]);
-
   function onSubmit(data: FormOutput) {
     let resultadoClassificacao = {} as ResultadoClassificacao | undefined;
 
@@ -207,15 +194,15 @@ export default function AppClassificador() {
       return;
     }
 
-    const { placaVeiculo, motorista, transportadora, produto, terminal } = data;
+    const { veiculo, motorista, fornecedor, produto } = data;
 
     reset({
       ...getValues(),
-      placaVeiculo,
-      motorista,
-      transportadora,
-      produto,
-      terminal,
+      placaVeiculo: veiculo.placa,
+      motorista: motorista.nome,
+      transportadora: "",
+      produto: produto.denominacao,
+      terminal: fornecedor.razaoSocial,
     });
   }, [data, getValues, reset]);
 

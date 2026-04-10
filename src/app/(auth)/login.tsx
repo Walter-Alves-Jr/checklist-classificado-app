@@ -3,13 +3,11 @@ import { AppButton } from "@/src/shared/components/Button";
 import AppText from "@/src/shared/components/Text/AppText";
 import { AppTextInput } from "@/src/shared/components/TextInput/AppTextInput";
 import { app_colors } from "@/src/shared/consts";
-import { runMigrations } from "@/src/sqlite/create-database";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSQLiteContext } from "expo-sqlite";
 import { Controller, useForm } from "react-hook-form";
-import { Alert, Image, View } from "react-native";
+import { Image, View } from "react-native";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -29,24 +27,6 @@ export default function LoginScreen() {
       senha: "",
     },
   });
-
-  const db = useSQLiteContext();
-
-  function handleRunMigrations() {
-    Alert.alert(
-      "Atenção",
-      "Isso vai resetar todas as tabelas. Deseja continuar?",
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Confirmar",
-          onPress: async () => {
-            await runMigrations(db);
-          },
-        },
-      ],
-    );
-  }
 
   async function handleLogin({ login, senha }: LoginSchema) {
     try {
@@ -123,15 +103,6 @@ export default function LoginScreen() {
           disabled={isPending}
         >
           <AppButton.Text className="text-lg font-bold">Entrar</AppButton.Text>
-        </AppButton>
-      </View>
-      <View className="absolute bottom-24">
-        <AppButton
-          useTheme={false}
-          onPress={handleRunMigrations}
-          className="flex items-center justify-center"
-        >
-          <AppButton.Text>Resetar Tabelas</AppButton.Text>
         </AppButton>
       </View>
     </View>

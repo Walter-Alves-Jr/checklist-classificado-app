@@ -1,5 +1,11 @@
-import { env } from "@/env";
-import axios from "axios";
+import { removerSessaoUsuarioStorage } from "@/src/features/auth/helpers/remover-sessao-usuario-storage";
+import { STORAGE } from "@/src/shared/consts/storage-keys";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios, {
+  AxiosError,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from "axios";
 import { Platform } from "react-native";
 
 const BASE_URL =
@@ -15,12 +21,39 @@ export const api = axios.create({
   },
 });
 
-if (env.EXPO_PUBLIC_ENABLE_API_DELAY) {
-  api.interceptors.request.use(async (config) => {
-    await new Promise((resolve) =>
-      setTimeout(resolve, Math.round(Math.random() * 2000)),
-    );
+api.interceptors.response.use(
+  (response: AxiosResponse) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (originalRequest?.skipAuth) {
+      return Promise.reject(error);
+    }
+
+    if (error.response?.status === 401) {
+      await removerSessaoUsuarioStorage();
+      return Promise.reject(error);
+    }
+
+    return Promise.reject(error);
+  },
+);
+
+api.interceptors.request.use(
+  async (config: InternalAxiosRequestConfig) => {
+    const token = await AsyncStorage.getItem(STORAGE.TOKEN_USUARIO);
+
+    if (config.url?.includes("/(auth)/login")) {
+      return config;
+    }
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
 
     return config;
-  });
-}
+  },
+  (error: AxiosError) => {
+    return Promise.reject(error);
+  },
+);

@@ -37,7 +37,7 @@ export default function CadastroPerguntas() {
 
   const { data: armazens, isPending: isPendingArmazens } = useArmazensQuery("");
   const { data: checklistsResult, isPending: isPendingChecklists } =
-    useChecklistsQuery();
+    useChecklistsQuery("");
 
   const { data: perguntasChecklist, isPending: isPendingPerguntasChecklist } =
     usePerguntasChecklistQuery(Number(checklistId));
