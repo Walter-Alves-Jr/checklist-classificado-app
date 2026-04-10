@@ -75,9 +75,9 @@ export function ToastItem({
 
   return (
     <GestureDetector gesture={gesture}>
-      <Animated.View className="p-4" style={animatedStyle}>
-        <AppText className="text-base font-bold">{title}</AppText>
-        <AppText>{description}</AppText>
+      <Animated.View style={animatedStyle}>
+        <AppText className="font-bold">{title}</AppText>
+        {description && <AppText>{description}</AppText>}
 
         {action && (
           <View className="mt-2 flex flex-row justify-end">

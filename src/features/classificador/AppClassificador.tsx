@@ -1,7 +1,7 @@
 import { registerClassificationLocalStorage } from "@/src/localStorage/services/localStorageService";
 import { AppButton } from "@/src/shared/components/Button";
-import AppContainer from "@/src/shared/components/Container/AppContainer";
 import HeaderPage from "@/src/shared/components/Header/HeaderPage";
+import ScreenWrapper from "@/src/shared/components/ScreenWrapper/screen-wrapper";
 import AppText from "@/src/shared/components/Text/AppText";
 import { AppTextInput } from "@/src/shared/components/TextInput/AppTextInput";
 import { useDebounce } from "@/src/shared/hooks/useDebounce";
@@ -11,7 +11,7 @@ import { Picker } from "@react-native-picker/picker";
 import { router } from "expo-router";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { z } from "zod";
 import { useAgendamentoQuery } from "./hooks/storage/queries/use-agendamento-query";
@@ -226,112 +226,19 @@ export default function AppClassificador() {
   return (
     <>
       <HeaderPage title="Classificador de Grãos" goBack={goBack} />
-      <AppContainer>
-        <SafeAreaView>
-          <View className="mt-1">
-            <Controller
-              control={control}
-              name="numeroAgendamento"
-              render={({
-                field: { value, onChange },
-                fieldState: { error },
-              }) => (
-                <AppTextInput
-                  label="Número agendamento"
-                  value={value}
-                  onChangeText={onChange}
-                  error={error}
-                />
-              )}
-            />
-          </View>
-
-          <View className="mb-5 mt-5">
-            <AppText variant="secondary" className="mb-6 text-base">
-              Informações para transporte
-            </AppText>
-
-            <View className="flex flex-col gap-3">
+      <ScrollView>
+        <ScreenWrapper>
+          <SafeAreaView>
+            <View className="mt-1">
               <Controller
-                disabled
                 control={control}
-                name="placaVeiculo"
+                name="numeroAgendamento"
                 render={({
                   field: { value, onChange },
                   fieldState: { error },
                 }) => (
                   <AppTextInput
-                    readOnly
-                    label="Placa do veículo"
-                    value={value}
-                    onChangeText={onChange}
-                    error={error}
-                    mask={maskPlaca}
-                  />
-                )}
-              />
-
-              <Controller
-                control={control}
-                name="motorista"
-                render={({
-                  field: { value, onChange },
-                  fieldState: { error },
-                }) => (
-                  <AppTextInput
-                    readOnly
-                    label="Motorista"
-                    value={value}
-                    onChangeText={onChange}
-                    error={error}
-                  />
-                )}
-              />
-
-              <Controller
-                control={control}
-                name="transportadora"
-                render={({
-                  field: { value, onChange },
-                  fieldState: { error },
-                }) => (
-                  <AppTextInput
-                    readOnly
-                    label="Transportadora"
-                    value={value}
-                    onChangeText={onChange}
-                    error={error}
-                  />
-                )}
-              />
-
-              <Controller
-                control={control}
-                name="produto"
-                render={({
-                  field: { value, onChange },
-                  fieldState: { error },
-                }) => (
-                  <AppTextInput
-                    readOnly
-                    label="Produto"
-                    value={value}
-                    onChangeText={onChange}
-                    error={error}
-                  />
-                )}
-              />
-
-              <Controller
-                control={control}
-                name="terminal"
-                render={({
-                  field: { value, onChange },
-                  fieldState: { error },
-                }) => (
-                  <AppTextInput
-                    readOnly
-                    label="Terminal"
+                    label="Número agendamento"
                     value={value}
                     onChangeText={onChange}
                     error={error}
@@ -339,195 +246,290 @@ export default function AppClassificador() {
                 )}
               />
             </View>
-          </View>
 
-          <View>
-            <AppText variant="secondary" className="text-base">
-              Informações do grão
-            </AppText>
+            <View className="mb-5 mt-5">
+              <AppText variant="secondary" className="mb-6 text-base">
+                Informações para transporte
+              </AppText>
 
-            <View className="mb-10 flex flex-col gap-3">
-              <View className="my-4">
-                <AppText variant="secondary" className="font-normal">
-                  Selecione o grão
-                </AppText>
-
+              <View className="flex flex-col gap-3">
                 <Controller
+                  disabled
                   control={control}
-                  name="cultura"
+                  name="placaVeiculo"
                   render={({
                     field: { value, onChange },
                     fieldState: { error },
                   }) => (
-                    <View>
-                      <Picker
-                        selectedValue={value}
-                        onValueChange={(v) => onChange(v)}
-                        style={{ color: "#242424" }}
-                      >
-                        <Picker.Item label="Soja" value="soja" />
-                        <Picker.Item label="Milho" value="milho" />
-                        <Picker.Item label="Trigo" value="trigo" />
-                      </Picker>
+                    <AppTextInput
+                      readOnly
+                      label="Placa do veículo"
+                      value={value}
+                      onChangeText={onChange}
+                      error={error}
+                      mask={maskPlaca}
+                    />
+                  )}
+                />
 
-                      {error && (
-                        <Text style={{ color: "red" }}>{error.message}</Text>
-                      )}
-                    </View>
+                <Controller
+                  control={control}
+                  name="motorista"
+                  render={({
+                    field: { value, onChange },
+                    fieldState: { error },
+                  }) => (
+                    <AppTextInput
+                      readOnly
+                      label="Motorista"
+                      value={value}
+                      onChangeText={onChange}
+                      error={error}
+                    />
+                  )}
+                />
+
+                <Controller
+                  control={control}
+                  name="transportadora"
+                  render={({
+                    field: { value, onChange },
+                    fieldState: { error },
+                  }) => (
+                    <AppTextInput
+                      readOnly
+                      label="Transportadora"
+                      value={value}
+                      onChangeText={onChange}
+                      error={error}
+                    />
+                  )}
+                />
+
+                <Controller
+                  control={control}
+                  name="produto"
+                  render={({
+                    field: { value, onChange },
+                    fieldState: { error },
+                  }) => (
+                    <AppTextInput
+                      readOnly
+                      label="Produto"
+                      value={value}
+                      onChangeText={onChange}
+                      error={error}
+                    />
+                  )}
+                />
+
+                <Controller
+                  control={control}
+                  name="terminal"
+                  render={({
+                    field: { value, onChange },
+                    fieldState: { error },
+                  }) => (
+                    <AppTextInput
+                      readOnly
+                      label="Terminal"
+                      value={value}
+                      onChangeText={onChange}
+                      error={error}
+                    />
                   )}
                 />
               </View>
-
-              {(cultura === "milho" || cultura === "soja") && (
-                <>
-                  <Controller
-                    control={control}
-                    name="umidade"
-                    render={({
-                      field: { value, onChange },
-                      fieldState: { error },
-                    }) => (
-                      <View>
-                        <AppTextInput
-                          label="Umidade (%)"
-                          value={value ?? ""}
-                          onChangeText={onChange}
-                          error={error}
-                        />
-                      </View>
-                    )}
-                  />
-
-                  <Controller
-                    control={control}
-                    name="impureza"
-                    render={({
-                      field: { value, onChange },
-                      fieldState: { error },
-                    }) => (
-                      <View>
-                        <AppTextInput
-                          label="Impureza (%)"
-                          value={value ?? ""}
-                          onChangeText={onChange}
-                          error={error}
-                        />
-                      </View>
-                    )}
-                  />
-                </>
-              )}
-
-              {cultura === "milho" && (
-                <Controller
-                  control={control}
-                  name="quebrados"
-                  render={({
-                    field: { value, onChange },
-                    fieldState: { error },
-                  }) => (
-                    <View>
-                      <AppTextInput
-                        label="Quebrados (%)"
-                        value={value ?? ""}
-                        onChangeText={onChange}
-                        error={error}
-                      />
-                    </View>
-                  )}
-                />
-              )}
-
-              {cultura === "soja" && (
-                <>
-                  <Controller
-                    control={control}
-                    name="ardidos"
-                    render={({
-                      field: { value, onChange },
-                      fieldState: { error },
-                    }) => (
-                      <View>
-                        <AppTextInput
-                          label="Ardidos (%)"
-                          value={value ?? ""}
-                          onChangeText={onChange}
-                          error={error}
-                        />
-                      </View>
-                    )}
-                  />
-
-                  <Controller
-                    control={control}
-                    name="mofados"
-                    render={({
-                      field: { value, onChange },
-                      fieldState: { error },
-                    }) => (
-                      <View>
-                        <AppTextInput
-                          label="Mofados (%)"
-                          value={value ?? ""}
-                          onChangeText={onChange}
-                          error={error}
-                        />
-                      </View>
-                    )}
-                  />
-
-                  <Controller
-                    control={control}
-                    name="germinados"
-                    render={({
-                      field: { value, onChange },
-                      fieldState: { error },
-                    }) => (
-                      <View>
-                        <AppTextInput
-                          label="Germinados (%)"
-                          value={value ?? ""}
-                          onChangeText={onChange}
-                          error={error}
-                        />
-                      </View>
-                    )}
-                  />
-                </>
-              )}
-
-              {cultura === "trigo" && (
-                <Controller
-                  control={control}
-                  name="pesoHectolitro"
-                  render={({
-                    field: { value, onChange },
-                    fieldState: { error },
-                  }) => (
-                    <View>
-                      <AppTextInput
-                        label="Peso Hectolitro (%)"
-                        value={value ?? ""}
-                        onChangeText={onChange}
-                        error={error}
-                      />
-                    </View>
-                  )}
-                />
-              )}
             </View>
-          </View>
 
-          <AppButton
-            onPress={handleSubmit(onSubmit)}
-            className="mb-20 flex items-center justify-center"
-          >
-            <AppButton.Text className="text-base font-bold">
-              Classificar
-            </AppButton.Text>
-          </AppButton>
-        </SafeAreaView>
-      </AppContainer>
+            <View>
+              <AppText variant="secondary" className="text-base">
+                Informações do grão
+              </AppText>
+
+              <View className="mb-10 flex flex-col gap-3">
+                <View className="my-4">
+                  <AppText variant="secondary" className="font-normal">
+                    Selecione o grão
+                  </AppText>
+
+                  <Controller
+                    control={control}
+                    name="cultura"
+                    render={({
+                      field: { value, onChange },
+                      fieldState: { error },
+                    }) => (
+                      <View>
+                        <Picker
+                          selectedValue={value}
+                          onValueChange={(v) => onChange(v)}
+                          style={{ color: "#242424" }}
+                        >
+                          <Picker.Item label="Soja" value="soja" />
+                          <Picker.Item label="Milho" value="milho" />
+                          <Picker.Item label="Trigo" value="trigo" />
+                        </Picker>
+
+                        {error && (
+                          <Text style={{ color: "red" }}>{error.message}</Text>
+                        )}
+                      </View>
+                    )}
+                  />
+                </View>
+
+                {(cultura === "milho" || cultura === "soja") && (
+                  <>
+                    <Controller
+                      control={control}
+                      name="umidade"
+                      render={({
+                        field: { value, onChange },
+                        fieldState: { error },
+                      }) => (
+                        <View>
+                          <AppTextInput
+                            label="Umidade (%)"
+                            value={value ?? ""}
+                            onChangeText={onChange}
+                            error={error}
+                          />
+                        </View>
+                      )}
+                    />
+
+                    <Controller
+                      control={control}
+                      name="impureza"
+                      render={({
+                        field: { value, onChange },
+                        fieldState: { error },
+                      }) => (
+                        <View>
+                          <AppTextInput
+                            label="Impureza (%)"
+                            value={value ?? ""}
+                            onChangeText={onChange}
+                            error={error}
+                          />
+                        </View>
+                      )}
+                    />
+                  </>
+                )}
+
+                {cultura === "milho" && (
+                  <Controller
+                    control={control}
+                    name="quebrados"
+                    render={({
+                      field: { value, onChange },
+                      fieldState: { error },
+                    }) => (
+                      <View>
+                        <AppTextInput
+                          label="Quebrados (%)"
+                          value={value ?? ""}
+                          onChangeText={onChange}
+                          error={error}
+                        />
+                      </View>
+                    )}
+                  />
+                )}
+
+                {cultura === "soja" && (
+                  <>
+                    <Controller
+                      control={control}
+                      name="ardidos"
+                      render={({
+                        field: { value, onChange },
+                        fieldState: { error },
+                      }) => (
+                        <View>
+                          <AppTextInput
+                            label="Ardidos (%)"
+                            value={value ?? ""}
+                            onChangeText={onChange}
+                            error={error}
+                          />
+                        </View>
+                      )}
+                    />
+
+                    <Controller
+                      control={control}
+                      name="mofados"
+                      render={({
+                        field: { value, onChange },
+                        fieldState: { error },
+                      }) => (
+                        <View>
+                          <AppTextInput
+                            label="Mofados (%)"
+                            value={value ?? ""}
+                            onChangeText={onChange}
+                            error={error}
+                          />
+                        </View>
+                      )}
+                    />
+
+                    <Controller
+                      control={control}
+                      name="germinados"
+                      render={({
+                        field: { value, onChange },
+                        fieldState: { error },
+                      }) => (
+                        <View>
+                          <AppTextInput
+                            label="Germinados (%)"
+                            value={value ?? ""}
+                            onChangeText={onChange}
+                            error={error}
+                          />
+                        </View>
+                      )}
+                    />
+                  </>
+                )}
+
+                {cultura === "trigo" && (
+                  <Controller
+                    control={control}
+                    name="pesoHectolitro"
+                    render={({
+                      field: { value, onChange },
+                      fieldState: { error },
+                    }) => (
+                      <View>
+                        <AppTextInput
+                          label="Peso Hectolitro (%)"
+                          value={value ?? ""}
+                          onChangeText={onChange}
+                          error={error}
+                        />
+                      </View>
+                    )}
+                  />
+                )}
+              </View>
+            </View>
+
+            <AppButton
+              onPress={handleSubmit(onSubmit)}
+              className="mb-20 flex items-center justify-center"
+            >
+              <AppButton.Text className="text-base font-bold">
+                Classificar
+              </AppButton.Text>
+            </AppButton>
+          </SafeAreaView>
+        </ScreenWrapper>
+      </ScrollView>
     </>
   );
 }

@@ -13,11 +13,11 @@ export function buildPdfChecklist(data: any) {
    <hr/>
 
    ${Object.entries(data.respostas)
-     .map(
-       ([id, res]) => `
-    <p><b>Pergunta ${id}</b>: ${res ? "sim" : "não"}</p>
-    `,
-     )
+     .map(([id, value]) => {
+       return `
+    <p><b>Pergunta ${id}</b>: ${value === "true" ? "sim" : "não"}</p>
+    `;
+     })
      .join("")}
 
    </body>
