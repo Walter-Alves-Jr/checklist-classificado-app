@@ -1,4 +1,5 @@
 import { useArmazensQuery } from "@/src/features/armazens/hooks/storage/queries/use-armazens-query";
+import CheklistPerguntas from "@/src/features/checklists/components/checklist-perguntas";
 import { useChecklistArmazemQuery } from "@/src/features/checklists/hooks/queries/use-checklist-armazem-query";
 import AppDropdown from "@/src/shared/components/Dropdown/app-dropdown";
 import HeaderPage from "@/src/shared/components/Header/HeaderPage";
@@ -25,6 +26,7 @@ export default function Armazens() {
     },
   });
   const armazemId = watch("armazemId");
+  const checklistId = watch("checklistId");
 
   const [search, setSearch] = useState("");
   const searchDebounced = useDebounce(search);
@@ -84,6 +86,16 @@ export default function Armazens() {
           );
         }}
       />
+
+      {checklistId && armazemId ? (
+        <CheklistPerguntas
+          armazemId={armazemId}
+          checklistId={checklistId}
+          search={search}
+        />
+      ) : (
+        <></>
+      )}
     </>
   );
 }

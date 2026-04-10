@@ -1,5 +1,5 @@
 import { getClassificationsLocalStorage } from "@/src/localStorage/services/localStorageService";
-import AppContainer from "@/src/shared/components/Container/AppContainer";
+import ScreenWrapper from "@/src/shared/components/ScreenWrapper/screen-wrapper";
 import AppText from "@/src/shared/components/Text/AppText";
 import { Touchable } from "@/src/shared/components/Touchable";
 import { router } from "expo-router";
@@ -24,7 +24,7 @@ export default function Situacoes() {
   const pendentes = dados.filter((d) => d.status === "PENDENTE");
 
   return (
-    <AppContainer style={styles.container}>
+    <ScreenWrapper style={styles.container}>
       <Touchable.Container
         className="w-24 bg-gray-800"
         onPress={() => router.push("/")}
@@ -56,7 +56,7 @@ export default function Situacoes() {
           </AppText>
         </View>
       </View>
-    </AppContainer>
+    </ScreenWrapper>
   );
 }
 

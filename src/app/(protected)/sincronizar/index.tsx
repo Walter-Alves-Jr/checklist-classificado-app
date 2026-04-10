@@ -1,6 +1,6 @@
 import { getChecklistsLocalStorage } from "@/src/localStorage/services/localStorageService";
-import AppContainer from "@/src/shared/components/Container/AppContainer";
 import HeaderPage from "@/src/shared/components/Header/HeaderPage";
+import ScreenWrapper from "@/src/shared/components/ScreenWrapper/screen-wrapper";
 import { Touchable } from "@/src/shared/components/Touchable";
 import { sendWebhookYMS } from "@/src/shared/services/webHookYMSService";
 import { router } from "expo-router";
@@ -34,11 +34,11 @@ export default function Sincronizar() {
     <>
       <HeaderPage title="Sincronizar Dados" goBack={goBack} />
 
-      <AppContainer>
+      <ScreenWrapper>
         <Touchable.Container onPress={sincronizar}>
           <Touchable.Content>Sincronizar</Touchable.Content>
         </Touchable.Container>
-      </AppContainer>
+      </ScreenWrapper>
     </>
   );
 }

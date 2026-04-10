@@ -1,9 +1,10 @@
 import { cn } from "@/src/lib/tailwind-merge/tailwind-merge";
 import { useBrand } from "@/src/theme/useBrand";
 import { Text, TextProps } from "react-native";
+import { palette } from "../../consts/app-colors";
 
 interface AppTextProps extends TextProps {
-  variant?: "primary" | "secondary" | "tertiary";
+  variant?: "primary" | "secondary" | "tertiary" | "error";
 }
 
 export default function AppText({
@@ -24,6 +25,9 @@ export default function AppText({
     },
     tertiary: {
       color: brand.text.tertiary.color,
+    },
+    error: {
+      color: palette.error,
     },
   };
 

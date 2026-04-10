@@ -5,7 +5,7 @@ export function AppInputError({ error }: { error?: FieldError }) {
   if (!error) return null;
 
   return (
-    <AppText className="ml-[0.80rem]" variant="tertiary">
+    <AppText className="ml-[0.80rem]" variant="error">
       {error.message}
     </AppText>
   );
